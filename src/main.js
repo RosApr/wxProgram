@@ -16,16 +16,45 @@ app.$mount()
 export default {
     // 这个字段走 app.json
     config: {
-        // 页面前带有 ^ 符号的，会被编译成首页，其他页面可以选填，我们会自动把 webpack entry 里面的入口页面加进去
-        pages: [
-            '^pages/login/main'
+        "pages": [
+          "pages/index/main",
+          "pages/login/main",
+          "pages/authorize/main",
+          "pages/me/main",
+          "pages/publish/main"
         ],
-        window: {
-            "backgroundTextStyle": "light",
-            "navigationBarBackgroundColor": "#3dc74b",
-            "navigationBarTitleText": "登陆",
-            "navigationBarTextStyle": "#fff"
+        "window": {
+          "backgroundTextStyle": "light",
+          "navigationBarBackgroundColor": "#3dc74b",
+          "navigationBarTitleText": "厨具商城",
+          "navigationBarTextStyle": "#fff"
         },
-
-    }
+        "tabBar": {
+          "backgroundColor": "#fff",
+          "borderStyle": "white",
+          "selectedColor": "#4eb131",
+          "color": "#373737",
+          "position": "bottom",
+          "list": [
+            {
+              "pagePath": "pages/index/main",
+              "iconPath": "static/images/home.png",
+              "selectedIconPath": "static/images/home_a.png",
+              "text": "首页"
+            },
+            {
+              "pagePath": "pages/publish/main",
+              "iconPath": "static/images/publish.png",
+              "selectedIconPath": "static/images/publish_a.png",
+              "text": "发布"
+            },
+            {
+              "pagePath": "pages/me/main",
+              "iconPath": "static/images/me.png",
+              "selectedIconPath": "static/images/me_a.png",
+              "text": "我"
+            }
+          ]
+        }
+      }
 }

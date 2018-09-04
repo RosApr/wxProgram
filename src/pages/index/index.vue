@@ -23,8 +23,8 @@
                     </div>
                     <div class="grid desc">
                         <div class="title">{{item.title}}</div>
-                        <div class="place">产地：<span>{{item.place}}</span></div>
                         <div class="date">有效期：{{item.startdate}}-{{item.enddate}}</div>
+                        <div class="place">产地：<span>{{item.place}}</span></div>
                         <div class="price">
                             <span class="price-symbol">¥</span>
                             <span class="price-number">{{item.price}}</span>
@@ -245,8 +245,8 @@
         .tab-container {
             width: 100%;
             .tab-header-container {
-                height: 90rpx;
-                line-height: 90rpx;
+                height: 120rpx;
+                line-height: 120rpx;
                 display: flex;
                 flex-flow: row nowrap;
                 justify-items: space-around;
@@ -263,7 +263,7 @@
                             content: "";
                             transition: all .3s ease-in-out;
                             position: absolute;
-                            bottom: -6rpx;
+                            bottom: -12rpx;
                             left: 4rpx;
                             right: 4rpx;
                             height: 6rpx;
@@ -300,10 +300,6 @@
                             background-size: contain;
                             background-position: center;
                             background-repeat: no-repeat; 
-                            // img {
-                            //     display: block;
-                            //     max-width: 100%;
-                            // }
                         }
                         &.desc {
                             padding-left: 20rpx;
