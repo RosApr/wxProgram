@@ -1,0 +1,13 @@
+{
+  "pages": [
+    "pages/index/main",
+    "pages/login/main",
+    "pages/authorize/main"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#3dc74b",
+    "navigationBarTitleText": "登陆",
+    "navigationBarTextStyle": "#fff"
+  }
+}
