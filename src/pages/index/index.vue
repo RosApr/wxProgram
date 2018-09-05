@@ -5,6 +5,7 @@
                 <input type="text" placeholder="身份、城市、区县" v-model="address">
             </picker>
         </div> -->
+        <div @click="handleClick">{{count}}</div>
         <div class="tab-container">
             <div class="tab-header-container">
                 <div class="grid" :class="{'active': activeTab == 0}" @click="changeActiveTab(0)">
@@ -41,6 +42,7 @@
 </template>
 <script>
     import wx from "@/utils/wx"
+    import { mapState, mapActions, mapMutations } from "vuex"
     export default {
         data() {
             return {
@@ -226,16 +228,30 @@
                 }]
             }
         },
-        created() {
-       
+        mounted() {
+            // setInterval(function() {
+                // this.increment()
+            // }, 2000)
+            console.log(this.increment)
+        },
+        computed: {
+            ...mapState([
+                "count"
+            ])
         },
         methods: {
+            ...mapMutations([
+                "increment"
+            ]),
             changeActiveTab(active) {
                 this.activeTab = active
             },
             bindRegionChange(e) {
                 var value = e.mp.detail.value
                 console.log(value)
+            },
+            handleClick() {
+                this.increment()
             }
         }
     }

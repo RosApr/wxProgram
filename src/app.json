@@ -4,12 +4,17 @@
     "pages/login/main",
     "pages/authorize/main",
     "pages/me/main",
-    "pages/publish/main"
+    "pages/publish/main",
+    "pages/setNickname/main",
+    "pages/setName/main",
+    "pages/setPwd/main",
+    "pages/setPhone/main",
+    "pages/setImg/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#3dc74b",
-    "navigationBarTitleText": "登陆",
+    "navigationBarTitleText": "厨具商城",
     "navigationBarTextStyle": "#fff"
   },
   "tabBar": {
@@ -35,7 +40,7 @@
         "pagePath": "pages/me/main",
         "iconPath": "static/images/me.png",
         "selectedIconPath": "static/images/me_a.png",
-        "text": "我"
+        "text": "个人中心"
       }
     ]
   }
