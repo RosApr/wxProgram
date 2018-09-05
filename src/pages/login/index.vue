@@ -30,8 +30,8 @@
 </template>
 
 <script>
-    import api from "@/utils/api"
-    console.log(api)
+    // import api from "@/utils/api"
+    // console.log(api)
     export default {
         data() {
             return {
@@ -43,10 +43,10 @@
             login() {
                 console.log(this.phone)
                 console.log(this.password)
-                api.login({
-                    phone: this.phone,
-                    password: this.password
-                })
+                // api.login({
+                //     phone: this.phone,
+                //     password: this.password
+                // })
             }
         }
     }

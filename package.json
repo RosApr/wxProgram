@@ -13,6 +13,7 @@
     "extract-text-webpack-plugin": "^3.0.2",
     "flyio": "^0.6.0",
     "mpvue": "^1.0.11",
+    "qs": "^6.5.2",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

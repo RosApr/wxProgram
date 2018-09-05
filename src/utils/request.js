@@ -1,7 +1,7 @@
 import wx from './wx'
 import Fly from 'flyio'
-
-const baseUrl = "http://demo.xinbao369.com/ids/public/index.php/api/common/"
+const qs = require("qs")
+const baseUrl = "https://demo.xinbao369.com/ids/public/index.php/api/"
 const request = new Fly()
 
 request.config.baseURL = baseUrl
