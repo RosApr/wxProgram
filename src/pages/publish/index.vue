@@ -33,17 +33,14 @@
       </div>
     </scroll-view>
     <div class="btn-container">
-        <div class="btn">发布信息</div>
+        <div class="btn" @click="goPublish">发布信息</div>
     </div>
   </div>
 </template>
 <script>
 import { INDEX_PAGE_LIST_TYPE } from "@/utils/common"
+import { setWxNavBarTitle } from "@/utils/common"
 export default {
-  computed: {
-    // tranX() {},
-    // tranX1() {}
-  },
   data() {
     return {
         titleConfig: INDEX_PAGE_LIST_TYPE,
@@ -68,7 +65,15 @@ export default {
       flag: false
     };
   },
+  mounted() {
+      setWxNavBarTitle("发布中心")
+  },
   methods: {
+      goPublish() {
+          wx.navigateTo({
+              url: "/pages/step1/main"
+          })
+      },
     transformTitle(title) {
         let titles = ""
         switch(title) {
@@ -166,7 +171,7 @@ export default {
   display: flex;
   flex-direction: column;
   background: #fff;
-  padding-bottom: 130rpx;
+  padding-bottom: 110rpx;
   box-sizing: border-box; // overflow-x: hidden;
   // overflow-y: scroll;
   // -webkit-overflow-scrolling: touch;

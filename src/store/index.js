@@ -1,7 +1,8 @@
 import Vue from "vue"
 import Vuex from "vuex"
-import { getIndexList, getDetail } from "@/utils/api"
+import { getIndexList, getDetail, getFilters } from "@/utils/api"
 import { INDEX_PAGE_LIST_TYPE } from "@/utils/common"
+
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -14,7 +15,15 @@ const store = new Vuex.Store({
       activeTab: INDEX_PAGE_LIST_TYPE["sell"]
     },
     detail: {},
-    pubulishList: []
+    pubulishList: [],
+    filters: {
+      category: [],
+      model: [],
+      stock: [],
+      factory: [],
+      transport: [],
+      vehicletype: []
+    }
   },
   mutations: {
     saveListParams(state, payload) {
@@ -25,9 +34,18 @@ const store = new Vuex.Store({
     },
     saveDetailData(state, payload) {
       state.detail = payload
+    },
+    saveFilters(state, payload) {
+      state.filters = payload
     }
   },
   actions: {
+    async getFilters({ state, commit }) {
+      const { data } = await getFilters()
+      data.transport = [...["不限"], ...data.transport]
+      data.vehicletype = [...["不限"], ...data.vehicletype]
+      commit("saveFilters", data)
+    },
     async getIndexList({ state, commit }, { listType }) {
       // 切换tab重置列表请求参数
       if(state.indexConfig.activeTab != listType) {

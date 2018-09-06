@@ -5,7 +5,6 @@
                 <input type="text" placeholder="身份、城市、区县" v-model="address">
             </picker>
         </div> -->
-        <div @click="handleClick">{{count}}</div>
         <div class="tab-container">
             <div class="tab-header-container">
                 <div class="grid"
@@ -80,7 +79,7 @@
 <script>
     import wx from "@/utils/wx"
     import { INDEX_PAGE_LIST_TYPE } from "@/utils/common"
-    import { mapState, mapActions, mapMutations } from "vuex"
+    import { mapState, mapActions } from "vuex"
     export default {
         data() {
             return {
@@ -108,8 +107,6 @@
             })
         },
         methods: {
-            ...mapMutations([
-            ]),
             ...mapActions([
                 "getIndexList"
             ]),
@@ -128,8 +125,6 @@
             bindRegionChange(e) {
                 var value = e.mp.detail.value
                 console.log(value)
-            },
-            handleClick() {
             }
         }
     }

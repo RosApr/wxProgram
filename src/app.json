@@ -1,5 +1,7 @@
 {
   "pages": [
+    "pages/step1/main",
+    "pages/step2Log/main",
     "pages/index/main",
     "pages/login/main",
     "pages/authorize/main",
@@ -10,7 +12,8 @@
     "pages/setPwd/main",
     "pages/setPhone/main",
     "pages/setImg/main",
-    "pages/detail/main"
+    "pages/detail/main",
+    "pages/step2/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
