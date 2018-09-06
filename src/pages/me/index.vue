@@ -89,6 +89,7 @@
             .item {
                 padding-left: 0;
                 padding-right: 0;
+                font-size: 30rpx;
                 &:before {
                     left: 0!important;
                     right: 0!important;

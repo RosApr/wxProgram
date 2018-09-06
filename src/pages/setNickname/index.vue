@@ -17,7 +17,7 @@
             }
         },
         mounted() {
-            setWxNavBarTitle("修改昵称")
+            setWxNavBarTitle("修改")
         }
     }
 </script>
@@ -30,6 +30,7 @@
         right: 0;
         input {
             color: #a7a7a7;
+            font-size: 30rpx;
             border-bottom: 2rpx solid #f1f1f1;
         }
         .weui-btn {

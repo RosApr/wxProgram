@@ -1,6 +1,6 @@
 import Vue from "vue"
 import Vuex from "vuex"
-import { getIndexList } from "@/utils/api"
+import { getIndexList, getDetail } from "@/utils/api"
 import { INDEX_PAGE_LIST_TYPE } from "@/utils/common"
 Vue.use(Vuex)
 
@@ -12,7 +12,9 @@ const store = new Vuex.Store({
       size: 8,
       total: 99999999999999,
       activeTab: INDEX_PAGE_LIST_TYPE["sell"]
-    }
+    },
+    detail: {},
+    pubulishList: []
   },
   mutations: {
     saveListParams(state, payload) {
@@ -20,6 +22,9 @@ const store = new Vuex.Store({
         ...state.indexConfig,
         ...payload
       }
+    },
+    saveDetailData(state, payload) {
+      state.detail = payload
     }
   },
   actions: {
@@ -49,6 +54,10 @@ const store = new Vuex.Store({
         })
       }
     },
+    async getDetail({ state, commit },  payload) {
+      const response = await getDetail(payload)
+      commit("saveDetailData", response.data)
+    }
   }
 })
 

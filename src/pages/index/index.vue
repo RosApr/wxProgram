@@ -29,6 +29,7 @@
                     <div class="item sell"
                         v-for="(item, index) in indexConfig.list"
                         :key="index"
+                        @click="showDetail(item.id, activeTab)"
                     >
                         <div class="grid img" :style="{backgroundImage: 'url(' + item.images[0] + ')'}"></div>
                         <div class="grid desc">
@@ -48,6 +49,7 @@
                         class="item logistics weui-cell weui-cell_access item border"
                         v-for="(item, index) in indexConfig.list"
                         :key="index"
+                        @click="showDetail(item.id, activeTab)"
                     >
                         <div class="grid desc">
                             <p class="title">{{item.title}}</p>
@@ -111,6 +113,11 @@
             ...mapActions([
                 "getIndexList"
             ]),
+            showDetail(id, listType) {
+                wx.navigateTo({
+                    url: `/pages/detail/main?type=${listType}&id=${id}`
+                })
+            },
             // 切换tab
             changeActiveTab(active) {
                 this.activeTab = active

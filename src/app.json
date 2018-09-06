@@ -9,7 +9,8 @@
     "pages/setName/main",
     "pages/setPwd/main",
     "pages/setPhone/main",
-    "pages/setImg/main"
+    "pages/setImg/main",
+    "pages/detail/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
