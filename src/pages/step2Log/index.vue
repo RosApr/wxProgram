@@ -1,17 +1,18 @@
 <template>
     <div class="container">
+        <div class="tip" :class="{'active': showTip}">{{tip}}</div>
         <div class="title">基础信息</div>
         <div class="item">
             <div class="grid label"><span class="badge">*</span>发布标题：</div>
             <div class="grid input">
-                <input placeholder="请输入标题" type="text" v-model="title">
+                <input class="height border" placeholder="请输入标题" type="text" v-model="title">
             </div>
         </div>
         <div class="item">
             <div class="grid label"><span class="badge">*</span>出发城市：</div>
             <div class="grid input">
                 <picker mode="multiSelector" @change="regionChange" @columnchange="regionColumnChange" :value="regionIndex" :range="regionDataComputed">
-                    <div>{{rmation || "请选择出发城市"}}</div>
+                    <div class="border height arrow">{{rmation || "请选择出发城市"}}</div>
                 </picker>
             </div>
         </div>
@@ -19,35 +20,88 @@
             <div class="grid label"><span class="badge">*</span>到达城市：</div>
             <div class="grid input">
                 <picker mode="multiSelector" @change="desRegionChange" @columnchange="desRegionColumnChange" :value="desRegionIndex" :range="desRegionDataComputed">
-                    <div>{{destination || "请选择目的地"}}</div>
+                    <div class="border height arrow">{{destination || "请选择目的地"}}</div>
                 </picker>
-            </div>
-        </div>
-        <div class="item">
-            <div class="grid label"><span class="badge">*</span>到达城市：</div>
-            <div class="grid input">
-                <input placeholder="请输入标题" type="text" v-model="title">
             </div>
         </div>
         <div class="item">
             <div class="grid label"><span class="badge">*</span>价格：</div>
             <div class="grid input">
-                <input placeholder="请输入价格" type="text" v-model="price">
+                <input class="height border" placeholder="请输入价格" type="text" v-model="price">
+            </div>
+        </div>
+        <div class="item"> 
+            <div class="grid label"><span class="badge">*</span>有效期：</div>
+            <div class="grid input">
+                <div class="date-container">
+                    <picker class="date-picker date-grid" :start="startdateConfig" mode="date" @change="startdateChange" :value="startdate">
+                        <div class="border height arrow">{{startdate || "请选择"}}</div>
+                    </picker>
+                    <span class="date-grid text">
+                        至
+                    </span>
+                    <picker class="date-picker date-grid" :start="enddateConfig" mode="date" @change="enddateChange" :value="enddate">
+                        <div class="border height arrow">{{enddate || "请选择"}}</div>
+                    </picker>
+                </div>
+            </div>
+        </div>
+        <div class="item">
+            <div class="grid label"><span class="badge">*</span>上传图片：</div>
+            <div class="grid input">
+                <div class="img-container"
+                    v-for="(item, index) in tempImgs"
+                    :key="index"
+                    @click="delImg(index)"
+                    >
+                    <div class="img" :style="{backgroundImage: 'url(' + item + ')'}"></div>
+                    <div class="del">X</div>
+                </div>
+                <div class="upload-img-btn" @click="uploadImg">+</div>
+            </div>
+        </div>
+        <div class="item">
+            <div class="grid label"><span class="badge">*</span>承载信息：</div>
+            <div class="grid input">
+                <picker mode="selector" @change="typeChange" :value="typeIndex" :range="filters['transport']">
+                    <div class="border height arrow">{{type || "请选择承载信息"}}</div>
+                </picker>
+            </div>
+        </div>
+        <div class="item">
+            <div class="grid label"><span class="badge">*</span>车辆信息：</div>
+            <div class="grid input">
+                <picker mode="selector" @change="vehicletypeChange" :value="vehicletypeIndex" :range="filters['vehicletype']">
+                    <div class="border height arrow">{{vehicletype || "请选择车辆信息"}}</div>
+                </picker>
+            </div>
+        </div>
+        <div class="item">
+            <div class="grid label"><span class="badge">*</span>详细信息：</div>
+            <div class="grid input">
+                <textarea class="border" v-model="details" rows="6"></textarea>
+            </div>
+        </div>
+        <div class="item">
+            <div class="grid label">备注：</div>
+            <div class="grid input">
+                <textarea class="border" v-model="remark" rows="6"></textarea>
             </div>
         </div>
         <div class="title">联系方式</div>
         <div class="item">
             <div class="grid label"><span class="badge">*</span>联系人：</div>
             <div class="grid input">
-                <input placeholder="请输入联系人名称" type="text" v-model="linkman">
+                <input class="height border" placeholder="请输入联系人名称" type="text" v-model="linkman">
             </div>
         </div>
         <div class="item">
             <div class="grid label"><span class="badge">*</span>联系电话：</div>
             <div class="grid input">
-                <input placeholder="请输入联系电话" type="text" v-model="phone">
+                <input class="height border" placeholder="请输入联系电话" type="text" v-model="phone">
             </div>
         </div>
+        <button class="weui-btn" @click="publish" type="primary">确认</button>
     </div>
 </template>
 <script>
@@ -55,6 +109,19 @@ import { INDEX_PAGE_LIST_TYPE } from "@/utils/common"
 import { setWxNavBarTitle } from "@/utils/common"
 import regionArray from "@/utils/region"
 import { mapActions, mapState, mapMutations } from "vuex"
+const tipConfig = {
+    title: "请输入标题！",
+    price: "请输入价格！",
+    linkman: "请输入联系人名称！",
+    startdate: "请选择开始时间！",
+    enddate: "请选择结束时间！",
+    details: "请输入详细信息！",
+    phone: "请输入联系电话！",
+    type: "请选择承载信息！",
+    vehicletype: "请选择车辆信息！",
+    destination: "请选择到达城市！",
+    rmation: "请选择出发城市！",
+}
 export default {
     data() {
         return {
@@ -63,6 +130,10 @@ export default {
             price: "",
             phone: "",
             linkman: "",
+            startdate: this.$moment().format("YYYY-MM-DD"),
+            enddate: this.$moment().format("YYYY-MM-DD"),
+            remark: "",
+            details: "",
             regionData: regionArray,
             // 出发
             regionIndex: [0,0],
@@ -72,13 +143,30 @@ export default {
             desRegionSecond: 0,
 
             rmation: "",
-            destination: ""
+            destination: "",
+            // 承载信息
+            typeIndex: 0,
+            type: "",
+            // 车辆信息
+            vehicletypeIndex: 0,
+            vehicletype: "",
+            // 时间选择纠正 结束时间大于等于开始时间
+            startdateConfig: "",
+            enddateConfig: "",
+            tip: "",
+            showTip: false,
+            tipConfig: tipConfig,
+            tempImgs: []
         }
     },
     mounted() {
         this.filters = Object.assign(this.$store.state.filters)
         setWxNavBarTitle("发布")
         const { query: { type }} = this.$root.$mp
+
+        //配置时间选择插件起始时间
+        this.startdateConfig = this.$moment().format("YYYY-MM-DD")
+        this.enddateConfig = this.$moment().format("YYYY-MM-DD")
     },
     computed: {
         regionDataComputed() {
@@ -110,35 +198,197 @@ export default {
                 this.desRegionSecond = e.mp.detail.value
                 this.desRegionIndex = [e.mp.detail.value, 0]
             }
+        },
+        typeChange(e) {
+            this.typeIndex = e.mp.detail.value
+            this.type = this.filters['transport'][e.mp.detail.value]
+        },
+        vehicletypeChange(e) {
+            this.vehicletypeIndex = e.mp.detail.value
+            this.vehicletype = this.filters['vehicletype'][e.mp.detail.value]
+        },
+        startdateChange(e) {
+            this.startdate = e.mp.detail.value
+            this.enddate = this.startdate
+            this.enddateConfig = this.startdate
+        },
+        enddateChange(e) {
+            this.enddate = e.mp.detail.value
+        },
+        uploadImg() {
+            const that = this
+            wx.chooseImage({
+                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                success: function (res) {
+                // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+                that.tempImgs = that.tempImgs.concat(res.tempFilePaths)
+                console.log(that.tempImgs)
+                },
+                fail: function () {
+                console.log('fail');
+                },
+                complete: function () {
+                console.log('commplete');
+                }
+            })
+        },
+        delImg(index) {
+            this.tempImgs.splice(index, 1)
+        },
+        publish() {
+            if(this.showTip) {
+                return false;
+            }
+            for(let [key,value] of Object.entries(this.tipConfig)) {
+                if(this[key] == '') {
+                    this.showTip = true
+                    this.tip = value
+                    return setTimeout(() => {
+                        this.showTip = false
+                    }, 2000)
+                }
+            }
+            const data = {}
+            // make form data
+            for(let [key,value] of Object.entries(this.tipConfig)) {
+                data[key] = this[key]
+            }
+            data["remark"] = this.remark
+            // publish
         }
     }
 }
 </script>
 <style lang="less" scoped>
     .container {
-        padding: 0 30rpx;
+        position: relative;
+        .tip {
+            z-index: 9;
+            width: 100%;
+            height: 60rpx;
+            line-height: 60rpx;
+            text-align: center;
+            position: fixed;
+            top: -80rpx;
+            font-size: 32rpx;
+            color: #fff;
+            background: red;
+            transform: all .3s ease;
+            opacity: 0;
+            &.active {
+                top: 0;
+                opacity: 1;
+            }
+        }
+        padding: 30rpx 30rpx 40rpx;
         .title {
             font-size: 28rpx;
             color: #383838;
-            margin-bottom: 10rpx;
+            margin-bottom: 20rpx;
             width: 100%;
+            z-index: 2;
         }
         .item {
+            z-index: 2;
             width: 100%;
             display: flex;
             flex-flow: row nowrap;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10rpx;
+            align-items: flex-start;
+            margin-bottom: 20rpx;
+            margin-top: 10rpx;
             .grid {
                 &.input {
                     flex: 1;
-                    color: #a7a7a7;
+                    color: #8c8c8c;
                     font-size: 28rpx;
                     min-height: 48rpx;
+                    .upload-img-btn {
+                        display: inline-block;
+                        width: 150rpx;
+                        height: 150rpx;
+                        line-height: 150rpx;
+                        border-radius: 16rpx;
+                        font-size: 50rpx;
+                        color: #8c8c8c;
+                        text-align: center;
+                        border: 1rpx solid #8c8c8c;
+                    }
+                    .img-container {
+                        border-radius: 16rpx;
+                        padding: 20rpx;
+                        border: 1rpx solid #8c8c8c;
+                        width: 100%;
+                        height: 300rpx;
+                        margin-bottom: 40rpx;
+                        position: relative;
+                        box-sizing: border-box;
+                        .img {
+                            background-size: 100%;
+                            background-position: center;
+                            background-repeat: no-repeat;
+                            width: 100%;
+                            height: 100%;
+                        }
+                        .del {
+                            position: absolute;
+                            top: -15rpx;
+                            right: -15rpx;
+                            width: 40rpx;
+                            height: 40rpx;
+                            line-height: 40rpx;
+                            border-radius: 100rpx;
+                            background: red;
+                            color: #fff;
+                            text-align: center;
+                            font-size: 24rpx;
+                        }
+                    }
+                    .height {
+                        height: 50rpx;
+                        line-height: 50rpx;
+                    }
+                    textarea {
+                        line-height: 30rpx;
+                        width: 100%;
+                        padding-right: 30rpx;
+                        padding-top: 20rpx;
+                        box-sizing: border-box;
+                    }
+                    .border {
+                        position: relative;
+                        padding-left: 20rpx;
+                        border: 1rpx solid #dadada;
+                        border-radius: 8rpx;
+                    }
+                    .arrow {
+                        &:after {
+                            content: "<";
+                            position: absolute;
+                            top: 50%;
+                            right: 20rpx;
+                            transform: translateY(-50%) rotateZ(-90deg);
+                            font-size: 26rpx;
+                            color: #8c8c8c;
+                        }
+                    }
+                    .date-container {
+                        width: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        .date-grid.text {
+                            padding: 0 20rpx;
+                        }
+                        .date-picker {
+                            flex: 1;
+                        }
+                    }
                 }
                 &.label {
                     width: 160rpx;
+                    text-align: right;
                     .badge {
                         color: #e03539;
                         font-size: 30rpx;
@@ -147,6 +397,10 @@ export default {
                     font-size: 28rpx;
                 }
             }
+        }
+        .weui-btn {
+            width: 100%;
+            border-radius: 200rpx;
         }
     }
 </style>
