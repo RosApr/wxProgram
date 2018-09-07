@@ -311,14 +311,14 @@ export default {
                         line-height: 150rpx;
                         border-radius: 16rpx;
                         font-size: 50rpx;
-                        color: #8c8c8c;
+                        color: #dadada;
                         text-align: center;
-                        border: 1rpx solid #8c8c8c;
+                        border: 1rpx solid #dadada;
                     }
                     .img-container {
                         border-radius: 16rpx;
                         padding: 20rpx;
-                        border: 1rpx solid #8c8c8c;
+                        border: 1rpx solid #dadada;
                         width: 100%;
                         height: 300rpx;
                         margin-bottom: 40rpx;
