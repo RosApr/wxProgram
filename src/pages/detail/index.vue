@@ -111,7 +111,7 @@
                 </div>
             </div>
         </div>
-        <div class="btn-container">
+        <div class="btn-container" v-if="!is">
             <button class="weui-btn" @click="report" type="primary">举报</button>
         </div>
     </div>
@@ -124,12 +124,15 @@
         data() {
             return {
                 type: "",
-                typeConfig: INDEX_PAGE_LIST_TYPE
+                typeConfig: INDEX_PAGE_LIST_TYPE,
+                is: ""
             }
         },
         mounted() {
             setWxNavBarTitle("详情")
-            const { query: { id, type }} = this.$root.$mp
+            const { query: { id, type, is }} = this.$root.$mp
+            // 从我的发布过来，不能举报
+            this.is = is
             this.type = type
             if(!id || !type) {
                 wx.navigateTo({

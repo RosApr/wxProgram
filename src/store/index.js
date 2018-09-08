@@ -1,6 +1,6 @@
 import Vue from "vue"
 import Vuex from "vuex"
-import { getIndexList, getDetail, getFilters, getSearchList } from "@/utils/api"
+import { getIndexList, getDetail, getFilters, getSearchList, getPublishList } from "@/utils/api"
 import { INDEX_PAGE_LIST_TYPE, transformTitle } from "@/utils/common"
 Vue.use(Vuex)
 
@@ -10,11 +10,17 @@ const store = new Vuex.Store({
       list: [],
       current: 1,
       size: 8,
-      total: 99999999999999,
+      total: 999999,
       activeTab: INDEX_PAGE_LIST_TYPE["sell"]
     },
     detail: {},
-    pubulishList: [],
+    // 我的发布
+    publishConfig: {
+      list: [],
+      page: 1,
+      size: 8,
+      total: 999999
+    },
     filters: {
       category: [],
       model: [],
@@ -29,7 +35,7 @@ const store = new Vuex.Store({
       list: [],
       page: 1,
       size: 8,
-      total: 99999999999
+      total: 999999
     }
   },
   mutations: {
@@ -49,7 +55,13 @@ const store = new Vuex.Store({
         }
       }
     },
-    saveListParams(state, payload) {
+    savePublishData(state, payload) {
+      state.publishConfig = {
+        ...state.publish,
+        ...payload
+      }
+    },
+    saveIndexConfig(state, payload) {
       state.indexConfig = {
         ...state.indexConfig,
         ...payload
@@ -63,6 +75,24 @@ const store = new Vuex.Store({
     }
   },
   actions: {
+    async queryPublishList({ state, commit }, payload={}) {
+      const { publishConfig: {page, size, total} } = state
+      if(state.publishConfig.list.length < total) {
+        const response = await getPublishList({
+          page,
+          size
+        })
+        const list = state.publishConfig.list.concat(response.data.data.map(item => {
+          item["typeFormat"] = transformTitle(item.type)
+          return item
+        }))
+        commit("savePublishData", {
+          list: list,
+          total: response.data.total,
+          page: ++state.publishConfig.page
+        })
+      }
+    },
     async querySearchList({ state, commit }, payload={}) {
       commit("saveSearchData", payload)
       const { size, page, search } = state.searchConfig
@@ -86,10 +116,10 @@ const store = new Vuex.Store({
       data.vehicletype = [...["不限"], ...data.vehicletype]
       commit("saveFilters", data)
     },
-    async getIndexList({ state, commit }, { listType }) {
+    async queryIndexList({ state, commit }, { listType }) {
       // 切换tab重置列表请求参数
       if(state.indexConfig.activeTab != listType) {
-        commit("saveListParams", {
+        commit("saveIndexConfig", {
           current: 1,
           size: 8,
           list: [],
@@ -105,7 +135,7 @@ const store = new Vuex.Store({
           listType: listType
         })
         const list = state.indexConfig.list.concat(response.data.rows)
-        commit("saveListParams", {
+        commit("saveIndexConfig", {
           list: list,
           total: response.data.total,
           current: ++state.indexConfig.current

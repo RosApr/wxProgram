@@ -102,7 +102,7 @@
         },
         mounted() {
             // 初始化获取列表
-            this.getIndexList({
+            this.queryIndexList({
                 listType: this.activeTab
             })
             this.getCurrentPosition()
@@ -118,13 +118,13 @@
         },
         onReachBottom() {
             // 加载更多
-            this.getIndexList({
+            this.queryIndexList({
                 listType: this.activeTab
             })
         },
         methods: {
             ...mapActions([
-                "getIndexList"
+                "queryIndexList"
             ]),
             goSearchPage() {
                 wx.navigateTo({
@@ -161,7 +161,7 @@
             // 切换tab
             changeActiveTab(active) {
                 this.activeTab = active
-                this.getIndexList({
+                this.queryIndexList({
                     listType: active
                 })
             },

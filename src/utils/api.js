@@ -38,6 +38,13 @@ const getSearchList = (params) => {
 const getFilters = () => {
     return request.get("/common/filter", null)
 }
+const getPublishList = (params) => {
+    const token = wx.getStorageSync("TOKEN")
+    return request.get("/user/my", {
+        ...params,
+        token
+    })
+}
 export {
     // 首页列表
     getIndexList,
@@ -46,5 +53,7 @@ export {
     //获取筛选条件
     getFilters,
     // 搜索
-    getSearchList
+    getSearchList,
+    // 获取发布列表
+    getPublishList
 }

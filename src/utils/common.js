@@ -16,6 +16,7 @@ const EXEC_REGULAR = {
 }
 
 const USER_INFO = "USER_INFO"
+const TOKEN = "5b8cd6e89265135acc3ac9f7f80663b3"
 const transformTitle = (title) => {
     let titles = ""
     switch(title) {
@@ -38,5 +39,6 @@ export {
     INDEX_PAGE_LIST_TYPE,
     EXEC_REGULAR,
     USER_INFO,
-    transformTitle
+    transformTitle,
+    TOKEN
 }

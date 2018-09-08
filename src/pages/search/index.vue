@@ -70,7 +70,7 @@
                 wx.navigateTo({
                     url: `/pages/detail/main?type=${listType}&id=${id}`
                 })
-            },
+            }
         }
     }
 </script>

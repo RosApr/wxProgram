@@ -9,7 +9,7 @@
 </template>
 <script>
     import WXP from 'minapp-api-promise'
-    import { USER_INFO } from "@/utils/common"
+    import { USER_INFO, TOKEN } from "@/utils/common"
     export default {
         data() {
             return {}
@@ -22,6 +22,7 @@
                     lang: "zh_CN"
                 })
                 wx.setStorageSync(USER_INFO, res.userInfo)
+                wx.setStorageSync("TOKEN", TOKEN)
                 wx.switchTab({
                     url: '/pages/index/main'
                 })
@@ -34,6 +35,7 @@
                 wx.switchTab({
                     url: '/pages/index/main'
                 })
+                wx.setStorageSync("TOKEN", TOKEN)
                 // 授权成功
                 let res = await WXP.login()
             }
