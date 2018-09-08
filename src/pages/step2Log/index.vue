@@ -105,9 +105,10 @@
     </div>
 </template>
 <script>
-import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle } from "@/utils/common"
-import { publishApi } from "@/utils/api"
+import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN } from "@/utils/common"
+import { publishApi, uploadImgUrl } from "@/utils/api"
 import regionArray from "@/utils/region"
+import WXP from 'minapp-api-promise'
 import { mapActions, mapState, mapMutations } from "vuex"
 const tipConfig = {
     title: "请输入标题！",
@@ -120,7 +121,7 @@ const tipConfig = {
     type: "请选择承载信息！",
     vehicletype: "请选择车辆信息！",
     destination: "请选择到达城市！",
-    rmation: "请选择出发城市！",
+    rmation: "请选择出发城市！"
 }
 export default {
     data() {
@@ -157,7 +158,10 @@ export default {
             showTip: false,
             tipConfig: tipConfig,
             tempImgs: [],
-            publishApi: publishApi
+            publishApi: publishApi,
+            uploadUrl: uploadImgUrl,
+            token: TOKEN
+
         }
     },
     mounted() {
@@ -222,15 +226,14 @@ export default {
                 sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
                 sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
                 success: function (res) {
-                // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-                that.tempImgs = that.tempImgs.concat(res.tempFilePaths)
-                console.log(that.tempImgs)
+                    // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+                    that.tempImgs = that.tempImgs.concat(res.tempFilePaths)
                 },
                 fail: function () {
-                console.log('fail');
+                    console.log('fail');
                 },
                 complete: function () {
-                console.log('commplete');
+                    console.log('commplete');
                 }
             })
         },
@@ -250,15 +253,44 @@ export default {
                     }, 2000)
                 }
             }
-            const data = {}
-            // make form data
-            for(let [key,value] of Object.entries(this.tipConfig)) {
-                data[key] = this[key]
+            if(this.tempImgs.length === 0) {
+                this.showTip = true
+                this.tip = "请上传至少一张图片！"
+                return setTimeout(() => {
+                    this.showTip = false
+                }, 2000)
             }
-            data["remark"] = this.remark
-            data["publishType"] = INDEX_PAGE_LIST_TYPE["logistics"]
-            // publish
-            this.publishApi(data)
+            const that = this
+            const queue = this.tempImgs.map(item => {
+                return WXP.uploadFile({
+                    url: that.uploadUrl,
+                    filePath: item,
+                    name: 'file',
+                    formData: {
+                        token: that.token
+                    }
+                    
+                })
+            })
+            Promise.all(queue).then(async res => {
+                const data = {}
+                // make form data
+                for(let [key,value] of Object.entries(this.tipConfig)) {
+                    data[key] = this[key]
+                }
+                data["remark"] = this.remark
+                data["images"] = res.map(item => {
+                    return JSON.parse(item["data"])["data"]["url"]
+                })
+                data["publishType"] = this.tipConfig["logistics"]
+                // publish
+                const publishRes = await this.publishApi(data)
+                if(publishRes.code == 1) {
+                    wx.switchTab({
+                        url: '/pages/publish/main'
+                    })
+                }
+            })
         }
     }
 }
@@ -328,7 +360,7 @@ export default {
                         position: relative;
                         box-sizing: border-box;
                         .img {
-                            background-size: 100%;
+                            background-size: contain;
                             background-position: center;
                             background-repeat: no-repeat;
                             width: 100%;

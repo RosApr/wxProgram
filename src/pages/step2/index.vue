@@ -107,9 +107,10 @@
     </div>
 </template>
 <script>
-import { INDEX_PAGE_LIST_TYPE } from "@/utils/common"
-import { setWxNavBarTitle } from "@/utils/common"
+import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN } from "@/utils/common"
+import { publishApi, uploadImgUrl } from "@/utils/api"
 import regionArray from "@/utils/region"
+import WXP from 'minapp-api-promise'
 import { mapActions, mapState, mapMutations } from "vuex"
 const tipConfig = {
     title: "请输入标题！",
@@ -162,7 +163,10 @@ export default {
             showTip: false,
             tipConfig: tipConfig,
             tempImgs: [],
-            type: ""
+            type: "",
+            publishApi: publishApi,
+            uploadUrl: uploadImgUrl,
+            token: TOKEN
         }
     },
     mounted() {
@@ -222,14 +226,13 @@ export default {
                 sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
                 success: function (res) {
                 // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-                that.tempImgs = that.tempImgs.concat(res.tempFilePaths)
-                console.log(that.tempImgs)
+                    that.tempImgs = that.tempImgs.concat(res.tempFilePaths)
                 },
                 fail: function () {
-                console.log('fail');
+                    console.log('fail');
                 },
                 complete: function () {
-                console.log('commplete');
+                    console.log('commplete');
                 }
             })
         },
@@ -249,14 +252,46 @@ export default {
                     }, 2000)
                 }
             }
-            const data = {}
-            // make form data
-            for(let [key,value] of Object.entries(this.tipConfig)) {
-                data[key] = this[key]
+            if(this.tempImgs.length === 0) {
+                this.showTip = true
+                this.tip = "请上传至少一张图片！"
+                return setTimeout(() => {
+                    this.showTip = false
+                }, 2000)
             }
-            data["type"] = this.type
-            console.log(data)
-            // publish
+            const that = this
+            const queue = this.tempImgs.map(item => {
+                return WXP.uploadFile({
+                    url: that.uploadUrl,
+                    filePath: item,
+                    name: 'file',
+                    formData: {
+                        token: that.token
+                    }
+                    
+                })
+            })
+            Promise.all(queue).then(async res => {
+                const data = {}
+                // make form data
+                for(let [key,value] of Object.entries(this.tipConfig)) {
+                    data[key] = this[key]
+                }
+                data["publishType"] = this.type
+                // publish
+                // make form data
+                data["images"] = res.map(item => {
+                    return JSON.parse(item["data"])["data"]["url"]
+                })
+                // publish
+                const publishRes = await this.publishApi(data)
+                if(publishRes.code == 1) {
+                    wx.switchTab({
+                        url: '/pages/publish/main'
+                    })
+                }
+            })
+            
         }
     }
 }
@@ -326,7 +361,7 @@ export default {
                         position: relative;
                         box-sizing: border-box;
                         .img {
-                            background-size: 100%;
+                            background-size: contain;
                             background-position: center;
                             background-repeat: no-repeat;
                             width: 100%;
