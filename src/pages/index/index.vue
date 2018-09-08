@@ -7,7 +7,7 @@
                 </picker>
             </div>
             <div class="grid input">
-                
+                <input placeholder-style='color:#fff;' type="text" placeholder="搜索" @click="goSearchPage">
             </div>
         </div>
         <div class="tab-container">
@@ -73,7 +73,6 @@
                         </div>
                     </div>
                 </template>
-                
             </div>
             <div class="no-data-tip" v-else>
                 暂无数据...
@@ -127,6 +126,11 @@
             ...mapActions([
                 "getIndexList"
             ]),
+            goSearchPage() {
+                wx.navigateTo({
+                    url: "/pages/search/main"
+                })
+            },
             getCurrentPosition() {
                 const currentCity = wx.getStorageSync(USER_INFO)["city"]
                 this.regionData[1].forEach((citysArray, citysIndex) => {
@@ -198,7 +202,19 @@
                 }
             }
             &.input {
-
+                flex: 1;
+                padding: 0 30rpx;
+                height: 100%;
+                input {
+                    font-size: 28rpx;
+                    color: #fff;
+                    padding-left: 30rpx;
+                    border: 1rpx solid #fff;
+                    border-radius: 100rpx;
+                    height: 60rpx;
+                    line-height: 60rpx;
+                    margin-top: 30rpx;
+                }
             }
         }
     }

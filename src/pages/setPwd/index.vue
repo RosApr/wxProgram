@@ -2,17 +2,17 @@
     <div class="setpwd-container">
         <div class="weui-cell">
             <div class="weui-cell__bd">
-                <input class="weui-input" type="password" v-model="pwd" placeholder="原密码">
+                <input class="weui-input" type="password" v-model.lazy="pwd" placeholder="原密码">
             </div>
         </div>
         <div class="weui-cell">
             <div class="weui-cell__bd">
-                <input class="weui-input" type="password" v-model="newPwd" placeholder="新密码">
+                <input class="weui-input" type="password" v-model.lazy="newPwd" placeholder="新密码">
             </div>
         </div>
         <div class="weui-cell">
             <div class="weui-cell__bd">
-                <input class="weui-input" type="password" v-model="newPwdCopy" placeholder="确认新密码">
+                <input class="weui-input" type="password" v-model.lazy="newPwdCopy" placeholder="确认新密码">
             </div>
         </div>
         <button class="weui-btn" type="primary">确认</button>

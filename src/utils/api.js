@@ -32,6 +32,9 @@ const getDetail = (params) => {
         id: params.id
     })
 }
+const getSearchList = (params) => {
+    return request.get("/common/search", params)
+}
 const getFilters = () => {
     return request.get("/common/filter", null)
 }
@@ -41,5 +44,7 @@ export {
     // 详情
     getDetail,
     //获取筛选条件
-    getFilters
+    getFilters,
+    // 搜索
+    getSearchList
 }

@@ -16,9 +16,27 @@ const EXEC_REGULAR = {
 }
 
 const USER_INFO = "USER_INFO"
+const transformTitle = (title) => {
+    let titles = ""
+    switch(title) {
+        case INDEX_PAGE_LIST_TYPE["sell"]:
+            titles = "厨具"
+            break
+        case INDEX_PAGE_LIST_TYPE["buy"]:
+            titles = "求购"
+            break
+        case INDEX_PAGE_LIST_TYPE["logistics"]:
+            titles = "物流"
+            break
+        default:
+            break
+    }
+    return titles
+}
 export {
     setWxNavBarTitle,
     INDEX_PAGE_LIST_TYPE,
     EXEC_REGULAR,
-    USER_INFO
+    USER_INFO,
+    transformTitle
 }

@@ -2,7 +2,7 @@
     <div class="setnickname-container">
         <div class="weui-cell">
             <div class="weui-cell__bd">
-                <input class="weui-input" type="text" v-model="nickname" placeholder="请输入法人姓名">
+                <input class="weui-input" type="text" v-model.lazy="nickname" placeholder="请输入法人姓名">
             </div>
         </div>
         <button class="weui-btn" type="primary">确认</button>

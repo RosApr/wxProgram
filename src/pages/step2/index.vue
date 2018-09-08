@@ -5,13 +5,13 @@
         <div class="item">
             <div class="grid label"><span class="badge">*</span>发布标题：</div>
             <div class="grid input">
-                <input class="height border" placeholder="请输入标题" type="text" v-model="title">
+                <input class="height border" placeholder="请输入标题" type="text" v-model.lazy="title">
             </div>
         </div>
         <div class="item">
             <div class="grid label"><span class="badge">*</span>价格：</div>
             <div class="grid input">
-                <input class="height border" placeholder="请输入价格" type="text" v-model="price">
+                <input class="height border" placeholder="请输入价格" type="text" v-model.lazy="price">
             </div>
         </div>
         <div class="item"> 
@@ -87,20 +87,20 @@
         <div class="item">
             <div class="grid label"><span class="badge">*</span>详细信息：</div>
             <div class="grid input">
-                <textarea class="border" v-model="details" rows="6"></textarea>
+                <textarea class="border" v-model.lazy="details" rows="6"></textarea>
             </div>
         </div>
         <div class="title">联系方式</div>
         <div class="item">
             <div class="grid label"><span class="badge">*</span>联系人：</div>
             <div class="grid input">
-                <input class="height border" placeholder="请输入联系人名称" type="text" v-model="linkman">
+                <input class="height border" placeholder="请输入联系人名称" type="text" v-model.lazy="linkman">
             </div>
         </div>
         <div class="item">
             <div class="grid label"><span class="badge">*</span>联系电话：</div>
             <div class="grid input">
-                <input class="height border" placeholder="请输入联系电话" type="text" v-model="phone">
+                <input class="height border" placeholder="请输入联系电话" type="text" v-model.lazy="phone">
             </div>
         </div>
         <button class="weui-btn" @click="publish" type="primary">确认</button>

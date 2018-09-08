@@ -2,13 +2,13 @@
     <div class="setphone-container">
         <div class="weui-cell">
             <div class="weui-cell__bd">
-                <input class="weui-input" type="text" v-model="phone" placeholder="请输入手机号">
+                <input class="weui-input" type="text" v-model.lazy="phone" placeholder="请输入手机号">
             </div>
         </div>
         <div class="weui-cell">
             <div class="weui-cell__bd verify-container">
                 <div :class="{'disable': isSendExecCode}" class="btn" @click="getVerifyCode">{{execBtnText}}</div>
-                <input class="weui-input" type="text" v-model="verify" placeholder="请输入验证码">
+                <input class="weui-input" type="text" v-model.lazy="verify" placeholder="请输入验证码">
             </div>
         </div>
         <button class="weui-btn" type="primary">确认</button>

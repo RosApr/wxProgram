@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/search/main",
     "pages/authorize/main",
     "pages/index/main",
     "pages/setImg/main",
