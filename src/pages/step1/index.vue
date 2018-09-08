@@ -18,11 +18,11 @@
         },
         mounted() {
             setWxNavBarTitle("第一步")
-            this.getFilters()
+            this.queryFilters()
         },
         methods: {
             ...mapActions([
-                "getFilters"
+                "queryFilters"
             ]),
             check(type) {
                 this.active = type

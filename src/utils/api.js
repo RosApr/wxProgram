@@ -40,10 +40,25 @@ const getFilters = () => {
 }
 const getPublishList = (params) => {
     const token = wx.getStorageSync("TOKEN")
-    return request.get("/user/my", {
+    if(!token) {
+        console.log("token丢失")
+        return false        
+    }
+    const data = {
         ...params,
         token
-    })
+    }
+    return request.get("/user/my", data)
+}
+const publishApi = (params) => {
+    const token = wx.getStorageSync("TOKEN")
+    if(!token) {
+        console.log("token丢失")
+        return false        
+    }
+    const { publishType, ...formData } = params
+    formData["token"] = token
+    request.post(`${publishType}/publish`, formData)
 }
 export {
     // 首页列表
@@ -55,5 +70,7 @@ export {
     // 搜索
     getSearchList,
     // 获取发布列表
-    getPublishList
+    getPublishList,
+    // 发布
+    publishApi
 }

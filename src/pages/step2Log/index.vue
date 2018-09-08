@@ -105,8 +105,8 @@
     </div>
 </template>
 <script>
-import { INDEX_PAGE_LIST_TYPE } from "@/utils/common"
-import { setWxNavBarTitle } from "@/utils/common"
+import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle } from "@/utils/common"
+import { publishApi } from "@/utils/api"
 import regionArray from "@/utils/region"
 import { mapActions, mapState, mapMutations } from "vuex"
 const tipConfig = {
@@ -156,7 +156,8 @@ export default {
             tip: "",
             showTip: false,
             tipConfig: tipConfig,
-            tempImgs: []
+            tempImgs: [],
+            publishApi: publishApi
         }
     },
     mounted() {
@@ -255,7 +256,9 @@ export default {
                 data[key] = this[key]
             }
             data["remark"] = this.remark
+            data["publishType"] = INDEX_PAGE_LIST_TYPE["logistics"]
             // publish
+            this.publishApi(data)
         }
     }
 }

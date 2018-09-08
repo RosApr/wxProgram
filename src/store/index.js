@@ -57,7 +57,7 @@ const store = new Vuex.Store({
     },
     savePublishData(state, payload) {
       state.publishConfig = {
-        ...state.publish,
+        ...state.publishConfig,
         ...payload
       }
     },
@@ -110,7 +110,7 @@ const store = new Vuex.Store({
         total: response.data.total
       })
     },
-    async getFilters({ state, commit }) {
+    async queryFilters({ state, commit }) {
       const { data } = await getFilters()
       data.transport = [...["不限"], ...data.transport]
       data.vehicletype = [...["不限"], ...data.vehicletype]
