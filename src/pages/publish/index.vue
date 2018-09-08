@@ -16,7 +16,7 @@
             </div>
             <div class="info">
               <p class="title">{{item.title}}</p>
-              <p class="date">有效期：{{item.startdate}}&nbsp;&nbsp;-&nbsp;&nbsp;{{item.enddate}}</p>
+              <p class="date">有效期：{{item.startdate}}&nbsp;-&nbsp;{{item.enddate}}</p>
               <p class="date">浏览次数：{{item.view}}</p>
             </div>
             <div @click="showDetail(item.id, item.type)">查看</div>

@@ -125,12 +125,13 @@
             return {
                 type: "",
                 typeConfig: INDEX_PAGE_LIST_TYPE,
-                is: ""
+                isOwnPublish: ""
             }
         },
         mounted() {
             setWxNavBarTitle("详情")
             const { query: { id, type, isOwnPublish }} = this.$root.$mp
+            console.log(isOwnPublish)
             // 从我的发布过来，不能举报
             this.isOwnPublish = isOwnPublish
             this.type = type
