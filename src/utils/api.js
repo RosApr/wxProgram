@@ -61,7 +61,16 @@ const publishApi = (params) => {
     return request.post(`${publishType}/publish`, formData)
 }
 const reportPublish = (params) => {
-    return request.post("/report/index", params)
+    const token = wx.getStorageSync("TOKEN")
+    if(!token) {
+        console.log("token丢失")
+        return false        
+    }
+    const data = {
+        ...params,
+        token
+    }
+    return request.post("/report/index", data)
 }
 const uploadImgUrl = "https://demo.xinbao369.com/ids/public/index.php/api/material/upload"
 export {

@@ -16,7 +16,7 @@ const EXEC_REGULAR = {
 }
 
 const USER_INFO = "USER_INFO"
-const TOKEN = "88094e7f40cce9e90703685b5f6812eb"
+const TOKEN = "e8255dae5870214f18a73c8bd89917d9"
 const transformTitle = (title) => {
     let titles = ""
     switch(title) {

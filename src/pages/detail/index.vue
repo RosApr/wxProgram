@@ -112,7 +112,25 @@
             </div>
         </div>
         <div class="btn-container" v-if="!isOwnPublish">
-            <button class="weui-btn" @click="report" type="primary">举报</button>
+            <button class="weui-btn" @click="showModel" type="primary">举报</button>
+        </div>
+        <div class="report-container" :class="{ 'active': showReportModel}">
+            <div class="content">
+                <radio-group @change="radioChange">
+                    <label class="weui-cell weui-check__label" v-for="(item, index) in radioItems" :key="index">
+                        <radio class="weui-check" :value="item.value" :checked="item.checked" />
+                        <div class="weui-cell__bd">{{item.name}}</div>
+                        <div class="weui-cell__ft weui-cell__ft_in-radio" v-if="item.checked">
+                        <icon class="weui-icon-radio" type="success_no_circle" size="16"></icon>
+                        </div>
+                    </label>
+                </radio-group>
+                <textarea v-model="reportInfo" cols="30" rows="10"></textarea>
+                <div class="item">
+                    <div class="grid"><div class="btn ok" @click="report">确定</div></div>
+                    <div class="grid"><div class="btn cancel" @click="cancel">取消</div></div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -124,17 +142,25 @@
         data() {
             return {
                 type: "",
+                id: "",
+                reportInfo: "",
                 typeConfig: INDEX_PAGE_LIST_TYPE,
-                isOwnPublish: ""
+                isOwnPublish: "",
+                radioItems: [
+                    { name: '此信息涉及欺骗', value: '此信息涉及欺骗', checked: true },
+                    { name: '信息不真实', value: '信息不真实' }
+                ],
+                showReportModel: false,
+                reportPublish: reportPublish
             }
         },
         mounted() {
             setWxNavBarTitle("详情")
             const { query: { id, type, isOwnPublish }} = this.$root.$mp
-            console.log(isOwnPublish)
             // 从我的发布过来，不能举报
             this.isOwnPublish = isOwnPublish
             this.type = type
+            this.id = id
             if(!id || !type) {
                 wx.navigateTo({
                     url: "/pages/index/main"
@@ -151,11 +177,31 @@
             ...mapActions([
                 "getDetail"
             ]),
-            // 举报
-            report() {
-                const { query: { id, type }} = this.$root.$mp
-                console.log(id)
-                console.log(type)
+            radioChange(e) {
+                let radioItems = this.radioItems;
+                for (let i = 0; i < radioItems.length; ++i) {
+                    radioItems[i].checked = radioItems[i].value === e.mp.detail.value;
+                }
+                this.radioItems = radioItems;
+            },
+            async report() {
+                // 举报
+                const data = {
+                    type: this.type,
+                    infoid: this.id,
+                    info: this.reportInfo == "" ? this.radioItems.filter(item => item["checked"])[0]["value"] : this.reportInfo
+                }
+                const res = await this.reportPublish(data)
+                if(res.code == 1) {
+                    this.cancel()
+                }
+            },
+            showModel() {
+                this.reportInfo = ""
+                this.showReportModel = true
+            },
+            cancel() {
+                this.showReportModel = false
             }
         }
     }
@@ -204,6 +250,66 @@
             .weui-form-preview__value {
                 text-align: left;
                 color: #8c8c8c;
+            }
+        }
+    }
+    .report-container {
+        &.active {
+            display: block;
+        }
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 999;
+        background-color: rgba(0,0,0,.7);
+        .content {
+            padding: 20rpx 30rpx 80rpx;
+            background: #fff;
+            border-radius: 10rpx;
+            width: 80%;
+            margin: 300rpx auto 0;
+            .weui-cell__bd {
+                color: #8c8c8c;
+                font-size: 28rpx;
+            }
+            textarea {
+                box-sizing: border-box;
+                margin-top: 30rpx;
+                padding: 8rpx 10rpx;
+                width: 100%;
+                color: #8c8c8c;
+                font-size: 28rpx;
+                border-radius: 8rpx;
+                border: 1rpx solid #a7a7a7;
+            }
+            .item {
+                display: flex;
+                justify-items: space-around;
+                align-content: center;
+                height: 40rpx;
+                line-height: 40rpx;
+                margin-top: 40rpx;
+                .grid {
+                    text-align: center;
+                    flex: 1;
+                    .btn {
+                        display: inline-block;
+                        font-size: 28rpx;
+                        padding: 14rpx 40rpx;
+                        border-radius: 10rpx;
+                        &.ok {
+                            background: #54cb60;
+                            color: #fff;
+                        }
+                        &.cancel {
+                            background: #a7a7a7;
+                            color: #fff;
+                        }
+                    }
+                }
             }
         }
     }
