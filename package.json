@@ -12,6 +12,7 @@
   "dependencies": {
     "extract-text-webpack-plugin": "^3.0.2",
     "flyio": "^0.6.0",
+    "minapp-api-promise": "^1.0.2",
     "moment": "^2.22.2",
     "mpvue": "^1.0.11",
     "qs": "^6.5.2",

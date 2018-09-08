@@ -1,10 +1,15 @@
 <template>
     <div class="index-container">
-        <!-- <div class="search-bar">
-            <picker mode="multiSelector" @change="bindRegionChange" :value="region">
-                <input type="text" placeholder="身份、城市、区县" v-model="address">
-            </picker>
-        </div> -->
+        <div class="search-bar">
+            <div class="grid label">
+                <picker mode="multiSelector" @change="regionChange" @columnchange="regionColumnChange" :value="regionIndex" :range="regionDataComputed">
+                    <div class="border height arrow">{{place}}</div>
+                </picker>
+            </div>
+            <div class="grid input">
+                
+            </div>
+        </div>
         <div class="tab-container">
             <div class="tab-header-container">
                 <div class="grid"
@@ -78,15 +83,22 @@
 </template>
 <script>
     import wx from "@/utils/wx"
+    import regionArray from "@/utils/region"
     import { INDEX_PAGE_LIST_TYPE } from "@/utils/common"
     import { mapState, mapActions } from "vuex"
+    import { USER_INFO } from "@/utils/common"
     export default {
         data() {
             return {
                 region: [],
                 address: "",
                 tabConfig: INDEX_PAGE_LIST_TYPE,
-                activeTab: INDEX_PAGE_LIST_TYPE["sell"]
+                activeTab: INDEX_PAGE_LIST_TYPE["sell"],
+                // 定位
+                regionData: regionArray,
+                regionIndex: [0,0],
+                regionSecond: 0,
+                place: regionArray[1][0][0]
             }
         },
         mounted() {
@@ -94,11 +106,16 @@
             this.getIndexList({
                 listType: this.activeTab
             })
+            this.getCurrentPosition()
         },
         computed: {
             ...mapState([
                 "indexConfig",
-            ])
+            ]),
+            regionDataComputed() {
+                const secondColumn = this.regionData[1][this.regionSecond]
+                return [this.regionData[0], secondColumn]
+            }
         },
         onReachBottom() {
             // 加载更多
@@ -110,6 +127,28 @@
             ...mapActions([
                 "getIndexList"
             ]),
+            getCurrentPosition() {
+                const currentCity = wx.getStorageSync(USER_INFO)["city"]
+                this.regionData[1].forEach((citysArray, citysIndex) => {
+                   citysArray.forEach((city, cityIndex) => {
+                       if(city.indexOf(currentCity) >= 0) {
+                           this.regionSecond = citysIndex
+                           this.regionIndex = [citysIndex, cityIndex]
+                           this.place = this.regionData[1][citysIndex][cityIndex]
+                       }
+                   })
+                })
+            },
+            regionChange(e) {
+                const values = e.mp.detail.value
+                this.place = this.regionData[1][values[0]][values[1]]
+            },
+            regionColumnChange(e) {
+                if(e.mp.detail.column === 0) {
+                    this.regionSecond = e.mp.detail.value
+                    this.regionIndex = [e.mp.detail.value, 0]
+                }
+            },
             showDetail(id, listType) {
                 wx.navigateTo({
                     url: `/pages/detail/main?type=${listType}&id=${id}`
@@ -130,6 +169,39 @@
     }
 </script>
 <style lang="less" scoped>
+    .search-bar {
+        display: flex;
+        justify-items: space-around;
+        align-items: center;
+        flex-flow: row nowrap;
+        background-color: #54cb60;
+        height: 120rpx;
+        line-height: 120rpx;
+        .grid {
+            position: relative;
+            &.label {
+                padding-right: 30rpx;
+                color: #fff;
+                font-size: 32rpx;
+                padding-left: 30rpx;
+                &:after {
+                    display: block;
+                    height: 120rpx;
+                    line-height: 120rpx;
+                    content: "<";
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    transform: rotateZ(-90deg);
+                    font-size: 28rpx;
+                    color: #fff;
+                }
+            }
+            &.input {
+
+            }
+        }
+    }
     .index-container {
         .tab-container {
             width: 100%;
