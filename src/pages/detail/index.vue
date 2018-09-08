@@ -111,14 +111,14 @@
                 </div>
             </div>
         </div>
-        <div class="btn-container" v-if="!is">
+        <div class="btn-container" v-if="!isOwnPublish">
             <button class="weui-btn" @click="report" type="primary">举报</button>
         </div>
     </div>
 </template>
 <script>
-    import { INDEX_PAGE_LIST_TYPE } from "@/utils/common"
-    import { setWxNavBarTitle } from "@/utils/common"
+    import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle } from "@/utils/common"
+    import { reportPublish } from "@/utils/api"
     import { mapActions, mapState } from "vuex"
     export default {
         data() {
@@ -130,9 +130,9 @@
         },
         mounted() {
             setWxNavBarTitle("详情")
-            const { query: { id, type, is }} = this.$root.$mp
+            const { query: { id, type, isOwnPublish }} = this.$root.$mp
             // 从我的发布过来，不能举报
-            this.is = is
+            this.isOwnPublish = isOwnPublish
             this.type = type
             if(!id || !type) {
                 wx.navigateTo({

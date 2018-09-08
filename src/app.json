@@ -1,9 +1,9 @@
 {
   "pages": [
+    "pages/index/main",
     "pages/authorize/main",
     "pages/publish/main",
     "pages/search/main",
-    "pages/index/main",
     "pages/setImg/main",
     "pages/setPwd/main",
     "pages/register/main",

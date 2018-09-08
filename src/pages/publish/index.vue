@@ -109,7 +109,7 @@ export default {
     },
     showDetail(id, listType) {
       wx.navigateTo({
-          url: `/pages/detail/main?type=${listType}&id=${id}&is=my`
+          url: `/pages/detail/main?type=${listType}&id=${id}&isOwnPublish=my`
       })
     },
     deleteGoods(e) {

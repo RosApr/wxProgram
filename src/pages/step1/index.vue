@@ -6,8 +6,7 @@
     </div>
 </template>
 <script>
-    import { INDEX_PAGE_LIST_TYPE } from "@/utils/common"
-    import { setWxNavBarTitle } from "@/utils/common"
+    import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle } from "@/utils/common"
     import { mapActions } from "vuex"
     export default {
         data() {

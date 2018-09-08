@@ -105,7 +105,7 @@
     </div>
 </template>
 <script>
-import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN } from "@/utils/common"
+import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN, EXEC_REGULAR } from "@/utils/common"
 import { publishApi, uploadImgUrl } from "@/utils/api"
 import regionArray from "@/utils/region"
 import WXP from 'minapp-api-promise'
@@ -252,6 +252,13 @@ export default {
                         this.showTip = false
                     }, 2000)
                 }
+            }
+            if(!EXEC_REGULAR.phone.test(this.phone)) {
+                this.tip = "手机号格式不正确!"
+                this.showTip = true
+                return setTimeout(() => {
+                    this.showTip = false
+                }, 2000)
             }
             if(this.tempImgs.length === 0) {
                 this.showTip = true

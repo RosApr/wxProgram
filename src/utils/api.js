@@ -60,6 +60,9 @@ const publishApi = (params) => {
     formData["token"] = token
     return request.post(`${publishType}/publish`, formData)
 }
+const reportPublish = (params) => {
+    return request.post("/report/index", params)
+}
 const uploadImgUrl = "https://demo.xinbao369.com/ids/public/index.php/api/material/upload"
 export {
     // 首页列表
@@ -75,5 +78,7 @@ export {
     // 发布
     publishApi,
     // 上传图片地址
-    uploadImgUrl
+    uploadImgUrl,
+    // 举报
+    reportPublish
 }
