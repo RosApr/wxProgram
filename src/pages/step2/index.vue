@@ -166,14 +166,15 @@ export default {
             type: "",
             publishApi: publishApi,
             uploadUrl: uploadImgUrl,
-            token: TOKEN
+            token: TOKEN,
+            publishType: ""
         }
     },
     mounted() {
         this.filters = Object.assign(this.$store.state.filters)
         setWxNavBarTitle("发布")
         const { query: { type }} = this.$root.$mp
-        this.type = type
+        this.publishType = type
         //配置时间选择插件起始时间
         this.startdateConfig = this.$moment().format("YYYY-MM-DD")
         this.enddateConfig = this.$moment().format("YYYY-MM-DD")
@@ -284,7 +285,7 @@ export default {
                 for(let [key,value] of Object.entries(this.tipConfig)) {
                     data[key] = this[key]
                 }
-                data["publishType"] = this.type
+                data["publishType"] = this.publishType
                 // publish
                 // make form data
                 data["images"] = res.map(item => {

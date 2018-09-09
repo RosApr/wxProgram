@@ -1,8 +1,7 @@
 {
   "pages": [
-    "pages/login/main",
-
     "pages/authorize/main",
+    "pages/login/main",
     "pages/register/main",
     "pages/getPwd/main",
     "pages/index/main",

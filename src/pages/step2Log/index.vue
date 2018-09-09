@@ -160,7 +160,8 @@ export default {
             tempImgs: [],
             publishApi: publishApi,
             uploadUrl: uploadImgUrl,
-            token: TOKEN
+            token: TOKEN,
+            publishType: ""
 
         }
     },
@@ -168,7 +169,7 @@ export default {
         this.filters = Object.assign(this.$store.state.filters)
         setWxNavBarTitle("发布")
         const { query: { type }} = this.$root.$mp
-
+        this.publishType = type
         //配置时间选择插件起始时间
         this.startdateConfig = this.$moment().format("YYYY-MM-DD")
         this.enddateConfig = this.$moment().format("YYYY-MM-DD")
@@ -289,7 +290,7 @@ export default {
                 data["images"] = res.map(item => {
                     return JSON.parse(item["data"])["data"]["url"]
                 })
-                data["publishType"] = this.tipConfig["logistics"]
+                data["publishType"] = this.publishType
                 // publish
                 const publishRes = await this.publishApi(data)
                 if(publishRes.code == 1) {

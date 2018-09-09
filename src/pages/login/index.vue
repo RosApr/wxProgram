@@ -131,7 +131,7 @@
             margin: 0 auto;
             flex: 1;
             &.btn-container {
-                margin-top: 120rpx;
+                margin-top: 50rpx;
             }
         }
         .weui-flex__item {
