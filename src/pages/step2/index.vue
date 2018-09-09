@@ -172,6 +172,22 @@ export default {
             publishType: ""
         }
     },
+    onShow() {
+        this.title = ""
+        this.price = ""
+        this.linkman = ""
+        this.startdate = this.$moment().format("YYYY-MM-DD")
+        this.enddate = this.$moment().format("YYYY-MM-DD")
+        this.details = ""
+        this.phone = ""
+        this.stock = ""
+        this.model = ""
+        this.category = ""
+        this.factory = ""
+        this.stock = ""
+        this.place = ""
+        this.tempImgs = []
+    },
     mounted() {
         this.filters = Object.assign(this.$store.state.filters)
         setWxNavBarTitle("发布")

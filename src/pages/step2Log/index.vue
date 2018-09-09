@@ -167,6 +167,20 @@ export default {
 
         }
     },
+    onShow() {
+        this.title = ""
+        this.price = ""
+        this.linkman = ""
+        this.startdate = this.$moment().format("YYYY-MM-DD")
+        this.enddate = this.$moment().format("YYYY-MM-DD")
+        this.details = ""
+        this.phone = ""
+        this.type = ""
+        this.vehicletype = ""
+        this.destination = ""
+        this.rmation = ""
+        this.tempImgs = []
+    },
     mounted() {
         this.filters = Object.assign(this.$store.state.filters)
         setWxNavBarTitle("发布")
