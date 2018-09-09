@@ -36,7 +36,7 @@
   </div>
 </template>
 <script>
-import { setWxNavBarTitle } from "@/utils/common"
+import { setWxNavBarTitle, TOKEN } from "@/utils/common"
 import { mapActions, mapState } from "vuex"
 export default {
   data() {
@@ -57,9 +57,17 @@ export default {
         flag: false
       }
   },
+  onShow() {
+    if(!wx.getStorageSync(TOKEN)) {
+      return wx.navigateTo({
+        url: "/pages/login/main"
+      })
+    }
+  },
   mounted() {
-      setWxNavBarTitle("发布中心")
-      this.queryPublishList()
+    setWxNavBarTitle("发布中心")
+    this.queryPublishList()
+    this.queryFilters()
   },
   computed: {
     ...mapState([
@@ -71,7 +79,8 @@ export default {
   },
   methods: {
     ...mapActions([
-      "queryPublishList"
+      "queryPublishList",
+      "queryFilters"
     ]),
     delAddress(id) {
       console.log(id)

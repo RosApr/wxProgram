@@ -46,38 +46,45 @@ const getFilters = () => {
     return request.get("/common/filter", null)
 }
 const getPublishList = (params) => {
-    const token = wx.getStorageSync("TOKEN")
-    if(!token) {
-        console.log("token丢失")
-        return false        
-    }
-    const data = {
-        ...params,
-        token
-    }
-    return request.get("/user/my", data)
+    return request.get("/user/my", params)
 }
 const publishApi = (params) => {
-    const token = wx.getStorageSync("TOKEN")
-    if(!token) {
-        console.log("token丢失")
-        return false        
-    }
     const { publishType, ...formData } = params
-    formData["token"] = token
-    return request.post(`${publishType}/publish`, formData)
+    return request.post(`/${publishType}/publish`, formData)
 }
 const reportPublish = (params) => {
-    const token = wx.getStorageSync("TOKEN")
-    if(!token) {
-        console.log("token丢失")
-        return false        
-    }
-    const data = {
-        ...params,
-        token
-    }
-    return request.post("/report/index", data)
+    return request.post("/report/index", params)
+}
+const modifyUserProfile = (params) => {
+    return request.post("/user/edit", params)
+}
+const getUserLoginInfo = (params) => {
+    const isLogin = Math.round(Math.random())
+    const userInfo = { openId: "test" }
+    // let data = !!isLogin ? {
+    let data = true ? {
+        ...userInfo,
+        token: "9b28563b51735082b174d2f0850e4227",
+        "id": 12,
+        "nickname": "test",
+        "phone": "18089210182",
+        "realname": "12345678",
+        "images": ["https:\/\/demo.xinbao369.com\/ids\/public\/\/upload\/20180909\/a8d2a55a3057809a3bf416dd4c4d3e4b.png"],
+        "account": null,
+        "headimg": null,
+        "createtime": "2018-09-09 14:11:42",
+        "checked": 0,
+        "status": 1,
+        "enable": 0
+    } : userInfo
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve({
+                code: 1,
+                data
+            })
+        }, 1000)
+    })
 }
 const uploadImgUrl = "https://demo.xinbao369.com/ids/public/index.php/api/material/upload"
 export {
@@ -106,5 +113,9 @@ export {
     // 重置密码
     resetPwd,
     // 注册
-    register
+    register,
+    // 获取登录信息
+    getUserLoginInfo,
+    // 修改用户信息
+    modifyUserProfile
 }

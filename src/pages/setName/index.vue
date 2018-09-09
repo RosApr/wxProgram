@@ -1,5 +1,6 @@
 <template>
     <div class="setnickname-container">
+        <exec-tip :showTip="showTip" :tip="tip" />
         <div class="weui-cell">
             <div class="weui-cell__bd">
                 <input class="weui-input" type="text" v-model.lazy="nickname" placeholder="请输入法人姓名">
@@ -9,15 +10,21 @@
     </div>
 </template>
 <script>
+    import execTip from "@/components/execTip"
     import { setWxNavBarTitle } from "@/utils/common"
     export default {
         data() {
             return {
-                name: "test"
+                name: "test",
+                showTip: false,
+                tip: ""
             }
         },
         mounted() {
             setWxNavBarTitle("修改")
+        },
+        components: {
+            execTip
         }
     }
 </script>

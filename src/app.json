@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/authorize/main",
+    "pages/me/main",
     "pages/login/main",
     "pages/register/main",
     "pages/getPwd/main",
@@ -11,7 +12,6 @@
     "pages/setPwd/main",
     "pages/step1/main",
     "pages/step2Log/main",
-    "pages/me/main",
     "pages/setNickname/main",
     "pages/setName/main",
     "pages/setPhone/main",

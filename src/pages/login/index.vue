@@ -1,6 +1,6 @@
 <template>
     <div class="login-container">
-        <div class="tip" :class="{'active': showTip}">{{tip}}</div>
+        <exec-tip :showTip="showTip" :tip="tip" />
         <div class="weui-flex">
             <div class="weui-flex__item label">
                 <span class="label">手机：</span>
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+    import execTip from "@/components/execTip"
     import { login } from "@/utils/api"
     import { setWxNavBarTitle, EXEC_REGULAR, openAjaxModel, TOKEN, USER_INFO } from "@/utils/common"
     const tipConfig = {
@@ -96,6 +97,9 @@
                     url: "/pages/index/main"
                 })
             }
+        },
+        components: {
+            execTip
         }
     }
 </script>

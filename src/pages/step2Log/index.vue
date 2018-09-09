@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div class="tip" :class="{'active': showTip}">{{tip}}</div>
+        <exec-tip :showTip="showTip" :tip="tip" />
         <div class="title">基础信息</div>
         <div class="item">
             <div class="grid label"><span class="badge">*</span>发布标题：</div>
@@ -110,6 +110,7 @@ import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN, EXEC_REGULAR } from "@/u
 import { publishApi, uploadImgUrl } from "@/utils/api"
 import regionArray from "@/utils/region"
 import WXP from 'minapp-api-promise'
+import execTip from "@/components/execTip"
 import { mapActions, mapState, mapMutations } from "vuex"
 const tipConfig = {
     title: "请输入标题！",
@@ -301,6 +302,9 @@ export default {
                 }
             })
         }
+    },
+    components: {
+        execTip
     }
 }
 </script>

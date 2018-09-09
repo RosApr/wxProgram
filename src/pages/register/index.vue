@@ -1,6 +1,6 @@
 <template>
     <div class="register-container">
-        <div class="tip" :class="{'active': showTip}">{{tip}}</div>
+        <exec-tip :showTip="showTip" :tip="tip" />
         <div class="item">
             <div class="grid label">
                 昵称：
@@ -48,6 +48,7 @@
 <script>
     import { setWxNavBarTitle, EXEC_REGULAR } from "@/utils/common"
     import { register, getPhoneVerifyCode } from "@/utils/api"
+    import execTip from "@/components/execTip"
     const tipConfig = {
         nickname: "请输入昵称!",
         phone: "请输入手机号!",
@@ -146,6 +147,9 @@
                     type: this.type
                 })
             }
+        },
+        components: {
+            execTip
         }
     }
 </script>

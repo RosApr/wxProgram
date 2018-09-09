@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div class="tip" :class="{'active': showTip}">{{tip}}</div>
+        <exec-tip :showTip="showTip" :tip="tip" />
         <div class="title">基础信息</div>
         <div class="item">
             <div class="grid label"><span class="badge">*</span>发布标题：</div>
@@ -108,6 +108,7 @@
     </div>
 </template>
 <script>
+import execTip from "@/components/execTip"
 import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN, EXEC_REGULAR } from "@/utils/common"
 import { publishApi, uploadImgUrl } from "@/utils/api"
 import regionArray from "@/utils/region"
@@ -302,6 +303,9 @@ export default {
             })
             
         }
+    },
+    components: {
+        execTip
     }
 }
 </script>

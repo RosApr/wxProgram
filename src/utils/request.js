@@ -2,10 +2,13 @@ import wx from './wx'
 import Fly from 'flyio'
 import WXP from 'minapp-api-promise'
 const baseUrl = "https://demo.xinbao369.com/ids/public/index.php/api/"
+import { TOKEN } from "@/utils/common"
 const request = new Fly()
 request.config.baseURL = baseUrl
 request.interceptors.request.use((request) => {
-  // request.body["token"] = token
+  if(wx.getStorageSync(TOKEN) && request.body) {
+    request.body["token"] = wx.getStorageSync(TOKEN) || ""
+  }
   if(request.method == "POST") {
     request.headers["content-type"] = "application/x-www-form-urlencoded"
   }

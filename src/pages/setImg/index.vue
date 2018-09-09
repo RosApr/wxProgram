@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div class="tip" :class="{'active': showTip}">{{tip}}</div>
+        <exec-tip :showTip="showTip" :tip="tip" />
         <div class="item">
             <div class="grid label"><span class="badge">*</span>上传图片：</div>
             <div class="grid input">
@@ -19,6 +19,7 @@
     </div>
 </template>
 <script>
+import execTip from "@/components/execTip"
 import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle } from "@/utils/common"
 import { mapActions, mapState, mapMutations } from "vuex"
 export default {
@@ -57,6 +58,9 @@ export default {
         publish() {
             // publish
         }
+    },
+    components: {
+        execTip
     }
 }
 </script>

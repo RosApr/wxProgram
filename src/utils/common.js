@@ -27,9 +27,6 @@ const EXEC_REGULAR = {
     code: /^[0-9a-zA-Z]*$/,
     pwd: /^[0-9a-zA-Z]{6,8}$/
 }
-
-const USER_INFO = "USER_INFO"
-const TOKEN = "ceeace89b6b18f0be55b3bf1da7c265a"
 const transformTitle = (title) => {
     let titles = ""
     switch(title) {
@@ -47,12 +44,18 @@ const transformTitle = (title) => {
     }
     return titles
 }
+const USER_INFO = "userInfo"
+const TOKEN = "token"
+const USER_PROFILE = "userProfile"
+const OPEN_ID = "openId"
 export {
     setWxNavBarTitle,
     INDEX_PAGE_LIST_TYPE,
     EXEC_REGULAR,
-    USER_INFO,
     transformTitle,
+    openAjaxModel,
+    USER_INFO,
     TOKEN,
-    openAjaxModel
+    USER_PROFILE,
+    OPEN_ID
 }

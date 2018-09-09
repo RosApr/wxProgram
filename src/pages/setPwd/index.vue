@@ -1,5 +1,6 @@
 <template>
     <div class="setpwd-container">
+        <exec-tip :showTip="showTip" :tip="tip" />
         <div class="weui-cell">
             <div class="weui-cell__bd">
                 <input class="weui-input" type="password" v-model.lazy="pwd" placeholder="原密码">
@@ -19,17 +20,23 @@
     </div>
 </template>
 <script>
+    import execTip from "@/components/execTip"
     import { setWxNavBarTitle } from "@/utils/common"
     export default {
         data() {
             return {
                 nickname: "test",
                 newPwd: "",
-                newPwdCopy: ""
+                newPwdCopy: "",
+                showTip: false,
+                tip: ""
             }
         },
         mounted() {
             setWxNavBarTitle("修改密码")
+        },
+        components: {
+            execTip
         }
     }
 </script>

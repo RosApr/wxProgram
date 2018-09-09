@@ -9,35 +9,50 @@
 </template>
 <script>
     import WXP from 'minapp-api-promise'
-    import { USER_INFO, TOKEN } from "@/utils/common"
+    import {
+        USER_INFO,
+        TOKEN,
+        USER_PROFILE,
+        OPEN_ID
+    } from "@/utils/common"
+    import { getUserLoginInfo } from "@/utils/api"
     export default {
         data() {
-            return {}
+            return {
+                getUserLoginInfoApi: getUserLoginInfo
+            }
         },
         async mounted() {
             let res = await WXP.getSetting()
             if (res.authSetting['scope.userInfo']) {
             // 已经授权，可以直接调用 getUserInfo 获取头像昵称
-                const res = await WXP.getUserInfo({
+                const userInfoRes = await WXP.getUserInfo({
                     lang: "zh_CN"
                 })
-                wx.setStorageSync(USER_INFO, res.userInfo)
-                wx.setStorageSync("TOKEN", TOKEN)
-                wx.switchTab({
-                    url: '/pages/index/main'
-                })
+                wx.setStorageSync(USER_INFO, userInfoRes.userInfo)
+                this.queryUserProfile()
+                
             }
         },
         methods: {
             async onGotUserInfo(e) {
                 if(e.mp.detail.errMsg != "getUserInfo:ok") return
                 wx.setStorageSync(USER_INFO, e.mp.detail.userInfo)
-                wx.switchTab({
-                    url: '/pages/index/main'
-                })
-                wx.setStorageSync("TOKEN", TOKEN)
-                // 授权成功
-                let res = await WXP.login()
+                this.queryUserProfile()
+            },
+            async queryUserProfile() {
+                wx.clearStorageSync()
+                let wxLoginRes = await WXP.login()
+                if(wxLoginRes.errMsg == "login:ok") {
+                    const userProfileRes = await this.getUserLoginInfoApi({code: wxLoginRes.code})
+                    const { openId, token, ...userInfo } = userProfileRes.data
+                    wx.setStorageSync(TOKEN, token)
+                    wx.setStorageSync(OPEN_ID, openId)
+                    wx.setStorageSync(USER_PROFILE, userInfo)
+                    wx.switchTab({
+                        url: '/pages/index/main'
+                    })
+                }
             }
         }
     }

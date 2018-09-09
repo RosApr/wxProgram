@@ -17,12 +17,8 @@
         },
         mounted() {
             setWxNavBarTitle("第一步")
-            this.queryFilters()
         },
         methods: {
-            ...mapActions([
-                "queryFilters"
-            ]),
             check(type) {
                 this.active = type
                 setTimeout(() => {

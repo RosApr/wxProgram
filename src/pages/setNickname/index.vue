@@ -1,23 +1,45 @@
 <template>
     <div class="setnickname-container">
+        <exec-tip :showTip="showTip" :tip="tip" />
         <div class="weui-cell">
             <div class="weui-cell__bd">
                 <input class="weui-input" type="text" v-model.lazy="nickname" placeholder="请输入昵称">
             </div>
         </div>
-        <button class="weui-btn" type="primary">确认</button>
+        <button class="weui-btn" type="primary" @click="modify">确认</button>
     </div>
 </template>
 <script>
-    import { setWxNavBarTitle } from "@/utils/common"
+    import { setWxNavBarTitle, USER_PROFILE } from "@/utils/common"
+    import { modifyUserProfile } from "@/utils/api"
+    import execTip from "@/components/execTip"
     export default {
         data() {
             return {
-                nickname: "test"
+                nickname: "",
+                userProfile: {},
+                tip: "",
+                showTip: false
             }
         },
         mounted() {
-            setWxNavBarTitle("修改")
+            setWxNavBarTitle("修改名称")
+            this.userProfile = wx.getStorageSync(USER_PROFILE)
+            this.nickname = this.userProfile.nickname
+        },
+        methods: {
+            modify() {
+                if(this.nickname == "") {
+                    this.showTip = true
+                    this.tip = "昵称不能为空！"                        
+                    return setTimeout(() => {
+                        this.showTip = false
+                    }, 2000)
+                }
+            }
+        },
+        components: {
+            execTip
         }
     }
 </script>

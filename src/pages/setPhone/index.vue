@@ -1,5 +1,6 @@
 <template>
     <div class="setphone-container">
+        <exec-tip :showTip="showTip" :tip="tip" />
         <div class="weui-cell">
             <div class="weui-cell__bd">
                 <input class="weui-input" type="text" v-model.lazy="phone" placeholder="请输入手机号">
@@ -15,6 +16,7 @@
     </div>
 </template>
 <script>
+    import execTip from "@/components/execTip"
     import { setWxNavBarTitle } from "@/utils/common"
     export default {
         data() {
@@ -22,7 +24,9 @@
                 isSendExecCode: false,
                 phone: "test",
                 verify: "",
-                execBtnText: "发送验证码"
+                execBtnText: "发送验证码",
+                showTip: false,
+                tip: ""
             }
         },
         mounted() {
@@ -46,6 +50,9 @@
                     }
                 }, 1000)
             }
+        },
+        components: {
+            execTip
         }
     }
 </script>
