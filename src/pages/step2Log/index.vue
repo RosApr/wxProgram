@@ -291,7 +291,7 @@ export default {
                     filePath: item,
                     name: 'file',
                     formData: {
-                        token: that.token
+                        token: wx.getStorageSync(TOKEN)
                     }
                     
                 })

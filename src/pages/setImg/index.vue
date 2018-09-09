@@ -9,7 +9,8 @@
                     :key="index"
                     @click="delImg(index)"
                     >
-                    <div class="img" :style="{backgroundImage: 'url(' + item + ')'}"></div>
+                    <!-- <div class="img" :style="{backgroundImage: 'url(' + item + ')'}"></div> -->
+                    <img :src="item" alt="">
                     <div class="del">X</div>
                 </div>
                 <div class="upload-img-btn" @click="uploadImg">+</div>
@@ -19,8 +20,10 @@
     </div>
 </template>
 <script>
+import WXP from 'minapp-api-promise'
 import execTip from "@/components/execTip"
-import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle } from "@/utils/common"
+import { uploadImgUrl } from "@/utils/api"
+import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN } from "@/utils/common"
 import { mapActions, mapState, mapMutations } from "vuex"
 export default {
     data() {
@@ -28,6 +31,7 @@ export default {
             tip: "",
             showTip: false,
             tempImgs: [],
+            uploadUrl: uploadImgUrl
         }
     },
     mounted() {
@@ -42,13 +46,13 @@ export default {
                 success: function (res) {
                 // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
                 that.tempImgs = that.tempImgs.concat(res.tempFilePaths)
-                console.log(that.tempImgs)
+                    console.log(that.tempImgs)
                 },
                 fail: function () {
-                console.log('fail');
+                    console.log('fail');
                 },
                 complete: function () {
-                console.log('commplete');
+                    console.log('commplete');
                 }
             })
         },
@@ -57,6 +61,38 @@ export default {
         },
         publish() {
             // publish
+            const that = this
+            const queue = this.tempImgs.map(item => {
+                return WXP.uploadFile({
+                    url: that.uploadUrl,
+                    filePath: item,
+                    name: 'file',
+                    formData: {
+                        token: wx.getStorageSync(TOKEN)
+                    }
+                    
+                })
+            })
+            Promise.all(queue).then(async res => {
+                const data = {}
+                // make form data
+                for(let [key,value] of Object.entries(this.tipConfig)) {
+                    data[key] = this[key]
+                }
+                data["publishType"] = this.publishType
+                // publish
+                // make form data
+                data["images"] = res.map(item => {
+                    return JSON.parse(item["data"])["data"]["url"]
+                })
+                // publish
+                const publishRes = await this.publishApi(data)
+                if(publishRes.code == 1) {
+                    wx.switchTab({
+                        url: '/pages/publish/main'
+                    })
+                }
+            })
         }
     },
     components: {
@@ -117,16 +153,13 @@ export default {
                         padding: 20rpx;
                         border: 1rpx solid #dadada;
                         width: 100%;
-                        height: 300rpx;
                         margin-bottom: 40rpx;
                         position: relative;
                         box-sizing: border-box;
-                        .img {
-                            background-size: 100%;
-                            background-position: center;
-                            background-repeat: no-repeat;
+                        img {
                             width: 100%;
-                            height: 100%;
+                            display: block;
+                            margin: 0 auto;
                         }
                         .del {
                             position: absolute;
