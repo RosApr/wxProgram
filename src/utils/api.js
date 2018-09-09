@@ -16,6 +16,9 @@ const execVerifyCode = (params) => {
 const resetPwd = (params) => {
     return request.post("/user/reset", params)
 }
+const register = (params) => {
+    return request.post("/user/register", params)
+}
 const getDetail = (params) => {
     let path = ""
     switch(params.type) {
@@ -101,5 +104,7 @@ export {
     // 校验验证码
     execVerifyCode,
     // 重置密码
-    resetPwd
+    resetPwd,
+    // 注册
+    register
 }

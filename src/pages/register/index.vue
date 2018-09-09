@@ -47,6 +47,7 @@
 </template>
 <script>
     import { setWxNavBarTitle, EXEC_REGULAR } from "@/utils/common"
+    import { register, getPhoneVerifyCode } from "@/utils/api"
     const tipConfig = {
         nickname: "请输入昵称!",
         phone: "请输入手机号!",
@@ -68,6 +69,8 @@
                 tip: "",
                 showTip: false,
                 tipConfig: tipConfig,
+                registerApi: register,
+                getPhoneVerifyCodeApi: getPhoneVerifyCode
             }
         },
         mounted() {
@@ -76,7 +79,7 @@
             this.isSendExecCode = false
         },
         methods: {
-            register() {
+            async register() {
                 if(this.showTip) {
                     return false;
                 }
@@ -103,11 +106,15 @@
                         this.showTip = false
                     }, 2000)
                 }
-                const data = {}
+                const registerData = {}
                 // make form data
                 for(let [key,value] of Object.entries(this.tipConfig)) {
-                    data[key] = this[key]
+                    registerData[key] = this[key]
                 }
+                await this.registerApi(registerData)
+                wx.switchTab({
+                    url: "/pages/index/main"
+                })
                 console.log(data)
             },
             getVerifyCode() {
@@ -134,6 +141,10 @@
                     }
                 }, 1000)
                 // 发送验证码
+                this.getPhoneVerifyCodeApi({
+                    phone: this.phone,
+                    type: this.type
+                })
             }
         }
     }
