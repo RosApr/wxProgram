@@ -78,7 +78,8 @@
                     :key="index"
                     @click="delImg(index)"
                     >
-                    <div class="img" :style="{backgroundImage: 'url(' + item + ')'}"></div>
+                    <!-- <div class="img" :style="{backgroundImage: 'url(' + item + ')'}"></div> -->
+                    <img :src="item" alt="">
                     <div class="del">X</div>
                 </div>
                 <div class="upload-img-btn" @click="uploadImg">+</div>
@@ -364,16 +365,13 @@ export default {
                         padding: 20rpx;
                         border: 1rpx solid #dadada;
                         width: 100%;
-                        height: 300rpx;
                         margin-bottom: 40rpx;
                         position: relative;
                         box-sizing: border-box;
-                        .img {
-                            background-size: contain;
-                            background-position: center;
-                            background-repeat: no-repeat;
+                        img {
                             width: 100%;
-                            height: 100%;
+                            display: block;
+                            margin: 0 auto;
                         }
                         .del {
                             position: absolute;
