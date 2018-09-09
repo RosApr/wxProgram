@@ -138,6 +138,7 @@
     import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle } from "@/utils/common"
     import { reportPublish } from "@/utils/api"
     import { mapActions, mapState } from "vuex"
+    import WXP from 'minapp-api-promise'
     export default {
         data() {
             return {
@@ -193,7 +194,13 @@
                 }
                 const res = await this.reportPublish(data)
                 if(res.code == 1) {
-                    this.cancel()
+                    WXP.showToast({
+                        title: '举报成功',
+                        icon: 'success',
+                        duration: 2000
+                    }).then(() => {
+                        this.cancel()
+                    })
                 }
             },
             showModel() {
