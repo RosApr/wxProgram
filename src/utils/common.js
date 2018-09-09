@@ -1,3 +1,16 @@
+import WXP from 'minapp-api-promise'
+const openAjaxModel = ({ code = 1, title }, callback) => {
+    return WXP.showToast({
+        title,
+        icon: code == 1 ? "success" : "none",
+        duration: 2000
+    }).then(() => {
+        if(callback && typeof callback == "function") {
+            callback()
+        }
+    })
+    
+}
 const setWxNavBarTitle = (title) => {
     wx.setNavigationBarTitle({
         title: title
@@ -40,5 +53,6 @@ export {
     EXEC_REGULAR,
     USER_INFO,
     transformTitle,
-    TOKEN
+    TOKEN,
+    openAjaxModel
 }

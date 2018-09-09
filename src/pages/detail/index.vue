@@ -135,10 +135,9 @@
     </div>
 </template>
 <script>
-    import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle } from "@/utils/common"
+    import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, openAjaxModel } from "@/utils/common"
     import { reportPublish } from "@/utils/api"
     import { mapActions, mapState } from "vuex"
-    import WXP from 'minapp-api-promise'
     export default {
         data() {
             return {
@@ -193,15 +192,7 @@
                     info: this.reportInfo == "" ? this.radioItems.filter(item => item["checked"])[0]["value"] : this.reportInfo
                 }
                 const res = await this.reportPublish(data)
-                if(res.code == 1) {
-                    WXP.showToast({
-                        title: '举报成功',
-                        icon: 'success',
-                        duration: 2000
-                    }).then(() => {
-                        this.cancel()
-                    })
-                }
+                openAjaxModel({code :res.code, title: "举报成功"}, this.cancel)
             },
             showModel() {
                 this.reportInfo = ""
