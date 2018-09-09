@@ -27,6 +27,9 @@
                 <button class="weui-btn" @click="login" type="primary">登录</button>
             </div>
         </div>
+        <div class="go-register-container">
+            还没有账号?<div @click="goRegister" class="go-register-btn">立即注册</div>
+        </div>
     </div>
 </template>
 
@@ -56,6 +59,11 @@
                 wx.navigateTo({
                     url: "/pages/getPwd/main"
                 })
+            },
+            goRegister() {
+                wx.navigateTo({
+                    url: "/pages/register/main"
+                })  
             },
             async login() {
                 if(this.showTip) {
@@ -157,6 +165,17 @@
         }
         button {
             border-radius: 200rpx
+        }
+    }
+    .go-register-container {
+        text-align: right;
+        width: 660rpx;
+        margin: 0 auto;
+        color: #474747;
+        font-size: 26rpx;
+        .go-register-btn {
+            display: inline-block;
+            color: #00a0ea;
         }
     }
 </style>

@@ -1,10 +1,11 @@
 {
   "pages": [
     "pages/login/main",
+
+    "pages/authorize/main",
     "pages/register/main",
     "pages/getPwd/main",
     "pages/index/main",
-    "pages/authorize/main",
     "pages/publish/main",
     "pages/search/main",
     "pages/setImg/main",
