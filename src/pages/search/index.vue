@@ -84,7 +84,7 @@
             justify-items: space-around;
             align-items: center;
             flex-flow: row nowrap;
-            background-color: #54cb60;
+            background-color: #36ca45;
             height: 120rpx;
             line-height: 120rpx;
             .grid {
@@ -95,7 +95,7 @@
                         display: inline-block;
                         margin-top: 30rpx;
                         padding: 4rpx 16rpx;
-                        color: #54cb60;
+                        color: #36ca45;
                         border-radius: 12rpx;
                         font-size: 28rpx;
                         background: #fff;

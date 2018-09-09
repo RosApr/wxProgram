@@ -1,6 +1,6 @@
 import wx from './wx'
 import Fly from 'flyio'
-const qs = require("qs")
+import WXP from 'minapp-api-promise'
 const baseUrl = "https://demo.xinbao369.com/ids/public/index.php/api/"
 const request = new Fly()
 request.config.baseURL = baseUrl
@@ -18,7 +18,37 @@ request.interceptors.request.use((request) => {
 request.interceptors.response.use(
   (response, promise) => {
     wx.hideLoading();
-    return promise.resolve(response.data)
+    if(response.data.code == 1) {
+      // operating success
+      if(response.request.method == "POST") {
+        WXP.showToast({
+          icon: "success",
+          title: response.data.msg,
+          duration: 2000
+        })
+      }
+      return promise.resolve(response.data)
+    } else if(response.data.code == 2) {
+      //token error
+      WXP.showToast({
+        icon: "none",
+        title: response.data.msg,
+        duration: 2000,
+      })
+      promise.reject(response.data)
+      return wx.navigateTo({
+        url: "/pages/authorize/main"
+      })
+    } else {
+      // fail
+      WXP.showToast({
+        icon: "none",
+        title: response.data.msg,
+        duration: 2000
+      })
+      return promise.reject(response.data)
+    }
+    
   },
   (err, promise) => {
     wx.hideLoading();

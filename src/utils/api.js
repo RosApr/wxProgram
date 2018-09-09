@@ -1,16 +1,20 @@
 import request from "./request"
 import { INDEX_PAGE_LIST_TYPE } from "@/utils/common"
 const login = (params) => {
-    var formData = new FormData();
-    for(let [key, value] of Object.entries(params)) {
-        formData.append(key, value);
-    }
-    formData.append("type", "login");
-    return request.post("/user/login", formData)
+    return request.post("/user/login", params)
 }
 const getIndexList = (params) => {
     const { listType, ...pagination } = params
     return request.get(`/common/${params.listType}`, pagination)
+}
+const getPhoneVerifyCode = (params) => {
+    return request.post("/message/sms", params)
+}
+const execVerifyCode = (params) => {
+    return request.post("/message/verify", params)
+}
+const resetPwd = (params) => {
+    return request.post("/user/reset", params)
 }
 const getDetail = (params) => {
     let path = ""
@@ -89,5 +93,13 @@ export {
     // 上传图片地址
     uploadImgUrl,
     // 举报
-    reportPublish
+    reportPublish,
+    // 登录
+    login,
+    // 获取验证码
+    getPhoneVerifyCode,
+    // 校验验证码
+    execVerifyCode,
+    // 重置密码
+    resetPwd
 }

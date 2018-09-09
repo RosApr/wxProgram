@@ -1,5 +1,7 @@
 {
   "pages": [
+    "pages/login/main",
+    "pages/getPwd/main",
     "pages/index/main",
     "pages/authorize/main",
     "pages/publish/main",
@@ -9,7 +11,6 @@
     "pages/register/main",
     "pages/step1/main",
     "pages/step2Log/main",
-    "pages/login/main",
     "pages/me/main",
     "pages/setNickname/main",
     "pages/setName/main",

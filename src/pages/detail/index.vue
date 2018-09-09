@@ -206,6 +206,7 @@
 </script>
 <style lang="less" scoped>
     .detail-container {
+        padding-bottom: 40rpx;
         .btn-container {
             width: 190rpx;
             margin: 40rpx auto;
@@ -216,7 +217,7 @@
                 text-align: left;
             }
             .person {
-                color: #54cb60;
+                color: #36ca45;
             }
             .price-container {
                 color: #e67a22;
@@ -299,7 +300,7 @@
                         padding: 14rpx 40rpx;
                         border-radius: 10rpx;
                         &.ok {
-                            background: #54cb60;
+                            background: #36ca45;
                             color: #fff;
                         }
                         &.cancel {

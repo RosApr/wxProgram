@@ -83,9 +83,8 @@
 <script>
     import wx from "@/utils/wx"
     import regionArray from "@/utils/region"
-    import { INDEX_PAGE_LIST_TYPE } from "@/utils/common"
+    import { INDEX_PAGE_LIST_TYPE, USER_INFO } from "@/utils/common"
     import { mapState, mapActions } from "vuex"
-    import { USER_INFO } from "@/utils/common"
     export default {
         data() {
             return {
@@ -178,7 +177,7 @@
         justify-items: space-around;
         align-items: center;
         flex-flow: row nowrap;
-        background-color: #54cb60;
+        background-color: #36ca45;
         height: 120rpx;
         line-height: 120rpx;
         .grid {
@@ -248,11 +247,11 @@
                         }
                     }
                     &.active {
-                        color: #54cb60;
+                        color:#36ca45;
                         span {
                             &:after {
                                 content: "";
-                                background: #54cb60;
+                                background: #36ca45;
                             }
                         }
                     }
@@ -293,7 +292,7 @@
                                     color: #a7a7a7;
                                     font-size: 28rpx;
                                     span {
-                                        color: #54cb60;
+                                        color: #36ca45;
                                     }
                                 }
                                 .price {

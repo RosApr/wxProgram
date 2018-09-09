@@ -1,5 +1,6 @@
 <template>
     <div class="login-container">
+        <div class="tip" :class="{'active': showTip}">{{tip}}</div>
         <div class="weui-flex">
             <div class="weui-flex__item label">
                 <span class="label">手机：</span>
@@ -18,7 +19,7 @@
         </div>
         <div class="weui-flex">
             <div class="weui-flex__item a-container">
-                <a href="">忘记密码</a>
+                <div @click="forgetPwd">忘记密码?</div>
             </div>
         </div>
         <div class="weui-flex btn-container">
@@ -30,29 +31,86 @@
 </template>
 
 <script>
-    // import api from "@/utils/api"
-    // console.log(api)
+    import { login } from "@/utils/api"
+    import { setWxNavBarTitle, EXEC_REGULAR, openAjaxModel, TOKEN, USER_INFO } from "@/utils/common"
+    const tipConfig = {
+        phone: "请输入手机号！",
+        password: "请输入密码！"
+    }
     export default {
         data() {
             return {
                 phone: "",
-                password: ""
+                password: "",
+                showTip: false,
+                tip: "",
+                tipConfig: tipConfig,
+                loginApi: login
             }
         },
+        mounted() {
+            setWxNavBarTitle("登录")
+        },
         methods: {
-            login() {
-                console.log(this.phone)
-                console.log(this.password)
-                // api.login({
-                //     phone: this.phone,
-                //     password: this.password
-                // })
+            forgetPwd() {
+                wx.navigateTo({
+                    url: "/pages/getPwd/main"
+                })
+            },
+            async login() {
+                if(this.showTip) {
+                    return false;
+                }
+                for(let [key,value] of Object.entries(this.tipConfig)) {
+                    if(this[key] == '') {
+                        this.showTip = true
+                        this.tip = value
+                        return setTimeout(() => {
+                            this.showTip = false
+                        }, 2000)
+                    }
+                }
+                if(!EXEC_REGULAR.phone.test(this.phone)) {
+                    this.tip = "手机号格式不正确!"
+                    this.showTip = true
+                    return setTimeout(() => {
+                        this.showTip = false
+                    }, 2000)
+                }
+                const formData = {
+                    phone: this.phone,
+                    password: this.password,
+                    type: "login"
+                }
+                const res = await this.loginApi(formData)
+                wx.setStorageSync("TOKEN", res.data.token)
+                wx.switchTab({
+                    url: "/pages/index/main"
+                })
             }
         }
     }
 </script>
 
 <style lang="less" scoped>
+    .tip {
+        z-index: 9;
+        width: 100%;
+        height: 60rpx;
+        line-height: 60rpx;
+        text-align: center;
+        position: fixed;
+        top: -80rpx;
+        font-size: 32rpx;
+        color: #fff;
+        background: red;
+        transform: all .3s ease;
+        opacity: 0;
+        &.active {
+            top: 0;
+            opacity: 1;
+        }
+    }
     .login-container {
         margin-top: 300rpx;
         height: 100%;
@@ -79,7 +137,7 @@
         }
         .a-container {
             text-align: right;
-            a {
+            div {
                 color: #474747;
                 font-size: 26rpx;
             }
