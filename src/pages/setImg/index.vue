@@ -23,7 +23,7 @@
 import WXP from 'minapp-api-promise'
 import execTip from "@/components/execTip"
 import { uploadImgUrl } from "@/utils/api"
-import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN } from "@/utils/common"
+import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN, USER_PROFILE } from "@/utils/common"
 import { mapActions, mapState, mapMutations } from "vuex"
 export default {
     data() {
@@ -36,6 +36,7 @@ export default {
     },
     mounted() {
         setWxNavBarTitle("发布")
+        this.tempImgs = wx.getStorageSync(USER_PROFILE).images
     },
     methods: {
         uploadImg() {

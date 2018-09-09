@@ -116,16 +116,21 @@
                 wx.switchTab({
                     url: "/pages/index/main"
                 })
-                console.log(data)
             },
             getVerifyCode() {
                 if(this.phone == "") {
                     this.tip = this.tipConfig["phone"]
-                    return this.showTip = true
+                    this.showTip = true
+                    return setTimeout(() => {
+                        this.showTip = false
+                    }, 2000)
                 }
                 if(!EXEC_REGULAR.phone.test(this.phone)) {
                     this.tip = "手机号格式不正确!"
-                    return this.showTip = true
+                    this.showTip = true
+                    return setTimeout(() => {
+                        this.showTip = false
+                    }, 2000)
                 }
                 this.showTip = false
                 if(this.isSendExecCode) {

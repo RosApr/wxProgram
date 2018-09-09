@@ -3,25 +3,39 @@
         <exec-tip :showTip="showTip" :tip="tip" />
         <div class="weui-cell">
             <div class="weui-cell__bd">
-                <input class="weui-input" type="text" v-model.lazy="nickname" placeholder="请输入法人姓名">
+                <input class="weui-input" type="text" v-model.lazy="realname" placeholder="请输入法人姓名">
             </div>
         </div>
-        <button class="weui-btn" type="primary">确认</button>
+        <button class="weui-btn" @click="modify" type="primary">确认</button>
     </div>
 </template>
 <script>
     import execTip from "@/components/execTip"
-    import { setWxNavBarTitle } from "@/utils/common"
+    import { setWxNavBarTitle, USER_PROFILE, TOKEN } from "@/utils/common"
     export default {
         data() {
             return {
-                name: "test",
+                realname: "",
                 showTip: false,
+                userProfile: {},
                 tip: ""
             }
         },
         mounted() {
-            setWxNavBarTitle("修改")
+            setWxNavBarTitle("修改法人姓名")
+            this.userProfile = wx.getStorageSync(USER_PROFILE)
+            this.realname = this.userProfile.realname
+        },
+        methods: {
+            modify() {
+                if(this.realname == "") {
+                    this.showTip = true
+                    this.tip = "法人姓名不能为空！"                        
+                    return setTimeout(() => {
+                        this.showTip = false
+                    }, 2000)
+                }
+            }
         },
         components: {
             execTip

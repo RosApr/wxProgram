@@ -21,7 +21,7 @@
 </template>
 <script>
     import execTip from "@/components/execTip"
-    import { setWxNavBarTitle } from "@/utils/common"
+    import { setWxNavBarTitle, USER_PROFILE, TOKEN } from "@/utils/common"
     export default {
         data() {
             return {

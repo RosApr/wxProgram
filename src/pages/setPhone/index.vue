@@ -12,30 +12,52 @@
                 <input class="weui-input" type="text" v-model.lazy="verify" placeholder="请输入验证码">
             </div>
         </div>
-        <button class="weui-btn" type="primary">确认</button>
+        <button class="weui-btn" type="primary" @click="modify">确认</button>
     </div>
 </template>
 <script>
     import execTip from "@/components/execTip"
-    import { setWxNavBarTitle } from "@/utils/common"
+    import { getPhoneVerifyCode } from "@/utils/api"
+    import { setWxNavBarTitle, EXEC_REGULAR, USER_PROFILE, TOKEN } from "@/utils/common"
     export default {
         data() {
             return {
                 isSendExecCode: false,
-                phone: "test",
+                phone: "",
                 verify: "",
                 execBtnText: "发送验证码",
                 showTip: false,
-                tip: ""
+                tip: "",
+                type: "reset",
+                userProfile: {},
+                getPhoneVerifyCodeApi: getPhoneVerifyCode
             }
         },
         mounted() {
             setWxNavBarTitle("修改")
+            this.userProfile = wx.getStorageSync(USER_PROFILE)
+            this.phone = this.userProfile.phone
+
             this.execBtnText = "发送验证码"
             this.isSendExecCode = false
         },
         methods: {
             getVerifyCode() {
+                if(this.phone == "") {
+                    this.tip = "手机号不能为空！"
+                    this.showTip = true
+                    return setTimeout(() => {
+                        this.showTip = false
+                    }, 2000)
+                }
+                if(!EXEC_REGULAR.phone.test(this.phone)) {
+                    this.tip = "手机号格式不正确!"
+                    this.showTip = true
+                    return setTimeout(() => {
+                        this.showTip = false
+                    }, 2000)
+                }
+                this.showTip = false
                 if(this.isSendExecCode) {
                     return false
                 }
@@ -49,6 +71,11 @@
                         this.isSendExecCode = false
                     }
                 }, 1000)
+                // 发送验证码
+                this.getPhoneVerifyCodeApi({
+                    phone: this.phone,
+                    type: this.type
+                })
             }
         },
         components: {

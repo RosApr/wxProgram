@@ -10,7 +10,7 @@
     </div>
 </template>
 <script>
-    import { setWxNavBarTitle, USER_PROFILE } from "@/utils/common"
+    import { setWxNavBarTitle, USER_PROFILE, TOKEN } from "@/utils/common"
     import { modifyUserProfile } from "@/utils/api"
     import execTip from "@/components/execTip"
     export default {
