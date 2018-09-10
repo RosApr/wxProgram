@@ -11,14 +11,17 @@
 </template>
 <script>
     import execTip from "@/components/execTip"
-    import { setWxNavBarTitle, USER_PROFILE, TOKEN } from "@/utils/common"
+    import { setWxNavBarTitle, USER_PROFILE, TOKEN, modifyUserProfileSuccessCallback } from "@/utils/common"
+    import { modifyUserProfile } from "@/utils/api"
     export default {
         data() {
             return {
                 realname: "",
                 showTip: false,
                 userProfile: {},
-                tip: ""
+                tip: "",
+                modifyUserProfileApi: modifyUserProfile,
+                cb: modifyUserProfileSuccessCallback,
             }
         },
         mounted() {
@@ -27,7 +30,7 @@
             this.realname = this.userProfile.realname
         },
         methods: {
-            modify() {
+            async modify() {
                 if(this.realname == "") {
                     this.showTip = true
                     this.tip = "法人姓名不能为空！"                        
@@ -35,6 +38,9 @@
                         this.showTip = false
                     }, 2000)
                 }
+                const formData = {realname: this.realname}
+                const res = await this.modifyUserProfileApi(formData)
+                this.cb(res)
             }
         },
         components: {

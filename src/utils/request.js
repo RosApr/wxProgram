@@ -10,7 +10,7 @@ request.interceptors.request.use((request) => {
     request.body["token"] = wx.getStorageSync(TOKEN) || ""
   }
   if(wx.getStorageSync(OPEN_ID) && request.body) {
-    request.body["openId"] = wx.getStorageSync(OPEN_ID) || ""
+    request.body["openid"] = wx.getStorageSync(OPEN_ID) || ""
   }
   if(request.method == "POST") {
     request.headers["content-type"] = "application/x-www-form-urlencoded"

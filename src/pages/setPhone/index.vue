@@ -3,13 +3,13 @@
         <exec-tip :showTip="showTip" :tip="tip" />
         <div class="weui-cell">
             <div class="weui-cell__bd">
-                <input class="weui-input" type="text" v-model.lazy="phone" placeholder="请输入手机号">
+                <input class="weui-input" type="text" v-model="phone" placeholder="请输入手机号">
             </div>
         </div>
         <div class="weui-cell">
             <div class="weui-cell__bd verify-container">
                 <div :class="{'disable': isSendExecCode}" class="btn" @click="getVerifyCode">{{execBtnText}}</div>
-                <input class="weui-input" type="text" v-model.lazy="verify" placeholder="请输入验证码">
+                <input class="weui-input" type="text" v-model="verify" placeholder="请输入验证码">
             </div>
         </div>
         <button class="weui-btn" type="primary" @click="modify">确认</button>
@@ -17,8 +17,8 @@
 </template>
 <script>
     import execTip from "@/components/execTip"
-    import { getPhoneVerifyCode } from "@/utils/api"
-    import { setWxNavBarTitle, EXEC_REGULAR, USER_PROFILE, TOKEN } from "@/utils/common"
+    import { getPhoneVerifyCode, modifyUserProfile } from "@/utils/api"
+    import { setWxNavBarTitle, EXEC_REGULAR, USER_PROFILE, TOKEN, modifyUserProfileSuccessCallback } from "@/utils/common"
     export default {
         data() {
             return {
@@ -30,7 +30,10 @@
                 tip: "",
                 type: "reset",
                 userProfile: {},
-                getPhoneVerifyCodeApi: getPhoneVerifyCode
+                getPhoneVerifyCodeApi: getPhoneVerifyCode,
+                modifyUserProfileApi: modifyUserProfile,
+                cb: modifyUserProfileSuccessCallback,
+                inter: null
             }
         },
         mounted() {
@@ -40,6 +43,9 @@
 
             this.execBtnText = "发送验证码"
             this.isSendExecCode = false
+        },
+        onShow() {
+            console.log("onshow")
         },
         methods: {
             getVerifyCode() {
@@ -63,10 +69,10 @@
                 }
                 this.isSendExecCode = true
                 let text = 60
-                let inter = setInterval(()=> {
+                this.inter = setInterval(()=> {
                     this.execBtnText = --text + "s后再次发送"
                     if(text == 0) {
-                        clearTimeout(inter)
+                        clearTimeout(this.inter)
                         this.execBtnText = "发送验证码"
                         this.isSendExecCode = false
                     }
@@ -76,6 +82,32 @@
                     phone: this.phone,
                     type: this.type
                 })
+            },
+            async modify() {
+                if(this.phone == "") {
+                    this.showTip = true
+                    this.tip = "手机号不能为空！"                        
+                    return setTimeout(() => {
+                        this.showTip = false
+                    }, 2000)
+                }
+                if(this.verify == "") {
+                    this.showTip = true
+                    this.tip = "验证码不能为空！"                        
+                    return setTimeout(() => {
+                        this.showTip = false
+                    }, 2000)
+                }
+                if(!EXEC_REGULAR.phone.test(this.phone)) {
+                    this.tip = "手机号格式不正确!"
+                    this.showTip = true
+                    return setTimeout(() => {
+                        this.showTip = false
+                    }, 2000)
+                }
+                const formData = {phone: this.phone, verify: this.verify}
+                const res = await this.modifyUserProfileApi(formData)
+                this.cb(res)
             }
         },
         components: {

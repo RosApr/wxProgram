@@ -58,13 +58,7 @@ export default {
       }
   },
   onShow() {
-    // if(!wx.getStorageSync(TOKEN)) {
-    //   return wx.navigateTo({
-    //     url: "/pages/login/main"
-    //   })
-    // }
-    console.log("publish show")
-    this.queryPublishList()
+    this.queryPublishList({refresh: true})
     this.queryFilters()
   },
   mounted() {

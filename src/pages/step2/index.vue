@@ -172,7 +172,7 @@ export default {
             publishType: ""
         }
     },
-    onShow() {
+    onUnload() {
         this.title = ""
         this.price = ""
         this.linkman = ""

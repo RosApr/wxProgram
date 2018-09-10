@@ -60,33 +60,6 @@ const modifyUserProfile = (params) => {
 }
 const getUserLoginInfo = (params) => {
     return request.post("/user/wechat", params)
-    // const isLogin = Math.round(Math.random())
-    // const userInfo = { openId: "test" }
-
-    // let data = !!isLogin ? {
-    // let data = true ? {
-    //     ...userInfo,
-    //     token: "9b28563b51735082b174d2f0850e4227",
-    //     "id": 12,
-    //     "nickname": "test",
-    //     "phone": "18089210182",
-    //     "realname": "12345678",
-    //     "images": ["https:\/\/demo.xinbao369.com\/ids\/public\/\/upload\/20180909\/a8d2a55a3057809a3bf416dd4c4d3e4b.png"],
-    //     "account": null,
-    //     "headimg": null,
-    //     "createtime": "2018-09-09 14:11:42",
-    //     "checked": 0,
-    //     "status": 1,
-    //     "enable": 0
-    // } : userInfo
-    // return new Promise((resolve, reject) => {
-    //     setTimeout(() => {
-    //         resolve({
-    //             code: 1,
-    //             data
-    //         })
-    //     }, 1000)
-    // })
 }
 const uploadImgUrl = "https://demo.xinbao369.com/ids/public/index.php/api/material/upload"
 export {

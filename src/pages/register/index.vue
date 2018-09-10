@@ -6,7 +6,7 @@
                 昵称：
             </div>
             <div class="grid input">
-                <input class="height border" type="text" v-model.lazy="nickname">
+                <input class="height border" type="text" v-model="nickname">
             </div>
         </div>
         <div class="item">
@@ -15,7 +15,7 @@
             </div>
             <div class="grid input verify-container">
                 <div :class="{'disable': isSendExecCode}" class="btn" @click="getVerifyCode">{{execBtnText}}</div>
-                <input class="height border" type="text" v-model.lazy="phone">
+                <input class="height border" type="text" v-model="phone">
             </div>
         </div>
         <div class="item">
@@ -23,7 +23,7 @@
                 验证码：
             </div>
             <div class="grid input">
-                <input class="height border" type="text" v-model.lazy="verify">
+                <input class="height border" type="text" v-model="verify">
             </div>
         </div>
         <div class="item">
@@ -31,7 +31,7 @@
                 密码：
             </div>
             <div class="grid input">
-                <input class="height border" type="password" v-model.lazy="password">
+                <input class="height border" type="password" v-model="password">
             </div>
         </div>
         <div class="item">
@@ -39,7 +39,7 @@
                 确认密码：
             </div>
             <div class="grid input">
-                <input class="height border" type="password" v-model.lazy="copyPwd">
+                <input class="height border" type="password" v-model="copyPwd">
             </div>
         </div>
         <button class="weui-btn" @click="register" type="primary">注册</button>
@@ -73,6 +73,13 @@
                 registerApi: register,
                 getPhoneVerifyCodeApi: getPhoneVerifyCode
             }
+        },
+        onUnload() {
+            this.phone = ""
+            this.password = ""
+            this.copyPwd = ""
+            this.nickname = ""
+            this.verify = ""
         },
         mounted() {
             setWxNavBarTitle("注册")

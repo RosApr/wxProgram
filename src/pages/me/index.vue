@@ -41,7 +41,7 @@
             return {
                 nickname: "未设置",
                 phone: "未设置",
-                password: "未设置",
+                password: "修改",
                 realname: "未设置",
                 images: "未设置"
             }
@@ -55,10 +55,10 @@
             const userProfile = wx.getStorageSync(USER_PROFILE)
             if(userProfile) {
                 this.nickname = userProfile.nickname
-                this.phone = "已设置"
-                this.password = "已设置"
+                this.phone = userProfile.phone
+                // this.password = "已设置"
                 this.realname = userProfile.realname || "未设置"
-                this.images = "已设置"
+                this.images = userProfile.images != null ? "已设置" : "未设置"
             }
         },
         mounted() {
@@ -80,7 +80,7 @@
                         path = "/pages/setImg/main"
                         break
                     case "password":
-                        path = "/pages/setPwd/main"
+                        path = "/pages/getPwd/main"
                         break
                     case "phone":
                         path = "/pages/setPhone/main"

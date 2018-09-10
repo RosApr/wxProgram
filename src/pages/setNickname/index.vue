@@ -10,7 +10,7 @@
     </div>
 </template>
 <script>
-    import { setWxNavBarTitle, USER_PROFILE, TOKEN } from "@/utils/common"
+    import { setWxNavBarTitle, USER_PROFILE, TOKEN, modifyUserProfileSuccessCallback } from "@/utils/common"
     import { modifyUserProfile } from "@/utils/api"
     import execTip from "@/components/execTip"
     export default {
@@ -19,16 +19,18 @@
                 nickname: "",
                 userProfile: {},
                 tip: "",
-                showTip: false
+                showTip: false,
+                modifyUserProfileApi: modifyUserProfile,
+                cb: modifyUserProfileSuccessCallback,
             }
         },
         mounted() {
-            setWxNavBarTitle("修改名称")
+            setWxNavBarTitle("修改昵称")
             this.userProfile = wx.getStorageSync(USER_PROFILE)
             this.nickname = this.userProfile.nickname
         },
         methods: {
-            modify() {
+            async modify() {
                 if(this.nickname == "") {
                     this.showTip = true
                     this.tip = "昵称不能为空！"                        
@@ -36,6 +38,9 @@
                         this.showTip = false
                     }, 2000)
                 }
+                const formData = {nickname: this.nickname}
+                const res = await this.modifyUserProfileApi(formData)
+                this.cb(res)
             }
         },
         components: {

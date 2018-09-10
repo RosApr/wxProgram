@@ -8,7 +8,7 @@ const store = new Vuex.Store({
   state: {
     indexConfig: {
       list: [],
-      current: 1,
+      page: 1,
       size: 8,
       total: 999999,
       activeTab: INDEX_PAGE_LIST_TYPE["sell"]
@@ -76,12 +76,21 @@ const store = new Vuex.Store({
   },
   actions: {
     async queryPublishList({ state, commit }, payload={}) {
+      if(payload["refresh"]) {
+        commit("savePublishData", {
+          list: [],
+          page: 1,
+          size: 8,
+          total: 999999
+        })
+      }
       const { publishConfig: {page, size, total} } = state
       if(state.publishConfig.list.length < total) {
         const response = await getPublishList({
           page,
           size
         })
+        const nextPage = response.data.data.length === 0 ? state.publishConfig.page : ++state.publishConfig.page
         const list = state.publishConfig.list.concat(response.data.data.map(item => {
           item["typeFormat"] = transformTitle(item.type)
           return item
@@ -89,7 +98,7 @@ const store = new Vuex.Store({
         commit("savePublishData", {
           list: list,
           total: response.data.total,
-          page: ++state.publishConfig.page
+          page: nextPage
         })
       }
     },
@@ -100,12 +109,13 @@ const store = new Vuex.Store({
         return false
       }
       const response = await getSearchList({size, page, search})
+      const nextPage = response.data.data.length === 0 ? state.searchConfig.page : ++state.searchConfig.page
       const list = state.searchConfig.list.concat(response.data.data.map(item => {
         item["typeFormat"] = transformTitle(item.type)
         return item
       }))
       commit("saveSearchData", {
-        page: ++state.searchConfig.page,
+        page: nextPage,
         list: list,
         total: response.data.total
       })
@@ -120,7 +130,7 @@ const store = new Vuex.Store({
       // 切换tab重置列表请求参数
       if(state.indexConfig.activeTab != listType) {
         commit("saveIndexConfig", {
-          current: 1,
+          page: 1,
           size: 8,
           list: [],
           total: 99999999999999,
@@ -130,15 +140,16 @@ const store = new Vuex.Store({
       // 判断数据是否全部得到
       if(state.indexConfig.list.length < state.indexConfig.total) {
         const response = await getIndexList({
-          page: state.indexConfig.current,
+          page: state.indexConfig.page,
           size: state.indexConfig.size,
           listType: listType
         })
+        const nextPage = response.data.rows.length === 0 ? state.indexConfig.page : ++state.indexConfig.page
         const list = state.indexConfig.list.concat(response.data.rows)
         commit("saveIndexConfig", {
           list: list,
           total: response.data.total,
-          current: ++state.indexConfig.current
+          page: nextPage
         })
       }
     },

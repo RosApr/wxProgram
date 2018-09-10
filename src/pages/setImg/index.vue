@@ -9,21 +9,21 @@
                     :key="index"
                     @click="delImg(index)"
                     >
-                    <!-- <div class="img" :style="{backgroundImage: 'url(' + item + ')'}"></div> -->
                     <img :src="item" alt="">
-                    <div class="del">X</div>
+                    <div class="del" @click="delImg">X</div>
                 </div>
                 <div class="upload-img-btn" @click="uploadImg">+</div>
             </div>
         </div>
-        <button class="weui-btn" @click="publish" type="primary">确认</button>
+        <button class="weui-btn" @click="modify" type="primary">确认</button>
     </div>
 </template>
 <script>
 import WXP from 'minapp-api-promise'
 import execTip from "@/components/execTip"
-import { uploadImgUrl } from "@/utils/api"
-import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN, USER_PROFILE } from "@/utils/common"
+import { uploadImgUrl, modifyUserProfile } from "@/utils/api"
+import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN, USER_PROFILE,
+    modifyUserProfileSuccessCallback } from "@/utils/common"
 import { mapActions, mapState, mapMutations } from "vuex"
 export default {
     data() {
@@ -31,12 +31,16 @@ export default {
             tip: "",
             showTip: false,
             tempImgs: [],
-            uploadUrl: uploadImgUrl
+            uploadUrl: uploadImgUrl,
+            modifyUserProfileApi: modifyUserProfile,
+            cb: modifyUserProfileSuccessCallback
         }
+    },
+    onShow() {
+        // this.tempImgs = wx.getStorageSync(USER_PROFILE).images || []
     },
     mounted() {
         setWxNavBarTitle("发布")
-        this.tempImgs = wx.getStorageSync(USER_PROFILE).images
     },
     methods: {
         uploadImg() {
@@ -46,8 +50,10 @@ export default {
                 sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
                 success: function (res) {
                 // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+                // console.log(res)
                 that.tempImgs = that.tempImgs.concat(res.tempFilePaths)
-                    console.log(that.tempImgs)
+                console.log(that.tempImgs)
+                    // console.log(that.tempImgs)
                 },
                 fail: function () {
                     console.log('fail');
@@ -60,7 +66,7 @@ export default {
         delImg(index) {
             this.tempImgs.splice(index, 1)
         },
-        publish() {
+        modify() {
             // publish
             const that = this
             const queue = this.tempImgs.map(item => {
@@ -75,24 +81,13 @@ export default {
                 })
             })
             Promise.all(queue).then(async res => {
-                const data = {}
-                // make form data
-                for(let [key,value] of Object.entries(this.tipConfig)) {
-                    data[key] = this[key]
-                }
-                data["publishType"] = this.publishType
-                // publish
-                // make form data
-                data["images"] = res.map(item => {
+                const formData = {}
+                formData["images"] = res.map(item => {
                     return JSON.parse(item["data"])["data"]["url"]
                 })
                 // publish
-                const publishRes = await this.publishApi(data)
-                if(publishRes.code == 1) {
-                    wx.switchTab({
-                        url: '/pages/publish/main'
-                    })
-                }
+                const modifyRes = await this.modifyUserProfileApi(formData)
+                this.cb(modifyRes)
             })
         }
     },

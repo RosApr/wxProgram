@@ -54,7 +54,6 @@
                     :key="index"
                     @click="delImg(index)"
                     >
-                    <!-- <div class="img" :style="{backgroundImage: 'url(' + item + ')'}"></div> -->
                     <img :src="item" alt="">
                     <div class="del">X</div>
                 </div>
@@ -167,7 +166,7 @@ export default {
 
         }
     },
-    onShow() {
+    onUnload() {
         this.title = ""
         this.price = ""
         this.linkman = ""

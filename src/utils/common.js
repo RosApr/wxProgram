@@ -1,4 +1,10 @@
 import WXP from 'minapp-api-promise'
+
+const USER_INFO = "userInfo"
+const TOKEN = "token"
+const USER_PROFILE = "userProfile"
+const OPEN_ID = "openId"
+
 const openAjaxModel = ({ code = 1, title }, callback) => {
     return WXP.showToast({
         title,
@@ -44,10 +50,12 @@ const transformTitle = (title) => {
     }
     return titles
 }
-const USER_INFO = "userInfo"
-const TOKEN = "token"
-const USER_PROFILE = "userProfile"
-const OPEN_ID = "openId"
+const modifyUserProfileSuccessCallback = (data) => {
+    wx.setStorageSync(USER_PROFILE, data.data)
+    wx.switchTab({
+        url: "/pages/me/main"
+    })
+}
 export {
     setWxNavBarTitle,
     INDEX_PAGE_LIST_TYPE,
@@ -57,5 +65,6 @@ export {
     USER_INFO,
     TOKEN,
     USER_PROFILE,
-    OPEN_ID
+    OPEN_ID,
+    modifyUserProfileSuccessCallback
 }

@@ -7,7 +7,7 @@
             </div>
             <div class="grid input verify-container">
                 <div :class="{'disable': isSendExecCode}" class="btn" @click="getVerifyCode">{{execBtnText}}</div>
-                <input class="height border" type="text" v-model.lazy="phone">
+                <input class="height border" type="text" v-model="phone">
             </div>
         </div>
         <div class="item">
@@ -15,7 +15,7 @@
                 验证码：
             </div>
             <div class="grid input">
-                <input class="height border" type="text" v-model.lazy="verify">
+                <input class="height border" type="text" v-model="verify">
             </div>
         </div>
         <div class="item">
@@ -23,7 +23,7 @@
                 密码：
             </div>
             <div class="grid input">
-                <input class="height border" type="password" v-model.lazy="password">
+                <input class="height border" type="password" v-model="password">
             </div>
         </div>
         <div class="item">
@@ -31,7 +31,7 @@
                 确认密码：
             </div>
             <div class="grid input">
-                <input class="height border" type="password" v-model.lazy="copyPwd">
+                <input class="height border" type="password" v-model="copyPwd">
             </div>
         </div>
         <button class="weui-btn" @click="register" type="primary">修改密码</button>
@@ -61,13 +61,25 @@
                 tipConfig: tipConfig,
                 getPhoneVerifyCodeApi: getPhoneVerifyCode,
                 execVerifyCodeApi: execVerifyCode,
-                resetPwdApi: resetPwd
+                resetPwdApi: resetPwd,
+                inter: null
+            }
+        },
+        onOnload() {
+            this.execBtnText = "发送验证码"
+            this.isSendExecCode = false
+            this.verify = ""
+            this.password = ""
+            this.copyPwd = ""
+            clearTimeout(this.inter)
+            const phone = wx.getStorageSync(USER_PROFILE)["phone"]
+            if(phone) {
+                this.phone = phone
             }
         },
         mounted() {
             setWxNavBarTitle("注册")
-            this.execBtnText = "发送验证码"
-            this.isSendExecCode = false
+            
         },
         methods: {
             async register() {
@@ -130,10 +142,10 @@
                 }
                 this.isSendExecCode = true
                 let text = 60
-                let inter = setInterval(()=> {
+                this.inter = setInterval(()=> {
                     this.execBtnText = --text + "s后再次发送"
                     if(text == 0) {
-                        clearTimeout(inter)
+                        clearTimeout(this.inter)
                         this.execBtnText = "发送验证码"
                         this.isSendExecCode = false
                     }
