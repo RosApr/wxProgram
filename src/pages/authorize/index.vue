@@ -41,15 +41,15 @@
                 this.queryUserProfile(e.mp.detail.userInfo)
             },
             async queryUserProfile(userInfo) {
-                wx.clearStorageSync()
+                // wx.clearStorageSync()
                 wx.setStorageSync(USER_INFO, userInfo)
                 let wxLoginRes = await WXP.login()
                 if(wxLoginRes.errMsg == "login:ok") {
                     const userProfileRes = await this.getUserLoginInfoApi({code: wxLoginRes.code})
-                    const { openId, token, data: userProfile } = userProfileRes.data
-                    wx.setStorageSync(TOKEN, token)
-                    wx.setStorageSync(OPEN_ID, openId)
-                    wx.setStorageSync(USER_PROFILE, userProfile)
+                    const { openid, token, data: userProfile } = userProfileRes.data
+                    token && wx.setStorageSync(TOKEN, token)
+                    wx.setStorageSync(OPEN_ID, openid)
+                    userProfile && wx.setStorageSync(USER_PROFILE, userProfile)
                     wx.switchTab({
                         url: '/pages/index/main'
                     })

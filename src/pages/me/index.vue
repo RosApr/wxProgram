@@ -57,7 +57,7 @@
                 this.nickname = userProfile.nickname
                 this.phone = "已设置"
                 this.password = "已设置"
-                this.realname = userProfile.realname
+                this.realname = userProfile.realname || "未设置"
                 this.images = "已设置"
             }
         },

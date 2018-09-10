@@ -39,7 +39,7 @@
 </template>
 <script>
     import execTip from "@/components/execTip"
-    import { setWxNavBarTitle, EXEC_REGULAR } from "@/utils/common"
+    import { setWxNavBarTitle, EXEC_REGULAR, USER_PROFILE, TOKEN } from "@/utils/common"
     import { getPhoneVerifyCode, execVerifyCode, resetPwd } from "@/utils/api"
     const tipConfig = {
         phone: "请输入手机号!",
@@ -108,12 +108,12 @@
                 for(let [key,value] of Object.entries(this.tipConfig)) {
                     resetPwdData[key] = this[key]
                 }
-                if(verifyCodeRes.code == 1) {
-                    await this.resetPwdApi(resetPwdData)
-                    wx.switchTab({
-                        url: "/pages/index/main"
-                    })
-                }
+                const res = await this.resetPwdApi(resetPwdData)
+                wx.setStorageSync(TOKEN, res.data.token)
+                wx.setStorageSync(USER_PROFILE, res.data.data)
+                wx.switchTab({
+                    url: "/pages/index/main"
+                })
             },
             getVerifyCode() {
                 if(this.phone == "") {

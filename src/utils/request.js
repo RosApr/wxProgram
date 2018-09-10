@@ -41,10 +41,10 @@ request.interceptors.response.use(
         title: response.data.msg,
         duration: 2000,
       })
-      promise.reject(response.data)
-      return wx.navigateTo({
-        url: "/pages/authorize/main"
+      wx.navigateTo({
+        url: "/pages/login/main"
       })
+      return promise.reject(response.data)
     } else {
       // fail
       WXP.showToast({

@@ -58,16 +58,17 @@ export default {
       }
   },
   onShow() {
-    if(!wx.getStorageSync(TOKEN)) {
-      return wx.navigateTo({
-        url: "/pages/login/main"
-      })
-    }
+    // if(!wx.getStorageSync(TOKEN)) {
+    //   return wx.navigateTo({
+    //     url: "/pages/login/main"
+    //   })
+    // }
+    console.log("publish show")
+    this.queryPublishList()
+    this.queryFilters()
   },
   mounted() {
     setWxNavBarTitle("发布中心")
-    this.queryPublishList()
-    this.queryFilters()
   },
   computed: {
     ...mapState([
