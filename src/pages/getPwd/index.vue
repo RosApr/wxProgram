@@ -65,7 +65,7 @@
                 inter: null
             }
         },
-        onOnload() {
+        onUnload() {
             this.execBtnText = "发送验证码"
             this.isSendExecCode = false
             this.verify = ""
