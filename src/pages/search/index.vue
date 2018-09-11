@@ -33,10 +33,6 @@
     export default {
         data() {
             return {
-                search: "",
-                size: 8,
-                page: 1,
-                list: []
             }
         },
         computed: {
@@ -46,6 +42,15 @@
         },
         mounted() {
             setWxNavBarTitle("搜索")
+        },
+        onUnload() {
+            this.search = ""
+            this.saveSearchData({
+                list: [],
+                page: 1,
+                size: 8,
+                total: 99999999999,
+            })
         },
         onReachBottom() {
             this.querySearchList()
