@@ -3,7 +3,7 @@
         <div class="search-bar">
             <div class="grid label">
                 <picker mode="multiSelector" @change="regionChange" @columnchange="regionColumnChange" :value="regionIndex" :range="regionDataComputed">
-                    <div class="border height arrow">{{place}}</div>
+                    <div class="border height arrow"><span class="text">{{place}}</span><span class="arrow">&gt;</span></div>
                 </picker>
             </div>
             <div class="grid input">
@@ -187,17 +187,17 @@
                 color: #fff;
                 font-size: 32rpx;
                 padding-left: 30rpx;
-                &:after {
-                    display: block;
-                    height: 120rpx;
-                    line-height: 120rpx;
-                    content: "<";
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    transform: rotateZ(-90deg);
-                    font-size: 28rpx;
-                    color: #fff;
+                .arrow {
+                    .arrow {
+                        display: inline-block;
+                        vertical-align: middle;
+                        transform: rotateZ(90deg);
+                        font-size: 28rpx;
+                        color: #fff;
+                    }
+                    .text {
+                        padding-right: 10rpx;
+                    }
                 }
             }
             &.input {
@@ -353,24 +353,6 @@
                         }
                     }
                 }
-                // <div
-                //     class="item logistics"
-                //     v-for="(item, index) in indexConfig.list"
-                //     :key="index"
-                // >
-                //     <div class="grid desc">
-                //         <p class="title">{{item.title}}</p>
-                //         <p class="date">出发时间：{{item.date}}</p>
-                //         <p class="area">
-                //             {{item.rmation}}-{{item.destination}}
-                //             <span>{{item.type}}</span>
-                //         </p>
-                //     </div>
-                //     <div class="grid money">
-                //         <span class="symbol">¥</span>
-                //         <span class="price">{{item.price}}</span>
-                //     </div>
-                // </div>
             }
             .no-data-tip {
                 font-size: 32rpx;
