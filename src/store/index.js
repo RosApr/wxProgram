@@ -126,9 +126,18 @@ const store = new Vuex.Store({
       data.vehicletype = [...["不限"], ...data.vehicletype]
       commit("saveFilters", data)
     },
-    async queryIndexList({ state, commit }, { listType }) {
+    async queryIndexList({ state, commit }, { listType, region }) {
       // 切换tab重置列表请求参数
       if(state.indexConfig.activeTab != listType) {
+        commit("saveIndexConfig", {
+          page: 1,
+          size: 8,
+          list: [],
+          total: 99999999999999,
+          activeTab: listType
+        })
+      }
+      if(region) {
         commit("saveIndexConfig", {
           page: 1,
           size: 8,

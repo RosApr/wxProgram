@@ -83,7 +83,7 @@
 <script>
     import wx from "@/utils/wx"
     import regionArray from "@/utils/region"
-    import { INDEX_PAGE_LIST_TYPE, USER_INFO } from "@/utils/common"
+    import { INDEX_PAGE_LIST_TYPE, USER_INFO, REGION } from "@/utils/common"
     import { mapState, mapActions } from "vuex"
     export default {
         data() {
@@ -131,20 +131,29 @@
                 })
             },
             getCurrentPosition() {
-                const currentCity = wx.getStorageSync(USER_INFO)["city"]
+                const currentCity = wx.getStorageSync(REGION) || wx.getStorageSync(USER_INFO)["city"]
                 this.regionData[1].forEach((citysArray, citysIndex) => {
                    citysArray.forEach((city, cityIndex) => {
                        if(city.indexOf(currentCity) >= 0) {
                            this.regionSecond = citysIndex
                            this.regionIndex = [citysIndex, cityIndex]
                            this.place = this.regionData[1][citysIndex][cityIndex]
+                           this.saveAreaToStorage(this.place)
                        }
                    })
                 })
             },
+            saveAreaToStorage(region) {
+                wx.setStorageSync(REGION, region)
+            },
             regionChange(e) {
                 const values = e.mp.detail.value
                 this.place = this.regionData[1][values[0]][values[1]]
+                this.saveAreaToStorage(this.place)
+                this.queryIndexList({
+                    listType: this.activeTab,
+                    region: this.place
+                })
             },
             regionColumnChange(e) {
                 if(e.mp.detail.column === 0) {
@@ -152,6 +161,7 @@
                     this.regionIndex = [e.mp.detail.value, 0]
                 }
             },
+
             showDetail(id, listType) {
                 wx.navigateTo({
                     url: `/pages/detail/main?type=${listType}&id=${id}`

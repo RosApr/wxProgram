@@ -4,7 +4,7 @@ const USER_INFO = "userInfo"
 const TOKEN = "token"
 const USER_PROFILE = "userProfile"
 const OPEN_ID = "openId"
-
+const REGION = "region"
 const openAjaxModel = ({ code = 1, title }, callback) => {
     return WXP.showToast({
         title,
@@ -66,5 +66,6 @@ export {
     TOKEN,
     USER_PROFILE,
     OPEN_ID,
-    modifyUserProfileSuccessCallback
+    modifyUserProfileSuccessCallback,
+    REGION
 }

@@ -13,7 +13,8 @@
         USER_INFO,
         TOKEN,
         USER_PROFILE,
-        OPEN_ID
+        OPEN_ID,
+        REGION
     } from "@/utils/common"
     import { getUserLoginInfo } from "@/utils/api"
     export default {
@@ -31,7 +32,6 @@
                 })
                 // wx.setStorageSync(USER_INFO, userInfoRes.userInfo)
                 this.queryUserProfile(userInfoRes.userInfo)
-                
             }
         },
         methods: {
@@ -42,6 +42,7 @@
             },
             async queryUserProfile(userInfo) {
                 wx.setStorageSync(USER_INFO, userInfo)
+                !wx.getStorageSync(REGION) && wx.setStorageSync(REGION, userInfo.city)
                 let wxLoginRes = await WXP.login()
                 if(wxLoginRes.errMsg == "login:ok") {
                     const userProfileRes = await this.getUserLoginInfoApi({code: wxLoginRes.code})

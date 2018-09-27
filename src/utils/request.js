@@ -2,12 +2,15 @@ import wx from './wx'
 import Fly from 'flyio'
 import WXP from 'minapp-api-promise'
 const baseUrl = "https://demo.xinbao369.com/ids/public/index.php/api/"
-import { TOKEN, OPEN_ID } from "@/utils/common"
+import { TOKEN, OPEN_ID, REGION } from "@/utils/common"
 const request = new Fly()
 request.config.baseURL = baseUrl
 request.interceptors.request.use((request) => {
   if(wx.getStorageSync(TOKEN) && request.body) {
     request.body["token"] = wx.getStorageSync(TOKEN) || ""
+  }
+  if(wx.getStorageSync(REGION) && request.body) {
+    request.body[REGION] = wx.getStorageSync(REGION) || ""
   }
   if(wx.getStorageSync(OPEN_ID) && request.body) {
     request.body["openid"] = wx.getStorageSync(OPEN_ID) || ""
