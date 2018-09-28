@@ -6,8 +6,8 @@
                 手机号：
             </div>
             <div class="grid input verify-container">
+                <input class="height border verfiy-input" type="text" v-model="phone">
                 <div :class="{'disable': isSendExecCode}" class="btn" @click="getVerifyCode">{{execBtnText}}</div>
-                <input class="height border" type="text" v-model="phone">
             </div>
         </div>
         <div class="item">
@@ -211,14 +211,22 @@
                         border: 1rpx solid #e8e8e8;
                         border-radius: 100rpx;
                     }
+                    .verfiy-input {
+                        width: 56%;
+                        display: inline-block;
+                        vertical-align: middle;
+                        margin-right: 4%;
+                        box-sizing: border-box;
+                    }
                     &.verify-container {
                         position: relative;
                         .btn {
+                            box-sizing: border-box;
                             z-index: 10;
-                            position: absolute;
-                            right: 20rpx;
-                            top: 50%;
-                            transform: translateY(-50%);
+                            text-align: center;
+                            width: 40%;
+                            vertical-align: middle;
+                            display: inline-block;
                             font-size: 24rpx;
                             color: #4dc959;
                             border: 1rpx solid #4dc959;

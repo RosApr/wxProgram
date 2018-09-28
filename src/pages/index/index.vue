@@ -290,17 +290,16 @@
                             }
                             &.desc {
                                 padding-left: 20rpx;
+                                font-size: 28rpx;
                                 .title {
                                     color: #383838;
-                                    font-size: 28rpx;
+                                    font-size: 30rpx;
                                 }
                                 .date {
                                     color: #a7a7a7;
-                                    font-size: 28rpx;
                                 }
                                 .place {
                                     color: #a7a7a7;
-                                    font-size: 28rpx;
                                     span {
                                         color: #36ca45;
                                     }
@@ -330,6 +329,7 @@
                                 color: #a7a7a7;
                                 font-size: 28rpx;
                                 .title {
+                                    font-size: 30rpx;
                                     margin-bottom: 10rpx;
                                     color: #383838;
                                 }

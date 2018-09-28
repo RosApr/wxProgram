@@ -1,10 +1,11 @@
 {
   "pages": [
     "pages/authorize/main",
+    "pages/setPhone/main",
+    "pages/getPwd/main",
+    "pages/register/main",
     "pages/me/main",
     "pages/login/main",
-    "pages/register/main",
-    "pages/getPwd/main",
     "pages/index/main",
     "pages/publish/main",
     "pages/search/main",
@@ -14,7 +15,6 @@
     "pages/step2Log/main",
     "pages/setNickname/main",
     "pages/setName/main",
-    "pages/setPhone/main",
     "pages/detail/main",
     "pages/step2/main"
   ],
