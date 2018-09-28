@@ -2,6 +2,9 @@
     <div class="login-container">
         <exec-tip :showTip="showTip" :tip="tip" />
         <div class="weui-flex">
+            <img class="logo" src="/static/images/login_logo.png" alt="">
+        </div>
+        <div class="weui-flex">
             <div class="weui-flex__item label">
                 <span class="label">手机：</span>
             </div>
@@ -125,7 +128,6 @@
         }
     }
     .login-container {
-        margin-top: 300rpx;
         height: 100%;
         width: 100%;
         display: flex;
@@ -137,6 +139,11 @@
             flex: 1;
             &.btn-container {
                 margin-top: 50rpx;
+            }
+            .logo {
+                width: 150rpx;
+                margin: 80rpx auto 120rpx;
+                height: 190rpx;
             }
         }
         .weui-flex__item {
