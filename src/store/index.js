@@ -1,6 +1,6 @@
 import Vue from "vue"
 import Vuex from "vuex"
-import { getIndexList, getDetail, getFilters, getSearchList, getPublishList } from "@/utils/api"
+import { getIndexList, getDetail, getFilters, getSearchList, getPublishList, deletePublishApi } from "@/utils/api"
 import { INDEX_PAGE_LIST_TYPE, transformTitle } from "@/utils/common"
 Vue.use(Vuex)
 
@@ -100,6 +100,12 @@ const store = new Vuex.Store({
           total: response.data.total,
           page: nextPage
         })
+      }
+    },
+    async deletePublish({ state, commit }, payload={}) {
+      const deleteRes = await deletePublishApi(payload)
+      if(deleteRes.code == 1) {
+        store.dispatch("queryPublishList", {refresh: true})
       }
     },
     async querySearchList({ state, commit }, payload={}) {

@@ -42,6 +42,26 @@ const getDetail = (params) => {
 const getSearchList = (params) => {
     return request.get("/common/search", params)
 }
+const deletePublishApi = (params) => {
+    let path = ""
+    switch(params.type) {
+        case INDEX_PAGE_LIST_TYPE.logistics:
+            path = "logistics"
+            break
+        case INDEX_PAGE_LIST_TYPE.sell:
+            path = "sell"
+            break
+        case INDEX_PAGE_LIST_TYPE.buy:
+            path = "buy"
+            break
+    }
+    if(!path) {
+        return false
+    }
+    return request.post(`/${path}/delete`, {
+        id: params.id
+    })
+}
 const getFilters = () => {
     return request.get("/common/filter", null)
 }
@@ -92,5 +112,7 @@ export {
     // 获取登录信息
     getUserLoginInfo,
     // 修改用户信息
-    modifyUserProfile
+    modifyUserProfile,
+    // 删除已发布
+    deletePublishApi
 }

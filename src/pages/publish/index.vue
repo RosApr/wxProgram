@@ -21,7 +21,7 @@
             </div>
             <div @click="showDetail(item.id, item.type)">查看</div>
           </div>
-          <div @click="delAddress(item.id)" class="delete" :style="item.textStyle1">
+          <div @click="callDeletePublish(item.id, item.type)" class="delete" :style="item.textStyle1">
             <div>
               删除
             </div>
@@ -75,10 +75,13 @@ export default {
   methods: {
     ...mapActions([
       "queryPublishList",
-      "queryFilters"
+      "queryFilters",
+      "deletePublish"
     ]),
-    delAddress(id) {
-      console.log(id)
+    callDeletePublish(id, type) {
+      this.deletePublish({
+        id, type
+      })
     },
     goPublish() {
         wx.navigateTo({

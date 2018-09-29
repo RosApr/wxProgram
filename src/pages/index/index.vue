@@ -112,7 +112,6 @@
                 address: "",
                 tabConfig: INDEX_PAGE_LIST_TYPE,
                 activeTab: INDEX_PAGE_LIST_TYPE["sell"],
-                // 定位
                 regionData: regionArray,
                 regionIndex: [0,0],
                 regionSecond: 0,
@@ -133,7 +132,6 @@
             }
         },
         onReachBottom() {
-            // 加载更多
             this.queryIndexList({
                 listType: this.activeTab
             })
@@ -145,7 +143,6 @@
             hideAuthLayer(layerShowStatus=false) {
                 saveLocationToStorage({city:defaultCity})
                 this.setCurrentRegionCascader(defaultCity)
-                // 初始化获取列表
                 this.queryIndexList({
                     listType: this.activeTab,
                     region: defaultCity
@@ -166,7 +163,6 @@
                 }
                 saveLocationToStorage({city:region})
                 this.setCurrentRegionCascader(region)
-                // 初始化获取列表
                 this.queryIndexList({
                     listType: this.activeTab,
                     region
@@ -203,7 +199,6 @@
                     url: `/pages/detail/main?type=${listType}&id=${id}`
                 })
             },
-            // 切换tab
             changeActiveTab(active) {
                 this.activeTab = active
                 this.queryIndexList({
@@ -241,7 +236,6 @@
                     const region = wx.getStorageSync(REGION)
                     saveLocationToStorage({city: region})
                     this.setCurrentRegionCascader(region)
-                    // 初始化获取列表
                     this.queryIndexList({
                         listType: this.activeTab,
                         region
@@ -252,12 +246,10 @@
                         const region = await this.queryUserLocation()
                         saveLocationToStorage({city:region})
                         this.setCurrentRegionCascader(region)
-                        // 初始化获取列表
                         this.queryIndexList({
                             listType: this.activeTab,
                             region
                         })
-                        // return this.returnRegion(region)
                     } else if(isAuthGetLocationApi == undefined){
                         wx.getLocation({
                             type: "wgs84",
@@ -269,7 +261,6 @@
                                 }
                                 saveLocationToStorage({city:city})
                                 this.setCurrentRegionCascader(city)
-                                // 初始化获取列表
                                 this.queryIndexList({
                                     listType: this.activeTab,
                                     region: city
@@ -278,7 +269,6 @@
                             fail: async res => {
                                 saveLocationToStorage({city:defaultCity})
                                 this.setCurrentRegionCascader(defaultCity)
-                                // 初始化获取列表
                                 this.queryIndexList({
                                     listType: this.activeTab,
                                     region: defaultCity
