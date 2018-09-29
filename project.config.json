@@ -7,10 +7,11 @@
 		"minified": true,
 		"newFeature": true
 	},
-	"miniprogramRoot": "./dist/",
+	"miniprogramRoot": "dist/",
 	"compileType": "miniprogram",
 	"appid": "wx4b5ca81e625b621d",
 	"projectname": "mall",
+	"libVersion": "2.3.0",
 	"condition": {
 		"search": {
 			"current": -1,

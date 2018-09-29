@@ -5,6 +5,7 @@ const TOKEN = "token"
 const USER_PROFILE = "userProfile"
 const OPEN_ID = "openId"
 const REGION = "region"
+const defaultCity = "北京市"
 const openAjaxModel = ({ code = 1, title }, callback) => {
     return WXP.showToast({
         title,
@@ -15,7 +16,15 @@ const openAjaxModel = ({ code = 1, title }, callback) => {
             callback()
         }
     })
-    
+}
+const queryUserLocationApi = ({longitude, latitude}) => {
+    return WXP.request({url: 'https://api.map.baidu.com/geocoder/v2/?ak=1IZFuZ916LH41ocA5KzGFUDyK4EQB5Zp&location=' + latitude + ',' + longitude + '&output=json',
+        data: {},
+        header: {'Content-Type': 'application/json'}
+    })
+}
+const saveLocationToStorage = ({city}) => {
+    wx.setStorageSync(REGION, city)
 }
 const setWxNavBarTitle = (title) => {
     wx.setNavigationBarTitle({
@@ -67,5 +76,8 @@ export {
     USER_PROFILE,
     OPEN_ID,
     modifyUserProfileSuccessCallback,
-    REGION
+    REGION,
+    queryUserLocationApi,
+    saveLocationToStorage,
+    defaultCity
 }

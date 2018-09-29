@@ -78,12 +78,32 @@
                 暂无数据...
             </div>
         </div>
+        <div class="auth-location-layer" :class="{'active': showAuthLocationLayer}">
+            <div class="content">
+                <div class="title">是否授权当前位置</div>
+                <div class="desc">需要获取您的地理位置，请确认授权，否则定位功能将无法使用</div>
+                <div class="btn-container">
+                    <div class="btn cancel" @click="hideAuthLayer(false)">取消</div>
+                    <div class="btn confirm">
+                        <button open-type="openSetting" type="primary" lang="zh_CN" @opensetting="onAuthLocation">授权</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
     import wx from "@/utils/wx"
+    import WXP from 'minapp-api-promise'
     import regionArray from "@/utils/region"
-    import { INDEX_PAGE_LIST_TYPE, USER_INFO, REGION } from "@/utils/common"
+    import { 
+        INDEX_PAGE_LIST_TYPE,
+        USER_INFO,
+        REGION,
+        queryUserLocationApi,
+        saveLocationToStorage,
+        defaultCity
+    } from "@/utils/common"
     import { mapState, mapActions } from "vuex"
     export default {
         data() {
@@ -96,15 +116,22 @@
                 regionData: regionArray,
                 regionIndex: [0,0],
                 regionSecond: 0,
-                place: regionArray[1][0][0]
+                place: regionArray[1][0][0],
+                showAuthLocationLayer: false
             }
         },
-        mounted() {
-            // 初始化获取列表
-            this.queryIndexList({
-                listType: this.activeTab
-            })
-            this.getCurrentPosition()
+        async mounted() {
+            const currentRegion = await this.getUserLocation()
+            console.log(currentRegion)
+            if(currentRegion) {
+                saveLocationToStorage({city:currentRegion})
+                this.setCurrentRegionCascader(currentRegion)
+                // 初始化获取列表
+                this.queryIndexList({
+                    listType: this.activeTab,
+                    region: currentRegion
+                })
+            }
         },
         computed: {
             ...mapState([
@@ -125,31 +152,50 @@
             ...mapActions([
                 "queryIndexList"
             ]),
+            hideAuthLayer(layerShowStatus=false) {
+                saveLocationToStorage({city:defaultCity})
+                this.setCurrentRegionCascader(defaultCity)
+                // 初始化获取列表
+                this.queryIndexList({
+                    listType: this.activeTab,
+                    region: defaultCity
+                })
+                console.log(defaultCity)
+                return this.showAuthLocationLayer = layerShowStatus
+            },
             goSearchPage() {
                 wx.navigateTo({
                     url: "/pages/search/main"
                 })
             },
-            getCurrentPosition() {
-                const currentCity = wx.getStorageSync(REGION) || wx.getStorageSync(USER_INFO)["city"]
+            async onAuthLocation(AuthRes) {
+                this.hideAuthLayer()
+                console.log(AuthRes)
+                const isAuthGetLocationApi = AuthRes.mp.detail.authSetting["scope.userLocation"]
+                const region = await this.queryUserLocation()
+                saveLocationToStorage({city:region})
+                this.setCurrentRegionCascader(region)
+                // 初始化获取列表
+                this.queryIndexList({
+                    listType: this.activeTab,
+                    region
+                })
+            },
+            setCurrentRegionCascader(currentCity) {
                 this.regionData[1].forEach((citysArray, citysIndex) => {
                    citysArray.forEach((city, cityIndex) => {
                        if(city.indexOf(currentCity) >= 0) {
                            this.regionSecond = citysIndex
                            this.regionIndex = [citysIndex, cityIndex]
                            this.place = this.regionData[1][citysIndex][cityIndex]
-                           this.saveAreaToStorage(this.place)
                        }
                    })
                 })
             },
-            saveAreaToStorage(region) {
-                wx.setStorageSync(REGION, region)
-            },
             regionChange(e) {
                 const values = e.mp.detail.value
                 this.place = this.regionData[1][values[0]][values[1]]
-                this.saveAreaToStorage(this.place)
+                saveLocationToStorage({city: this.place})
                 this.queryIndexList({
                     listType: this.activeTab,
                     region: this.place
@@ -161,7 +207,6 @@
                     this.regionIndex = [e.mp.detail.value, 0]
                 }
             },
-
             showDetail(id, listType) {
                 wx.navigateTo({
                     url: `/pages/detail/main?type=${listType}&id=${id}`
@@ -177,6 +222,71 @@
             bindRegionChange(e) {
                 var value = e.mp.detail.value
                 console.log(value)
+            },
+            returnRegion(region=defaultCity) {
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        resolve(region)
+                    }, 100)
+                })
+            },
+            async queryUserLocation() {
+                const locationRes = await WXP.getLocation({
+                    type: "wgs84",
+                })
+                if(locationRes.errMsg == "getLocation:ok") {
+                    const cityRes = await queryUserLocationApi(locationRes)
+                    if(cityRes.errMsg == "request:ok") {
+                        const { city } = cityRes.data.result.addressComponent
+                        return this.returnRegion(city)
+                    }
+                }
+                return this.returnRegion()
+            },
+            async getUserLocation() {
+                const isRegionInStorage = wx.getStorageInfoSync().keys.includes(REGION)
+                const userSettingRes = await WXP.getSetting()
+                const isAuthGetLocationApi = userSettingRes.authSetting["scope.userLocation"]
+                if(isRegionInStorage && wx.getStorageSync(REGION) && isAuthGetLocationApi) {
+                    return this.returnRegion(wx.getStorageSync(REGION))
+                } else {
+                    let region = defaultCity
+                    if(isAuthGetLocationApi) {
+                        region = await this.queryUserLocation()
+                        console.log(region)
+                        return this.returnRegion(region || defaultCity)
+                    } else if(isAuthGetLocationApi == undefined){
+                        wx.getLocation({
+                            type: "wgs84",
+                            success: async locationRes => {
+                                const cityRes = await queryUserLocationApi(locationRes)
+                                if(cityRes.errMsg == "request:ok") {
+                                    const { city } = cityRes.data.result.addressComponent
+                                    region = city
+                                }
+                                saveLocationToStorage({city:region})
+                                this.setCurrentRegionCascader(region)
+                                // 初始化获取列表
+                                this.queryIndexList({
+                                    listType: this.activeTab,
+                                    region
+                                })
+                            },
+                            fail: async res => {
+                                saveLocationToStorage({city:defaultCity})
+                                this.setCurrentRegionCascader(defaultCity)
+                                // 初始化获取列表
+                                this.queryIndexList({
+                                    listType: this.activeTab,
+                                    region: defaultCity
+                                })
+                            }
+                        })
+                        
+                    } else if(isAuthGetLocationApi == false) {
+                        this.hideAuthLayer(true)
+                    }
+                }
             }
         }
     }
@@ -228,6 +338,65 @@
         }
     }
     .index-container {
+        .auth-location-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            z-index: 99;
+            background-color: rgba(0, 0, 0, .6);
+            display: none;
+            &.active {
+                display: block;
+            }
+            .content {
+                background-color: #fff;
+                width: 60%;
+                margin: 300rpx auto 0;
+                padding: 20rpx 0 0;
+                box-sizing: border-box;
+                .title {
+                    padding: 20rpx 40rpx;
+                    font-size: 30rpx;
+                    color: #666;
+                }
+                .desc {
+                    font-size: 28rpx;
+                    padding: 0 40rpx;
+                    margin-top: 30rpx;
+                    color: #ccc;
+                }
+                .btn-container {
+                    width: 100%;
+                    display: flex;
+                    justify-items: center;
+                    align-items: center;
+                    .btn {
+                        flex: 1;
+                        width: 50%;
+                        height: 100%;
+
+                        &.cancel {
+                            background: #a7a7a7;
+                            box-sizing:border-box;
+                            font-size:18px;
+                            text-align:center;
+                            text-decoration:none;
+                            line-height:2.55555556;
+                            border-radius:0;
+                            color: #fff;
+                        }
+                        &.confirm {
+                            button {
+                                border-radius:0;
+                            }
+                        }
+                    }
+                }
+                
+            }
+        }
         .tab-container {
             width: 100%;
             .tab-header-container {

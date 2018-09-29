@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <img class="logo" src="/static/images/login_logo.png" alt="">
         <div class="item">商城申请获取以下权限：</div>
         <div class="item">获取你的公开信息（头像、昵称等）</div>
         <div class="btn">
@@ -14,7 +15,10 @@
         TOKEN,
         USER_PROFILE,
         OPEN_ID,
-        REGION
+        queryUserLocationApi,
+        saveLocationToStorage,
+        defaultCity,
+        REGION,
     } from "@/utils/common"
     import { getUserLoginInfo } from "@/utils/api"
     export default {
@@ -26,23 +30,19 @@
         async mounted() {
             let res = await WXP.getSetting()
             if (res.authSetting['scope.userInfo']) {
-            // 已经授权，可以直接调用 getUserInfo 获取头像昵称
                 const userInfoRes = await WXP.getUserInfo({
                     lang: "zh_CN"
                 })
-                // wx.setStorageSync(USER_INFO, userInfoRes.userInfo)
                 this.queryUserProfile(userInfoRes.userInfo)
             }
         },
         methods: {
             async onGotUserInfo(e) {
                 if(e.mp.detail.errMsg != "getUserInfo:ok") return
-                // wx.setStorageSync(USER_INFO, e.mp.detail.userInfo)
                 this.queryUserProfile(e.mp.detail.userInfo)
             },
-            async queryUserProfile(userInfo) {
+            async queryUserProfile(userInfo, isAuthGetLocationApi) {
                 wx.setStorageSync(USER_INFO, userInfo)
-                !wx.getStorageSync(REGION) && wx.setStorageSync(REGION, userInfo.city)
                 let wxLoginRes = await WXP.login()
                 if(wxLoginRes.errMsg == "login:ok") {
                     const userProfileRes = await this.getUserLoginInfoApi({code: wxLoginRes.code})
@@ -50,6 +50,7 @@
                     wx.setStorageSync(TOKEN, token)
                     wx.setStorageSync(OPEN_ID, openid)
                     wx.setStorageSync(USER_PROFILE, userProfile)
+
                     wx.switchTab({
                         url: '/pages/index/main'
                     })
@@ -68,7 +69,12 @@
             padding: 5rpx 0;
             margin-bottom: 30rpx;
         }
-
+        .logo {
+            width: 150rpx;
+            height: 190rpx;
+            display: block;
+            margin: 0 auto 40rpx;
+        }
         .btn {
             width: 100%;
             margin: 100rpx 50rpx 0;
