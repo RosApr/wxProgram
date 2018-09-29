@@ -122,7 +122,6 @@
         },
         async mounted() {
             const currentRegion = await this.getUserLocation()
-            console.log(currentRegion)
             if(currentRegion) {
                 saveLocationToStorage({city:currentRegion})
                 this.setCurrentRegionCascader(currentRegion)
@@ -160,7 +159,6 @@
                     listType: this.activeTab,
                     region: defaultCity
                 })
-                console.log(defaultCity)
                 return this.showAuthLocationLayer = layerShowStatus
             },
             goSearchPage() {
@@ -170,7 +168,6 @@
             },
             async onAuthLocation(AuthRes) {
                 this.hideAuthLayer()
-                console.log(AuthRes)
                 const isAuthGetLocationApi = AuthRes.mp.detail.authSetting["scope.userLocation"]
                 const region = await this.queryUserLocation()
                 saveLocationToStorage({city:region})
@@ -221,7 +218,6 @@
             },
             bindRegionChange(e) {
                 var value = e.mp.detail.value
-                console.log(value)
             },
             returnRegion(region=defaultCity) {
                 return new Promise((resolve, reject) => {
@@ -253,7 +249,6 @@
                     let region = defaultCity
                     if(isAuthGetLocationApi) {
                         region = await this.queryUserLocation()
-                        console.log(region)
                         return this.returnRegion(region || defaultCity)
                     } else if(isAuthGetLocationApi == undefined){
                         wx.getLocation({
@@ -463,9 +458,16 @@
                                 .title {
                                     color: #383838;
                                     font-size: 30rpx;
+                                    display: -webkit-box;
+                                    word-break: break-all;   
+                                    -webkit-box-orient: vertical;   
+                                    -webkit-line-clamp:2;    
+                                    overflow: hidden;    
+                                    text-overflow:ellipsis;
                                 }
                                 .date {
                                     color: #a7a7a7;
+                                    margin-top: 10rpx;
                                 }
                                 .place {
                                     color: #a7a7a7;
@@ -501,6 +503,13 @@
                                     font-size: 30rpx;
                                     margin-bottom: 10rpx;
                                     color: #383838;
+                                    display: -webkit-box;
+                                    line-height: 40rpx;   
+                                    word-break: break-all;   
+                                    -webkit-box-orient: vertical;   
+                                    -webkit-line-clamp:2;    
+                                    overflow: hidden;    
+                                    text-overflow:ellipsis;
                                 }
                                 .area {
                                     .type {
