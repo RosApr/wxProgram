@@ -121,16 +121,7 @@
             }
         },
         async mounted() {
-            const currentRegion = await this.getUserLocation()
-            if(currentRegion) {
-                saveLocationToStorage({city:currentRegion})
-                this.setCurrentRegionCascader(currentRegion)
-                // 初始化获取列表
-                this.queryIndexList({
-                    listType: this.activeTab,
-                    region: currentRegion
-                })
-            }
+            await this.getUserLocation()
         },
         computed: {
             ...mapState([
@@ -169,7 +160,14 @@
             async onAuthLocation(AuthRes) {
                 this.hideAuthLayer()
                 const isAuthGetLocationApi = AuthRes.mp.detail.authSetting["scope.userLocation"]
-                const region = await this.queryUserLocation()
+                let region = defaultCity
+                console.log("opensetting")
+                console.log(isAuthGetLocationApi)
+                if(isAuthGetLocationApi) {
+                    region = await this.queryUserLocation()
+                    console.log("第一次拒绝授权位置，再次授权获得权限")
+                }
+                console.log(region)
                 saveLocationToStorage({city:region})
                 this.setCurrentRegionCascader(region)
                 // 初始化获取列表
@@ -234,6 +232,8 @@
                     const cityRes = await queryUserLocationApi(locationRes)
                     if(cityRes.errMsg == "request:ok") {
                         const { city } = cityRes.data.result.addressComponent
+                        console.log("获取经纬度，获取百度解析成功")
+                        console.log(city)
                         return this.returnRegion(city)
                     }
                 }
@@ -243,31 +243,59 @@
                 const isRegionInStorage = wx.getStorageInfoSync().keys.includes(REGION)
                 const userSettingRes = await WXP.getSetting()
                 const isAuthGetLocationApi = userSettingRes.authSetting["scope.userLocation"]
+                console.log("开始判断关键变量")
+                console.log(wx.getStorageSync(REGION))
+                console.log(`isRegionInStorage:${isRegionInStorage}`)
+                console.log(`isAuthGetLocationApi:${isAuthGetLocationApi}`)
                 if(isRegionInStorage && wx.getStorageSync(REGION) && isAuthGetLocationApi) {
-                    return this.returnRegion(wx.getStorageSync(REGION))
+                    const region = wx.getStorageSync(REGION)
+                    console.log("缓存已存在位置，已获取用户授权")
+                    console.log(region)
+                    saveLocationToStorage({city: region})
+                    this.setCurrentRegionCascader(region)
+                    // 初始化获取列表
+                    this.queryIndexList({
+                        listType: this.activeTab,
+                        region
+                    })
+                    return this.returnRegion(region)
                 } else {
-                    let region = defaultCity
+                    // let region = defaultCity
+                    console.log("判断是否已经获取过位置授权")
                     if(isAuthGetLocationApi) {
-                        region = await this.queryUserLocation()
-                        return this.returnRegion(region || defaultCity)
+                        const region = await this.queryUserLocation()
+                        console.log("位置授权以获取，无缓存，获取位置")
+                        console.log(region)
+                        saveLocationToStorage({city:region})
+                        this.setCurrentRegionCascader(region)
+                        // 初始化获取列表
+                        this.queryIndexList({
+                            listType: this.activeTab,
+                            region
+                        })
+                        // return this.returnRegion(region)
                     } else if(isAuthGetLocationApi == undefined){
+                        console.log("第一次准备授权")
                         wx.getLocation({
                             type: "wgs84",
                             success: async locationRes => {
+                                console.log("授权成功")
                                 const cityRes = await queryUserLocationApi(locationRes)
+                                let city = ""
                                 if(cityRes.errMsg == "request:ok") {
-                                    const { city } = cityRes.data.result.addressComponent
-                                    region = city
+                                    city = cityRes.data.result.addressComponent.city
                                 }
-                                saveLocationToStorage({city:region})
-                                this.setCurrentRegionCascader(region)
+                                console.log(city)
+                                saveLocationToStorage({city:city})
+                                this.setCurrentRegionCascader(city)
                                 // 初始化获取列表
                                 this.queryIndexList({
                                     listType: this.activeTab,
-                                    region
+                                    region: city
                                 })
                             },
                             fail: async res => {
+                                console.log("授权失败，填充默认位置")
                                 saveLocationToStorage({city:defaultCity})
                                 this.setCurrentRegionCascader(defaultCity)
                                 // 初始化获取列表
@@ -279,6 +307,7 @@
                         })
                         
                     } else if(isAuthGetLocationApi == false) {
+                        console.log("open opensetting 逻辑")
                         this.hideAuthLayer(true)
                     }
                 }
