@@ -30,6 +30,9 @@
                 <button class="weui-btn" @click="login" type="primary">登录</button>
             </div>
         </div>
+        <div class="continue-look-container">
+            <div @click="continueLook" class="go-register-btn">暂不登录继续浏览</div>
+        </div>
         <div class="go-register-container">
             还没有账号?<div @click="goRegister" class="go-register-btn">立即注册</div>
         </div>
@@ -68,6 +71,11 @@
                 wx.navigateTo({
                     url: "/pages/register/main"
                 })  
+            },
+            continueLook() {
+                wx.switchTab({
+                    url: "/pages/index/main"
+                })
             },
             async login() {
                 if(this.showTip) {
@@ -188,6 +196,17 @@
         .go-register-btn {
             display: inline-block;
             color: #00a0ea;
+        }
+    }
+    .continue-look-container {
+        text-align: center;
+        width: 660rpx;
+        margin: 0 auto 40rpx;
+        color: #474747;
+        font-size: 26rpx;
+        .go-register-btn {
+            display: inline-block;
+            color: #666;
         }
     }
 </style>
