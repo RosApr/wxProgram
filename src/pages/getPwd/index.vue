@@ -78,7 +78,7 @@
             }
         },
         mounted() {
-            setWxNavBarTitle("注册")
+            setWxNavBarTitle("修改密码")
             
         },
         methods: {

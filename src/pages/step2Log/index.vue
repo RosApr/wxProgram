@@ -133,7 +133,7 @@ export default {
             phone: "",
             linkman: "",
             startdate: this.$moment().format("YYYY-MM-DD"),
-            enddate: this.$moment().format("YYYY-MM-DD"),
+            enddate: this.$moment().day(30).format("YYYY-MM-DD"),
             remark: "",
             details: "",
             regionData: regionArray,
@@ -187,7 +187,7 @@ export default {
         this.publishType = type
         //配置时间选择插件起始时间
         this.startdateConfig = this.$moment().format("YYYY-MM-DD")
-        this.enddateConfig = this.$moment().format("YYYY-MM-DD")
+        this.enddateConfig = this.$moment().day(30).format("YYYY-MM-DD")
     },
     computed: {
         regionDataComputed() {

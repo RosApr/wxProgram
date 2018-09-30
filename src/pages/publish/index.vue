@@ -36,7 +36,7 @@
   </div>
 </template>
 <script>
-import { setWxNavBarTitle, TOKEN } from "@/utils/common"
+import { setWxNavBarTitle, TOKEN, isNoTokenGoAuthPage } from "@/utils/common"
 import { mapActions, mapState } from "vuex"
 export default {
   data() {
@@ -58,6 +58,11 @@ export default {
       }
   },
   onShow() {
+    if(!wx.getStorageSync(TOKEN)) {
+      return wx.navigateTo({
+        url: "/pages/authorize/main"
+      })
+    }
     this.queryPublishList({refresh: true})
     this.queryFilters()
   },

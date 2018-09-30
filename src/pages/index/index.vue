@@ -231,6 +231,7 @@
             async getUserLocation() {
                 const isRegionInStorage = wx.getStorageInfoSync().keys.includes(REGION)
                 const userSettingRes = await WXP.getSetting()
+                console.log(userSettingRes)
                 const isAuthGetLocationApi = userSettingRes.authSetting["scope.userLocation"]
                 if(isRegionInStorage && wx.getStorageSync(REGION) && isAuthGetLocationApi) {
                     const region = wx.getStorageSync(REGION)

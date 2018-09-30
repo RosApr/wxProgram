@@ -53,7 +53,7 @@
                 </div>
                 <div class="weui-form-preview__item">
                     <div class="weui-form-preview__label">联系电话：</div>
-                    <div class="weui-form-preview__value">{{detail.phone}}</div>
+                    <div class="weui-form-preview__value phone" @click="callLinkman(detail.phone)">{{detail.phone}}</div>
                 </div>
             </div>
         </div>
@@ -107,7 +107,7 @@
                 </div>
                 <div class="weui-form-preview__item">
                     <div class="weui-form-preview__label">联系电话：</div>
-                    <div class="weui-form-preview__value">{{detail.phone}}</div>
+                    <div class="weui-form-preview__value phone" @click="callLinkman(detail.phone)">{{detail.phone}}</div>
                 </div>
             </div>
         </div>
@@ -135,6 +135,7 @@
     </div>
 </template>
 <script>
+    import WXP from 'minapp-api-promise'
     import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, openAjaxModel } from "@/utils/common"
     import { reportPublish } from "@/utils/api"
     import { mapActions, mapState } from "vuex"
@@ -200,11 +201,19 @@
             },
             cancel() {
                 this.showReportModel = false
+            },
+            async callLinkman(phone) {
+                const makePhoneCallRes = await WXP.makePhoneCall({
+                    phoneNumber: phone
+                })
             }
         }
     }
 </script>
 <style lang="less" scoped>
+    .phone {
+        text-decoration: underline;   
+    }
     .detail-container {
         padding-bottom: 40rpx;
         .btn-container {

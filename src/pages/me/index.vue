@@ -49,7 +49,7 @@
         onShow() {
             if(!wx.getStorageSync(TOKEN)) {
                 return wx.navigateTo({
-                    url: "/pages/login/main"
+                    url: "/pages/authorize/main"
                 })
             }
             const userProfile = wx.getStorageSync(USER_PROFILE)

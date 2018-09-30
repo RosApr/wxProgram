@@ -1,12 +1,12 @@
 {
   "pages": [
+    "pages/index/main",
     "pages/authorize/main",
     "pages/setPhone/main",
     "pages/getPwd/main",
     "pages/register/main",
     "pages/me/main",
     "pages/login/main",
-    "pages/index/main",
     "pages/publish/main",
     "pages/search/main",
     "pages/setImg/main",
