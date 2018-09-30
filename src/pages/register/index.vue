@@ -46,7 +46,7 @@
     </div>
 </template>
 <script>
-    import { setWxNavBarTitle, EXEC_REGULAR, TOKEN, USER_PROFILE } from "@/utils/common"
+    import { setWxNavBarTitle, EXEC_REGULAR, TOKEN, USER_PROFILE, setDataToStorageIfIsAvailable } from "@/utils/common"
     import { register, getPhoneVerifyCode } from "@/utils/api"
     import execTip from "@/components/execTip"
     const tipConfig = {
@@ -120,8 +120,8 @@
                     registerData[key] = this[key]
                 }
                 const res = await this.registerApi(registerData)
-                wx.setStorageSync(TOKEN, res.data.token)
-                wx.setStorageSync(USER_PROFILE, res.data.data)
+                setDataToStorageIfIsAvailable(TOKEN, res.data.token)
+                setDataToStorageIfIsAvailable(USER_PROFILE, res.data.data)
                 wx.switchTab({
                     url: "/pages/index/main"
                 })

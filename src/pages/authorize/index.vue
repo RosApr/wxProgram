@@ -14,7 +14,6 @@
 <script>
     import WXP from 'minapp-api-promise'
     import {
-        USER_INFO,
         TOKEN,
         USER_PROFILE,
         OPEN_ID,
@@ -22,6 +21,7 @@
         saveLocationToStorage,
         defaultCity,
         REGION,
+        setDataToStorageIfIsAvailable
     } from "@/utils/common"
     import { getUserLoginInfo } from "@/utils/api"
     export default {
@@ -30,31 +30,30 @@
                 getUserLoginInfoApi: getUserLoginInfo
             }
         },
-        async onShow() {
-            let res = await WXP.getSetting()
-            if (res.authSetting['scope.userInfo']) {
-                const userInfoRes = await WXP.getUserInfo({
-                    lang: "zh_CN"
-                })
-                console.log(userInfoRes)
-                this.queryUserProfile(userInfoRes.userInfo)
-            }
-        },
+        // async onShow() {
+        //     let res = await WXP.getSetting()
+        //     if (res.authSetting['scope.userInfo']) {
+        //         const userInfoRes = await WXP.getUserInfo({
+        //             lang: "zh_CN"
+        //         })
+        //         console.log(userInfoRes)
+        //         this.queryUserProfile(userInfoRes.userInfo)
+        //     }
+        // },
         methods: {
             async onGotUserInfo(e) {
                 if(e.mp.detail.errMsg != "getUserInfo:ok") return
                 this.queryUserProfile(e.mp.detail.userInfo)
             },
-            async queryUserProfile(userInfo, isAuthGetLocationApi) {
-                wx.setStorageSync(USER_INFO, userInfo)
+            async queryUserProfile() {
                 let wxLoginRes = await WXP.login()
                 console.log(wxLoginRes)
                 if(wxLoginRes.errMsg == "login:ok") {
                     const userProfileRes = await this.getUserLoginInfoApi({code: wxLoginRes.code})
                     const { openid, token, data: userProfile } = userProfileRes.data
-                    wx.setStorageSync(TOKEN, token)
-                    wx.setStorageSync(OPEN_ID, openid)
-                    wx.setStorageSync(USER_PROFILE, userProfile)
+                    setDataToStorageIfIsAvailable(TOKEN, token)
+                    setDataToStorageIfIsAvailable(OPEN_ID, openid)
+                    setDataToStorageIfIsAvailable(USER_PROFILE, userProfile)
                     console.log("login ok")
                     wx.navigateTo({
                         url: '/pages/login/main'

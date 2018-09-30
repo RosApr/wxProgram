@@ -60,7 +60,7 @@ export default {
   onShow() {
     if(!wx.getStorageSync(TOKEN)) {
       return wx.navigateTo({
-        url: "/pages/authorize/main"
+        url: "/pages/login/main"
       })
     }
     this.queryPublishList({refresh: true})

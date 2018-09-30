@@ -42,7 +42,7 @@
 <script>
     import execTip from "@/components/execTip"
     import { login } from "@/utils/api"
-    import { setWxNavBarTitle, EXEC_REGULAR, openAjaxModel, TOKEN, USER_PROFILE } from "@/utils/common"
+    import { setWxNavBarTitle, EXEC_REGULAR, openAjaxModel, TOKEN, USER_PROFILE, setDataToStorageIfIsAvailable } from "@/utils/common"
     const tipConfig = {
         phone: "请输入手机号！",
         password: "请输入密码！"
@@ -103,8 +103,8 @@
                     type: "login"
                 }
                 const res = await this.loginApi(formData)
-                wx.setStorageSync(TOKEN, res.data.token)
-                wx.setStorageSync(USER_PROFILE, res.data.data)
+                setDataToStorageIfIsAvailable(TOKEN, res.data.token)
+                setDataToStorageIfIsAvailable(USER_PROFILE, res.data.data)
                 wx.switchTab({
                     url: "/pages/index/main"
                 })

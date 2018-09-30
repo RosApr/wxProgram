@@ -1,7 +1,6 @@
 {
   "pages": [
     "pages/index/main",
-    "pages/authorize/main",
     "pages/setPhone/main",
     "pages/getPwd/main",
     "pages/register/main",

@@ -96,14 +96,18 @@
     import wx from "@/utils/wx"
     import WXP from 'minapp-api-promise'
     import regionArray from "@/utils/region"
+    // import { getUserLoginInfo } from "@/utils/api"
     import { 
         INDEX_PAGE_LIST_TYPE,
-        USER_INFO,
         REGION,
-        queryUserLocationApi,
         saveLocationToStorage,
+        queryUserLocationApi,
         defaultCity,
-        isInStorageAndReturn
+        isInStorageAndReturn,
+        // OPEN_ID,
+        // TOKEN,
+        // USER_PROFILE,
+        setDataToStorageIfIsAvailable
     } from "@/utils/common"
     import { mapState, mapActions } from "vuex"
     export default {
@@ -120,8 +124,9 @@
                 showAuthLocationLayer: false
             }
         },
-        async mounted() {
-            await this.getUserLocation()
+        mounted() {
+            // this.queryUserProfile()
+            this.getUserLocation()
         },
         computed: {
             ...mapState([
@@ -141,6 +146,24 @@
             ...mapActions([
                 "queryIndexList"
             ]),
+            // async queryUserProfile() {
+            //     let wxLoginRes = await WXP.login()
+            //     console.log(wxLoginRes)
+            //     if(wxLoginRes.errMsg == "login:ok") {
+            //         const userProfileRes = await getUserLoginInfo({code: wxLoginRes.code})
+            //         const { openid, token, data: userProfile } = userProfileRes.data
+            //         setDataToStorageIfIsAvailable(TOKEN, token)
+            //         setDataToStorageIfIsAvailable(OPEN_ID, openid)
+            //         setDataToStorageIfIsAvailable(USER_PROFILE, userProfile)
+            //         console.log("login ok")
+            //         console.log(token)
+            //         console.log(openid)
+            //         console.log(userProfile)
+            //         // wx.navigateTo({
+            //         //     url: '/pages/login/main'
+            //         // })
+            //     }
+            // },
             hideAuthLayer(layerShowStatus=false) {
                 saveLocationToStorage({city:defaultCity})
                 this.setCurrentRegionCascader(defaultCity)

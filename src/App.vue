@@ -1,12 +1,27 @@
 <script>
+  import { getUserLoginInfo } from "@/utils/api"
+  import { 
+    OPEN_ID,
+    TOKEN,
+    USER_PROFILE,
+    setDataToStorageIfIsAvailable
+  } from "@/utils/common"
+  import WXP from 'minapp-api-promise'
 export default {
-  created () {
-    // 调用API从本地缓存中获取数据
-    const logs = wx.getStorageSync('logs') || []
-    logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
-
-    console.log('app created and cache logs by setStorageSync')
+  async created () {
+    let wxLoginRes = await WXP.login()
+      console.log(wxLoginRes)
+      if(wxLoginRes.errMsg == "login:ok") {
+          const userProfileRes = await getUserLoginInfo({code: wxLoginRes.code})
+          const { openid, token, data: userProfile } = userProfileRes.data
+          setDataToStorageIfIsAvailable(TOKEN, token)
+          setDataToStorageIfIsAvailable(OPEN_ID, openid)
+          setDataToStorageIfIsAvailable(USER_PROFILE, userProfile)
+          console.log("login ok")
+          console.log(token)
+          console.log(openid)
+          console.log(userProfile)
+      }
   }
 }
 </script>

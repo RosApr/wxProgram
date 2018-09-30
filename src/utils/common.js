@@ -1,6 +1,5 @@
 import WXP from 'minapp-api-promise'
 
-const USER_INFO = "userInfo"
 const TOKEN = "token"
 const USER_PROFILE = "userProfile"
 const OPEN_ID = "openid"
@@ -34,7 +33,7 @@ const queryUserLocationApi = ({longitude, latitude}) => {
     })
 }
 const saveLocationToStorage = ({city}) => {
-    wx.setStorageSync(REGION, city)
+    setDataToStorageIfIsAvailable(REGION, city)
 }
 const setWxNavBarTitle = (title) => {
     wx.setNavigationBarTitle({
@@ -70,10 +69,17 @@ const transformTitle = (title) => {
     return titles
 }
 const modifyUserProfileSuccessCallback = (data) => {
-    wx.setStorageSync(USER_PROFILE, data.data)
+    setDataToStorageIfIsAvailable(USER_PROFILE, data.data)
     wx.switchTab({
         url: "/pages/me/main"
     })
+}
+const setDataToStorageIfIsAvailable = (key, value) => {
+    if(value){
+        wx.setStorageSync(key, value)
+        return true
+    }
+    return false
 }
 export {
     setWxNavBarTitle,
@@ -81,7 +87,6 @@ export {
     EXEC_REGULAR,
     transformTitle,
     openAjaxModel,
-    USER_INFO,
     TOKEN,
     USER_PROFILE,
     OPEN_ID,
@@ -90,5 +95,6 @@ export {
     queryUserLocationApi,
     saveLocationToStorage,
     defaultCity,
-    isInStorageAndReturn
+    isInStorageAndReturn,
+    setDataToStorageIfIsAvailable
 }

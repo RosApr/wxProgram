@@ -30,7 +30,6 @@
 <script>
     import {
         setWxNavBarTitle,
-        USER_INFO,
         TOKEN,
         USER_PROFILE,
         OPEN_ID
@@ -49,7 +48,7 @@
         onShow() {
             if(!wx.getStorageSync(TOKEN)) {
                 return wx.navigateTo({
-                    url: "/pages/authorize/main"
+                    url: "/pages/login/main"
                 })
             }
             const userProfile = wx.getStorageSync(USER_PROFILE)
