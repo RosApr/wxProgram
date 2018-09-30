@@ -102,7 +102,8 @@
         REGION,
         queryUserLocationApi,
         saveLocationToStorage,
-        defaultCity
+        defaultCity,
+        isInStorageAndReturn
     } from "@/utils/common"
     import { mapState, mapActions } from "vuex"
     export default {
@@ -229,12 +230,11 @@
                 return this.returnRegion()
             },
             async getUserLocation() {
-                const isRegionInStorage = wx.getStorageInfoSync().keys.includes(REGION)
+                const regionStorageInfo = isInStorageAndReturn(REGION)
                 const userSettingRes = await WXP.getSetting()
-                console.log(userSettingRes)
                 const isAuthGetLocationApi = userSettingRes.authSetting["scope.userLocation"]
-                if(isRegionInStorage && wx.getStorageSync(REGION) && isAuthGetLocationApi) {
-                    const region = wx.getStorageSync(REGION)
+                if(regionStorageInfo.status && isAuthGetLocationApi) {
+                    const region = regionStorageInfo(REGION)
                     saveLocationToStorage({city: region})
                     this.setCurrentRegionCascader(region)
                     this.queryIndexList({

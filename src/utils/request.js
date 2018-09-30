@@ -2,19 +2,21 @@ import wx from './wx'
 import Fly from 'flyio'
 import WXP from 'minapp-api-promise'
 const baseUrl = "https://demo.xinbao369.com/ids/public/index.php/api/"
-import { TOKEN, OPEN_ID, REGION } from "@/utils/common"
+import { TOKEN, OPEN_ID, REGION, isInStorageAndReturn } from "@/utils/common"
 const request = new Fly()
 request.config.baseURL = baseUrl
 request.interceptors.request.use((request) => {
-  const storageKeysArray = wx.getStorageInfoSync().keys
-  if(storageKeysArray.includes(TOKEN) && request.body) {
-    request.body["token"] = wx.getStorageSync(TOKEN) || ""
+  const tokenStorageInfo = isInStorageAndReturn(TOKEN)
+  const regionStorageInfo = isInStorageAndReturn(REGION)
+  const openidStorageInfo = isInStorageAndReturn(OPEN_ID)
+  if(tokenStorageInfo.status && request.body) {
+    request.body[TOKEN] = tokenStorageInfo[TOKEN]
   }
-  if(storageKeysArray.includes(REGION) && request.body) {
-    request.body[REGION] = wx.getStorageSync(REGION) || ""
+  if(regionStorageInfo.status && request.body) {
+    request.body[REGION] = regionStorageInfo[REGION]
   }
-  if(storageKeysArray.includes(OPEN_ID) && request.body) {
-    request.body["openid"] = wx.getStorageSync(OPEN_ID) || ""
+  if(openidStorageInfo.status && request.body) {
+    request.body[OPEN_ID] = openidStorageInfo[OPEN_ID]
   }
   if(request.method == "POST") {
     request.headers["content-type"] = "application/x-www-form-urlencoded"
