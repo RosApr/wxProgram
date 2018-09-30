@@ -138,7 +138,7 @@ export default {
             phone: "",
             linkman: "",
             startdate: this.$moment().format("YYYY-MM-DD"),
-            enddate: this.$moment().format("YYYY-MM-DD"),
+            enddate: this.$moment().day(30).format("YYYY-MM-DD"),
             details: "",
             regionData: regionArray,
             // 产地

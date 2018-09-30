@@ -6,13 +6,14 @@ import { TOKEN, OPEN_ID, REGION } from "@/utils/common"
 const request = new Fly()
 request.config.baseURL = baseUrl
 request.interceptors.request.use((request) => {
-  if(wx.getStorageSync(TOKEN) && request.body) {
+  const storageKeysArray = wx.getStorageInfoSync().keys
+  if(storageKeysArray.includes(TOKEN) && request.body) {
     request.body["token"] = wx.getStorageSync(TOKEN) || ""
   }
-  if(wx.getStorageSync(REGION) && request.body) {
+  if(storageKeysArray.includes(REGION) && request.body) {
     request.body[REGION] = wx.getStorageSync(REGION) || ""
   }
-  if(wx.getStorageSync(OPEN_ID) && request.body) {
+  if(storageKeysArray.includes(OPEN_ID) && request.body) {
     request.body["openid"] = wx.getStorageSync(OPEN_ID) || ""
   }
   if(request.method == "POST") {
@@ -29,7 +30,7 @@ request.interceptors.response.use(
     wx.hideLoading();
     if(response.data.code == 1) {
       // operating success
-      if(response.request.method == "POST") {
+      if(response.request.method == "POST" && response.data.msg != "") {
         WXP.showToast({
           icon: "success",
           title: response.data.msg,

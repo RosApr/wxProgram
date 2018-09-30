@@ -8,7 +8,7 @@
                 </div>
                 <div class="weui-form-preview__item">
                     <div class="weui-form-preview__label">有效期：</div>
-                    <div class="weui-form-preview__value">{{detail.startdate}}-{{detail.enddate}}</div>
+                    <div class="weui-form-preview__value">{{detail.startdate}}至{{detail.enddate}}</div>
                 </div>
                 <div class="weui-form-preview__item">
                     <div class="weui-form-preview__label">发布人：</div>
@@ -213,6 +213,7 @@
         }
         .log-container {
             .title {
+                font-size: 36rpx;
                 color: #383838;
                 text-align: left;
             }

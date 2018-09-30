@@ -171,7 +171,7 @@ export default {
         this.price = ""
         this.linkman = ""
         this.startdate = this.$moment().format("YYYY-MM-DD")
-        this.enddate = this.$moment().format("YYYY-MM-DD")
+        this.enddate = this.$moment().day(30).format("YYYY-MM-DD")
         this.details = ""
         this.phone = ""
         this.type = ""
