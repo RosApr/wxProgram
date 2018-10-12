@@ -30,16 +30,6 @@
                 getUserLoginInfoApi: getUserLoginInfo
             }
         },
-        // async onShow() {
-        //     let res = await WXP.getSetting()
-        //     if (res.authSetting['scope.userInfo']) {
-        //         const userInfoRes = await WXP.getUserInfo({
-        //             lang: "zh_CN"
-        //         })
-        //         console.log(userInfoRes)
-        //         this.queryUserProfile(userInfoRes.userInfo)
-        //     }
-        // },
         methods: {
             async onGotUserInfo(e) {
                 if(e.mp.detail.errMsg != "getUserInfo:ok") return
@@ -47,14 +37,12 @@
             },
             async queryUserProfile() {
                 let wxLoginRes = await WXP.login()
-                console.log(wxLoginRes)
                 if(wxLoginRes.errMsg == "login:ok") {
                     const userProfileRes = await this.getUserLoginInfoApi({code: wxLoginRes.code})
                     const { openid, token, data: userProfile } = userProfileRes.data
                     setDataToStorageIfIsAvailable(TOKEN, token)
                     setDataToStorageIfIsAvailable(OPEN_ID, openid)
                     setDataToStorageIfIsAvailable(USER_PROFILE, userProfile)
-                    console.log("login ok")
                     wx.navigateTo({
                         url: '/pages/login/main'
                     })

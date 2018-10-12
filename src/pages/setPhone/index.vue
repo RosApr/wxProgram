@@ -45,7 +45,6 @@
             this.isSendExecCode = false
         },
         onShow() {
-            console.log("onshow")
         },
         methods: {
             getVerifyCode() {

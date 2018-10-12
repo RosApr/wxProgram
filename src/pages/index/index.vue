@@ -96,7 +96,6 @@
     import wx from "@/utils/wx"
     import WXP from 'minapp-api-promise'
     import regionArray from "@/utils/region"
-    // import { getUserLoginInfo } from "@/utils/api"
     import { 
         INDEX_PAGE_LIST_TYPE,
         REGION,
@@ -104,9 +103,6 @@
         queryUserLocationApi,
         defaultCity,
         isInStorageAndReturn,
-        // OPEN_ID,
-        // TOKEN,
-        // USER_PROFILE,
         setDataToStorageIfIsAvailable
     } from "@/utils/common"
     import { mapState, mapActions } from "vuex"
@@ -125,7 +121,6 @@
             }
         },
         mounted() {
-            // this.queryUserProfile()
             this.getUserLocation()
         },
         computed: {
@@ -146,24 +141,6 @@
             ...mapActions([
                 "queryIndexList"
             ]),
-            // async queryUserProfile() {
-            //     let wxLoginRes = await WXP.login()
-            //     console.log(wxLoginRes)
-            //     if(wxLoginRes.errMsg == "login:ok") {
-            //         const userProfileRes = await getUserLoginInfo({code: wxLoginRes.code})
-            //         const { openid, token, data: userProfile } = userProfileRes.data
-            //         setDataToStorageIfIsAvailable(TOKEN, token)
-            //         setDataToStorageIfIsAvailable(OPEN_ID, openid)
-            //         setDataToStorageIfIsAvailable(USER_PROFILE, userProfile)
-            //         console.log("login ok")
-            //         console.log(token)
-            //         console.log(openid)
-            //         console.log(userProfile)
-            //         // wx.navigateTo({
-            //         //     url: '/pages/login/main'
-            //         // })
-            //     }
-            // },
             hideAuthLayer(layerShowStatus=false) {
                 saveLocationToStorage({city:defaultCity})
                 this.setCurrentRegionCascader(defaultCity)
@@ -257,7 +234,7 @@
                 const userSettingRes = await WXP.getSetting()
                 const isAuthGetLocationApi = userSettingRes.authSetting["scope.userLocation"]
                 if(regionStorageInfo.status && isAuthGetLocationApi) {
-                    const region = regionStorageInfo(REGION)
+                    const region = regionStorageInfo[REGION]
                     saveLocationToStorage({city: region})
                     this.setCurrentRegionCascader(region)
                     this.queryIndexList({
