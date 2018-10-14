@@ -81,7 +81,7 @@ const modifyUserProfile = (params) => {
 const getUserLoginInfo = (params) => {
     return request.post("/user/wechat", params)
 }
-const uploadImgUrl = "https://demo.xinbao369.com/ids/public/index.php/api/material/upload"
+const uploadImgUrl = "https://m.91lzht.com/ids/public/index.php/api/material/upload"
 export {
     // 首页列表
     getIndexList,
