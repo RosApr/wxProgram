@@ -15,7 +15,7 @@
                 <div class="grid"
                     :class="{'active': activeTab == tabConfig['sell']}"
                     @click="changeActiveTab(tabConfig['sell'])">
-                    <span>厨具</span>
+                    <span>供应</span>
                 </div>
                 <div class="grid"
                     :class="{'active': activeTab == tabConfig['buy']}"

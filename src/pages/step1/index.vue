@@ -2,7 +2,7 @@
     <div class="step1-container">
         <div class="grid">
             <div class="img-container" @click="check(typeConfig['sell'])" :class="{'active': active == typeConfig['sell']}"></div>
-            <p>厨具</p>
+            <p>供应</p>
         </div>
         <div class="grid">
             <div class="img-container" @click="check(typeConfig['buy'])" :class="{'active': active == typeConfig['buy']}"></div>

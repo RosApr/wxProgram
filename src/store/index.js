@@ -128,8 +128,8 @@ const store = new Vuex.Store({
     },
     async queryFilters({ state, commit }) {
       const { data } = await getFilters()
-      data.transport = [...["不限"], ...data.transport]
-      data.vehicletype = [...["不限"], ...data.vehicletype]
+      data.transport = [...data.transport]
+      data.vehicletype = [...data.vehicletype]
       commit("saveFilters", data)
     },
     async queryIndexList({ state, commit }, { listType, region }) {

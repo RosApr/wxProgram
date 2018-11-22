@@ -55,7 +55,7 @@ const transformTitle = (title) => {
     let titles = ""
     switch(title) {
         case INDEX_PAGE_LIST_TYPE["sell"]:
-            titles = "厨具"
+            titles = "供应"
             break
         case INDEX_PAGE_LIST_TYPE["buy"]:
             titles = "求购"
