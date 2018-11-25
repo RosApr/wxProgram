@@ -29,18 +29,23 @@
 </template>
 <script>
     import { mapActions, mapMutations, mapState } from "vuex"
-    import { setWxNavBarTitle } from "@/utils/common"
+    import { setWxNavBarTitle, INDEX_PAGE_LIST_TYPE } from "@/utils/common"
     export default {
         data() {
             return {
+                type: "",
+                typeConfig: INDEX_PAGE_LIST_TYPE
             }
         },
         computed: {
             ...mapState([
-                "searchConfig"
+                "searchConfig",
+                "filters"
             ])
         },
         mounted() {
+            const { query: { type }} = this.$root.$mp
+            this.type = type
             setWxNavBarTitle("搜索")
         },
         onUnload() {

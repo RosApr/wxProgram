@@ -152,7 +152,7 @@
             },
             goSearchPage() {
                 wx.navigateTo({
-                    url: "/pages/search/main"
+                    url: `/pages/search/main?type=${this.activeTab}`
                 })
             },
             async onAuthLocation(AuthRes) {

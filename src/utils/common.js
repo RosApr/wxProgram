@@ -44,7 +44,11 @@ const INDEX_PAGE_LIST_TYPE = {
     sell: "sell",
     buy : "buy",
     logistics: "logistics"
-
+}
+const searchFilterGroup = {
+    [INDEX_PAGE_LIST_TYPE["sell"]]: {
+        
+    }
 }
 const EXEC_REGULAR = {
     phone: /^((1[3-8][0-9])+\d{8})$/,
@@ -81,6 +85,7 @@ const setDataToStorageIfIsAvailable = (key, value) => {
     }
     return false
 }
+
 export {
     setWxNavBarTitle,
     INDEX_PAGE_LIST_TYPE,
