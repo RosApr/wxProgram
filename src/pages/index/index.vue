@@ -446,7 +446,7 @@
                                 flex-basis: 270rpx;
                                 height: 270rpx;
                                 overflow: hidden;
-                                background-size: contain;
+                                background-size: cover;
                                 background-position: center;
                                 background-repeat: no-repeat; 
                             }
