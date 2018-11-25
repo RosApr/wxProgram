@@ -75,7 +75,7 @@
                 </template>
             </div>
             <div class="no-data-tip" v-else>
-                暂无数据...
+                数据加载中...
             </div>
         </div>
         <div class="auth-location-layer" :class="{'active': showAuthLocationLayer}">

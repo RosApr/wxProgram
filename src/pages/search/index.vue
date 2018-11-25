@@ -24,7 +24,7 @@
                 <div class="btn" @click="showDetail(item.id, item.type)">查看</div>
             </div>
         </div>
-        <div class="no-list-tip" v-else>暂无数据</div>
+        <div class="no-list-tip" v-else>数据加载中...</div>
     </div>
 </template>
 <script>

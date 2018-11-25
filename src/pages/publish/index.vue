@@ -28,7 +28,7 @@
           </div>
         </div>
       </div>
-      <div class="no-list-tip" v-else>暂无数据</div>
+      <div class="no-list-tip" v-else>数据加载中...</div>
     </scroll-view>
     <div class="btn-container">
         <div class="btn" @click="goPublish">发布信息</div>
