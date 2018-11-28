@@ -21,7 +21,23 @@ const store = new Vuex.Store({
       size: 8,
       total: 999999
     },
-    filters: {
+    filter: {
+      category: "",
+      model: "",
+      stock: "",
+      factory: "",
+      price: "",
+      min: "",
+      max: "",
+    },
+    filterTransform: {
+      transferType: "",
+      startdate: "",
+      cityStart: "",
+      cityEnd: "",
+      type: ""
+    },
+    filtersConfig: {
       category: [],
       model: [],
       stock: [],
@@ -71,7 +87,7 @@ const store = new Vuex.Store({
       state.detail = payload
     },
     saveFilters(state, payload) {
-      state.filters = payload
+      state.filtersConfig = payload
     }
   },
   actions: {
@@ -128,8 +144,11 @@ const store = new Vuex.Store({
     },
     async queryFilters({ state, commit }) {
       const { data } = await getFilters()
-      data.transport = [...data.transport]
-      data.vehicletype = [...data.vehicletype]
+      data.stock = [...[""], ...data.stock]
+      data.category = [...[""], ...data.category]
+      data.model = [...[""], ...data.model]
+      data.factory = [...[""], ...data.factory]
+      data.vehicletype = [...[""], ...data.vehicletype]
       commit("saveFilters", data)
     },
     async queryIndexList({ state, commit }, { listType, region }) {

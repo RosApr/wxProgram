@@ -64,7 +64,7 @@ export default {
       })
     }
     this.queryPublishList({refresh: true})
-    this.queryFilters()
+    // this.queryFilters()
   },
   mounted() {
     setWxNavBarTitle("发布中心")
@@ -80,7 +80,7 @@ export default {
   methods: {
     ...mapActions([
       "queryPublishList",
-      "queryFilters",
+      // "queryFilters",
       "deletePublish"
     ]),
     callDeletePublish(id, type) {

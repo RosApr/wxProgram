@@ -16,16 +16,75 @@
                     :class="{'active': activeTab == tabConfig['sell']}"
                     @click="changeActiveTab(tabConfig['sell'])">
                     <span>供应</span>
+                    <img src="../../../static/images/icon_filter.png" alt="">
                 </div>
                 <div class="grid"
                     :class="{'active': activeTab == tabConfig['buy']}"
                     @click="changeActiveTab(tabConfig['buy'])">
                     <span>求购</span>
+                    <img src="../../../static/images/icon_filter.png" alt="">
                 </div>
                 <div class="grid"
                     :class="{'active': activeTab == tabConfig['logistics']}"
                     @click="changeActiveTab(tabConfig['logistics'])">
                     <span>物流</span>
+                    <img src="../../../static/images/icon_filter.png" alt="">
+                </div>
+            </div>
+            <!-- 筛选 -->
+            <div class="filter-model">
+                <div class="scroll-container">
+                    <div class="item">
+                        <div class="title">产品分类：</div>
+                        <div class="label-container">
+                            <div
+                            :class="{'activeTab': filter.category == item}"
+                            @click="changeFilter({category: item})"
+                            class="grid" v-for="(item, index) in filtersConfig.category" :key="index">{{!item ? "不限" : item}}</div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="title">产品型号：</div>
+                        <div class="label-container">
+                            <div
+                            :class="{'activeTab': filter.model == item}"
+                            @click="changeFilter({model: item})"
+                            class="grid" v-for="(item, index) in filtersConfig.model" :key="index">{{!item ? "不限" : item}}</div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="title">货物状态：</div>
+                        <div class="label-container">
+                            <div
+                            :class="{'activeTab': filter.stock == item}"
+                            @click="changeFilter({stock: item})"
+                            class="grid" v-for="(item, index) in filtersConfig.stock" :key="index">{{!item ? "不限" : item}}</div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="title">厂家：</div>
+                        <div class="label-container">
+                            <div
+                            :class="{'activeTab': filter.factory == item}"
+                            @click="changeFilter({factory: item})"
+                            class="grid" v-for="(item, index) in filtersConfig.factory" :key="index">{{!item ? "不限" : item}}</div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="title">价格：</div>
+                        <div class="label-container">
+                            <div class="grid" :class="{'activeTab': filter.price == ''}" @click="changeFilter({price: ''})">不限</div>
+                            <div class="grid" :class="{'activeTab': filter.price == 'desc'}" @click="changeFilter({price: 'desc'})">从高到低</div>
+                            <div class="grid" :class="{'activeTab': filter.price == 'asc'}" @click="changeFilter({price: 'asc'})">从低到高</div>
+                            <input placeholder="最小值" type="text" v-model.lazy="filter.min">
+                            <span>-</span>
+                            <input placeholder="最大值" type="number" v-model.lazy="filter.max">
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <div class="grid cancel" @click="resetFilter">重置</div>
+                    <div class="grid submit" @click="confirmFiterChange">确定</div>
                 </div>
             </div>
             <div class="list" v-if="indexConfig.list.length > 0">
@@ -117,15 +176,33 @@
                 regionIndex: [0,0],
                 regionSecond: 0,
                 place: regionArray[1][0][0],
-                showAuthLocationLayer: false
+                showAuthLocationLayer: false,
+                filter: {
+                    category: "",
+                    model: "",
+                    stock: "",
+                    factory: "",
+                    price: "",
+                    min: "",
+                    max: "",
+                },
+                filterTransform: {
+                    transferType: "",
+                    startdate: "",
+                    cityStart: "",
+                    cityEnd: "",
+                    type: ""
+                }
             }
         },
         mounted() {
             this.getUserLocation()
+            this.queryFilters()
         },
         computed: {
             ...mapState([
                 "indexConfig",
+                "filtersConfig"
             ]),
             regionDataComputed() {
                 const secondColumn = this.regionData[1][this.regionSecond]
@@ -139,8 +216,22 @@
         },
         methods: {
             ...mapActions([
-                "queryIndexList"
+                "queryIndexList",
+                "queryFilters"
             ]),
+            // 筛选切换
+            changeFilter(changedItemObj) {
+                return this.filter = Object.assign(this.filter, changedItemObj)
+            },
+            // 重置筛选
+            resetFilter() {
+                for(let key of Object.keys(this.filter)) {
+                    this.filter[key] = ""
+                }
+            },
+            confirmFiterChange() {
+                console.log(this.filter)
+            },
             hideAuthLayer(layerShowStatus=false) {
                 saveLocationToStorage({city:defaultCity})
                 this.setCurrentRegionCascader(defaultCity)
@@ -369,7 +460,6 @@
                         flex: 1;
                         width: 50%;
                         height: 100%;
-
                         &.cancel {
                             background: #a7a7a7;
                             box-sizing:border-box;
@@ -392,6 +482,105 @@
         }
         .tab-container {
             width: 100%;
+            position: relative;
+            .filter-model {
+                box-shadow: inset 0px -1px 0px 0px #ccc;
+                box-sizing:border-box;
+                width: 100%;
+                height: 600rpx;
+                position: absolute;
+                top: 120rpx;
+                left: 0;
+                background-color: #fff;
+                z-index: 3;
+                overflow-y: scroll;
+                .scroll-container {
+                    box-sizing:border-box;
+                    padding: 20rpx 20rpx 100rpx;
+                    overflow: hidden;
+                    overflow-y: auto;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    z-index: 1;
+                    .item {
+                        padding: 10rpx 0;
+                        .title {
+                            font-size: 28rpx;
+                            color: #666;
+                            margin-bottom: 10rpx;
+                        }
+                        .label-container {
+                            .grid {
+                                display: inline-block;
+                                vertical-align: middle;
+                                font-size: 24rpx;
+                                color: #ccc;
+                                border: 1rpx solid #ccc;
+                                padding: 2rpx 10rpx;
+                                border-radius: 10rpx;
+                                margin-right: 20rpx;
+                                transition: all ease-in-out .3s;
+                                margin-bottom: 6rpx;
+                                &.activeTab {
+                                    border-color: #4acc3b;
+                                    color: #4acc3b
+                                }
+                            }
+                            span {
+                                display: inline-block;
+                                vertical-align: middle;
+                                margin: 0 16rpx;
+                            }
+                            input {
+                                display: inline-block;
+                                font-size: 24rpx;
+                                color: #383838;
+                                width: 80rpx;
+                                vertical-align: middle;
+                                border: 1rpx solid #ccc;
+                                padding: 2rpx 20rpx;
+                                border-radius: 10rpx;
+                                height: 40rpx;
+                                // min-height: auto!important;
+                                // height: auto!important;
+                                line-height: 40rpx;
+                                // box-sizing: border-box;
+                            }
+                        }
+                    }
+                }
+                .btn-container {
+                    z-index: 2;
+                    box-sizing:border-box;
+                    height: 70rpx;
+                    line-height: 70rpx;
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    display: flex;
+                    flex-flow: row nowrap;
+                    justify-items: space-around;
+                    align-content: center;
+                    .grid {
+                        text-align: center;
+                        flex: 1;
+                        font-size: 32rpx;
+                        text-align: center;
+                        &.cancel {
+                            background-color: #ccc;
+                            color: #fff;
+                        }
+                        &.submit {
+                            background-color: #4acc3b;
+                            color: #fff;
+                        }
+                    }
+                }
+            }
             .tab-header-container {
                 height: 120rpx;
                 line-height: 120rpx;
@@ -399,14 +588,16 @@
                 flex-flow: row nowrap;
                 justify-items: space-around;
                 align-content: center;
+                z-index: 2;
                 .grid {
                     text-align: center;
                     flex: 1;
                     color: #383838;
                     font-size: 32rpx;
                     transition: all .3s ease-in-out;
-                    span {
+                    & > span {
                         position: relative;
+                        vertical-align: middle;
                         &:after {
                             content: "";
                             transition: all .3s ease-in-out;
@@ -418,9 +609,15 @@
                             background: transparent;
                         }
                     }
+                    img {
+                        width: 40rpx;
+                        height: 40rpx;
+                        vertical-align: middle;
+                        display: inline-block;
+                    }
                     &.active {
                         color:#36ca45;
-                        span {
+                        & > span {
                             &:after {
                                 content: "";
                                 background: #36ca45;
@@ -430,6 +627,8 @@
                 }
             }
             .list {
+                position: relative;
+                z-index: 2;
                 padding: 0 18rpx;
                 .item {
                     display: flex;
