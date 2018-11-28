@@ -246,10 +246,10 @@ export default {
                     that.tempImgs = that.tempImgs.concat(res.tempFilePaths)
                 },
                 fail: function () {
-                    console.log('fail');
+                    // console.log('fail');
                 },
                 complete: function () {
-                    console.log('commplete');
+                    // console.log('commplete');
                 }
             })
         },

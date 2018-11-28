@@ -54,11 +54,11 @@
                 </picker>
             </div>
         </div>
-        <div class="item">
-            <div class="grid label"><span class="badge">*</span>库存：</div>
+        <div class="item" v-if="publishType == INDEX_PAGE_LIST_TYPE.sell">
+            <div class="grid label"><span class="badge">*</span>货物状态：</div>
             <div class="grid input">
                 <picker mode="selector" @change="stockChange" :value="stockIndex" :range="filters['stock']">
-                    <div class="border height arrow">{{stock || "请选择库存"}}</div>
+                    <div class="border height arrow">{{stock || "请选择货物状态"}}</div>
                 </picker>
             </div>
         </div>
@@ -122,16 +122,16 @@ const tipConfig = {
     enddate: "请选择结束时间！",
     details: "请输入详细信息！",
     phone: "请输入联系电话！",
-    stock: "请选择承载信息！",
     model: "请选择产品型号",
     category: "请选择产品分类",
     factory: "请选择厂家",
-    stock: "请选择库存类型！",
+    stock: "请选择货物状态！",
     place: "请选择产地！",
 }
 export default {
     data() {
         return {
+            INDEX_PAGE_LIST_TYPE,
             filters: {},
             title: "",
             price: "",
@@ -146,7 +146,7 @@ export default {
             regionSecond: 0,
 
             place: "",
-            // 库存信息
+            // 货物状态信息
             stockIndex: 0,
             stock: "",
             // 产品分类信息
@@ -173,6 +173,7 @@ export default {
         }
     },
     onUnload() {
+        this.tipConfig = tipConfig
         this.title = ""
         this.price = ""
         this.linkman = ""
@@ -193,6 +194,10 @@ export default {
         setWxNavBarTitle("发布")
         const { query: { type }} = this.$root.$mp
         this.publishType = type
+        if(this.publishType == this.INDEX_PAGE_LIST_TYPE.buy) {
+            let { stock, ...config } = this.tipConfig
+            this.tipConfig = config
+        }
         //配置时间选择插件起始时间
         this.startdateConfig = this.$moment().format("YYYY-MM-DD")
         this.enddateConfig = this.$moment().day(30).format("YYYY-MM-DD")
@@ -248,10 +253,10 @@ export default {
                     that.tempImgs = that.tempImgs.concat(res.tempFilePaths)
                 },
                 fail: function () {
-                    console.log('fail');
+                    // console.log('fail');
                 },
                 complete: function () {
-                    console.log('commplete');
+                    // console.log('commplete');
                 }
             })
         },

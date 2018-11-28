@@ -88,8 +88,8 @@
                     <div class="weui-form-preview__label">产地：</div>
                     <div class="weui-form-preview__value">{{detail.place}}</div>
                 </div>
-                <div class="weui-form-preview__item">
-                    <div class="weui-form-preview__label">库存：</div>
+                <div class="weui-form-preview__item" v-if="typeConfig.sell == type">
+                    <div class="weui-form-preview__label">货物状态：</div>
                     <div class="weui-form-preview__value">{{detail.stock}}</div>
                 </div>
                 <div class="weui-form-preview__item">
