@@ -134,6 +134,8 @@ const store = new Vuex.Store({
         const nextPage = response.data.data.length === 0 ? state.publishConfig.page : ++state.publishConfig.page
         const list = state.publishConfig.list.concat(response.data.data.map(item => {
           item["typeFormat"] = transformTitle(item.type)
+          item["startdate"] = item["startdate"].split("-").join(".") 
+          item["enddate"] = item["enddate"].split("-").join(".") 
           return item
         }))
         commit("savePublishData", {
@@ -159,6 +161,8 @@ const store = new Vuex.Store({
       const nextPage = response.data.data.length === 0 ? state.searchConfig.page : ++state.searchConfig.page
       const list = state.searchConfig.list.concat(response.data.data.map(item => {
         item["typeFormat"] = transformTitle(item.type)
+        item["startdate"] = item["startdate"].split("-").join(".") 
+        item["enddate"] = item["enddate"].split("-").join(".") 
         return item
       }))
       commit("saveSearchData", {
@@ -221,7 +225,13 @@ const store = new Vuex.Store({
           isLoading: false
         })
         const nextPage = response.data.rows.length === 0 ? state.indexConfig.page : ++state.indexConfig.page
-        const list = state.indexConfig.list.concat(response.data.rows)
+        const list = state.indexConfig.list.concat(response.data.rows.map(item => {
+          return {
+            ...item,
+            startdate: item.startdate.split("-").join("."),
+            enddate: item.enddate.split("-").join("."),
+          }
+        }))
         commit("saveIndexConfig", {
           list: list,
           total: response.data.total,
@@ -231,6 +241,8 @@ const store = new Vuex.Store({
     },
     async getDetail({ state, commit },  payload) {
       const response = await getDetail(payload)
+      response.data.startdate = response.data.startdate.split("-").join(".")
+      response.data.enddate = response.data.enddate.split("-").join(".")
       commit("saveDetailData", response.data)
     }
   }
