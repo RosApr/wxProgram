@@ -181,7 +181,7 @@ export default {
         this.tempImgs = []
     },
     mounted() {
-        this.filters = Object.assign(this.$store.state.filters)
+        this.filters = Object.assign(this.$store.state.filtersInPublish)
         setWxNavBarTitle("发布")
         const { query: { type }} = this.$root.$mp
         this.publishType = type

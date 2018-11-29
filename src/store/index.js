@@ -29,6 +29,14 @@ const store = new Vuex.Store({
     },
     filter,
     filterTransform,
+    filtersInPublish: {
+      category: [],
+      model: [],
+      stock: [],
+      factory: [],
+      transport: [],
+      vehicletype: []
+    },
     filtersConfig: {
       category: [],
       model: [],
@@ -95,7 +103,16 @@ const store = new Vuex.Store({
       state.detail = payload
     },
     saveFilters(state, payload) {
-      state.filtersConfig = payload
+      state.filtersConfig = {
+        ...state.filtersConfig,
+        ...payload
+      }
+    },
+    saveFiltersInPublish(state, payload) {
+      state.filtersInPublish = {
+        ...state.filtersInPublish,
+        ...payload
+      }
     }
   },
   actions: {
@@ -152,6 +169,8 @@ const store = new Vuex.Store({
     },
     async queryFilters({ state, commit }) {
       const { data } = await getFilters()
+      const filtersInPublish = Object.assign({}, data)
+      commit("saveFiltersInPublish", filtersInPublish)
       data.stock = [...[""], ...data.stock]
       data.category = [...[""], ...data.category]
       data.model = [...[""], ...data.model]
