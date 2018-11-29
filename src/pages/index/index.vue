@@ -32,59 +32,105 @@
                 </div>
             </div>
             <!-- 筛选 -->
-            <div class="filter-model">
+            <div class="filter-model" v-show="showSellAndBuyFilterModel">
                 <div class="scroll-container">
-                    <div class="item">
-                        <div class="title">产品分类：</div>
-                        <div class="label-container">
-                            <div
-                            :class="{'activeTab': filter.category == item}"
-                            @click="changeFilter({category: item})"
-                            class="grid" v-for="(item, index) in filtersConfig.category" :key="index">{{!item ? "不限" : item}}</div>
+                    <template v-if="activeTab != tabConfig['logistics']">
+                        <div class="item">
+                            <div class="title">产品分类：</div>
+                            <div class="label-container">
+                                <div
+                                :class="{'activeTab': filter.category == item}"
+                                @click="changeFilter({category: item})"
+                                class="grid" v-for="(item, index) in filtersConfig.category" :key="index">{{!item ? "不限" : item}}</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="item">
-                        <div class="title">产品型号：</div>
-                        <div class="label-container">
-                            <div
-                            :class="{'activeTab': filter.model == item}"
-                            @click="changeFilter({model: item})"
-                            class="grid" v-for="(item, index) in filtersConfig.model" :key="index">{{!item ? "不限" : item}}</div>
+                        <div class="item">
+                            <div class="title">产品型号：</div>
+                            <div class="label-container">
+                                <div
+                                :class="{'activeTab': filter.model == item}"
+                                @click="changeFilter({model: item})"
+                                class="grid" v-for="(item, index) in filtersConfig.model" :key="index">{{!item ? "不限" : item}}</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="item">
-                        <div class="title">货物状态：</div>
-                        <div class="label-container">
-                            <div
-                            :class="{'activeTab': filter.stock == item}"
-                            @click="changeFilter({stock: item})"
-                            class="grid" v-for="(item, index) in filtersConfig.stock" :key="index">{{!item ? "不限" : item}}</div>
+                        <div class="item" v-show="activeTab == tabConfig['sell']">
+                            <div class="title">货物状态：</div>
+                            <div class="label-container">
+                                <div
+                                :class="{'activeTab': filter.stock == item}"
+                                @click="changeFilter({stock: item})"
+                                class="grid" v-for="(item, index) in filtersConfig.stock" :key="index">{{!item ? "不限" : item}}</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="item">
-                        <div class="title">厂家：</div>
-                        <div class="label-container">
-                            <div
-                            :class="{'activeTab': filter.factory == item}"
-                            @click="changeFilter({factory: item})"
-                            class="grid" v-for="(item, index) in filtersConfig.factory" :key="index">{{!item ? "不限" : item}}</div>
+                        <div class="item">
+                            <div class="title">厂家：</div>
+                            <div class="label-container">
+                                <div
+                                :class="{'activeTab': filter.factory == item}"
+                                @click="changeFilter({factory: item})"
+                                class="grid" v-for="(item, index) in filtersConfig.factory" :key="index">{{!item ? "不限" : item}}</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="item">
-                        <div class="title">价格：</div>
-                        <div class="label-container">
-                            <div class="grid" :class="{'activeTab': filter.price == ''}" @click="changeFilter({price: ''})">不限</div>
-                            <div class="grid" :class="{'activeTab': filter.price == 'desc'}" @click="changeFilter({price: 'desc'})">从高到低</div>
-                            <div class="grid" :class="{'activeTab': filter.price == 'asc'}" @click="changeFilter({price: 'asc'})">从低到高</div>
-                            <input placeholder="最小值" type="text" v-model.lazy="filter.min">
-                            <span>-</span>
-                            <input placeholder="最大值" type="number" v-model.lazy="filter.max">
+                        <div class="item">
+                            <div class="title">价格：</div>
+                            <div class="label-container">
+                                <div class="grid" :class="{'activeTab': filter.price == ''}" @click="changeFilter({price: ''})">不限</div>
+                                <div class="grid" :class="{'activeTab': filter.price == 'desc'}" @click="changeFilter({price: 'desc'})">从高到低</div>
+                                <div class="grid" :class="{'activeTab': filter.price == 'asc'}" @click="changeFilter({price: 'asc'})">从低到高</div>
+                                <input placeholder="最小值" type="text" v-model.lazy="filter.min">
+                                <span>-</span>
+                                <input placeholder="最大值" type="number" v-model.lazy="filter.max">
+                            </div>
                         </div>
-                    </div>
+                    </template>
+                    <template v-else>
+                        <div class="item">
+                            <div class="title">出发时间：</div>
+                            <div class="label-container">
+                                <picker class="date-picker date-grid" :start="startdateConfig" mode="date" @change="startdateChange" :value="filterTransform.startdate">
+                                    <div class="border height arrow">{{filterTransform.startdate || "请选择"}}</div>
+                                </picker>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="title">出发城市：</div>
+                            <div class="label-container">
+                                <picker mode="multiSelector" @change="startRegionChange" @columnchange="startRegionColumnChange" :value="startRegionIndex" :range="startRegionDataComputed">
+                                    <div class="border height arrow">{{filterTransform.cityStart || "请选择出发城市"}}</div>
+                                </picker>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="title">到达城市：</div>
+                            <div class="label-container">
+                                <picker mode="multiSelector" @change="desRegionChange" @columnchange="desRegionColumnChange" :value="desRegionIndex" :range="desRegionDataComputed">
+                                    <div class="border height arrow">{{filterTransform.cityEnd || "请选择目的地"}}</div>
+                                </picker>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="title">承载信息：</div>
+                            <div class="label-container">
+                                <div
+                                :class="{'activeTab': filterTransform.type == item}"
+                                @click="changeFilter({type: item})"
+                                class="grid" v-for="(item, index) in filtersConfig.transport" :key="index">{{!item ? "不限" : item}}</div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="title">车辆信息：</div>
+                            <div class="label-container">
+                                <div
+                                :class="{'activeTab': filterTransform.transferType == item}"
+                                @click="changeFilter({transferType: item})"
+                                class="grid" v-for="(item, index) in filtersConfig.vehicletype" :key="index">{{!item ? "不限" : item}}</div>
+                            </div>
+                        </div>
+                    </template>
                 </div>
                 <div class="btn-container">
                     <div class="grid cancel" @click="resetFilter">重置</div>
-                    <div class="grid submit" @click="confirmFiterChange">确定</div>
+                    <div class="grid submit" @click="confirmFilterChange">确定</div>
                 </div>
             </div>
             <div class="list" v-if="indexConfig.list.length > 0">
@@ -134,7 +180,7 @@
                 </template>
             </div>
             <div class="no-data-tip" v-else>
-                数据加载中...
+                {{indexConfig.isLoading ? "数据加载中..." : "暂无数据"}}
             </div>
         </div>
         <div class="auth-location-layer" :class="{'active': showAuthLocationLayer}">
@@ -162,7 +208,9 @@
         queryUserLocationApi,
         defaultCity,
         isInStorageAndReturn,
-        setDataToStorageIfIsAvailable
+        setDataToStorageIfIsAvailable,
+        filterTransform,
+        filter
     } from "@/utils/common"
     import { mapState, mapActions } from "vuex"
     export default {
@@ -177,22 +225,16 @@
                 regionSecond: 0,
                 place: regionArray[1][0][0],
                 showAuthLocationLayer: false,
-                filter: {
-                    category: "",
-                    model: "",
-                    stock: "",
-                    factory: "",
-                    price: "",
-                    min: "",
-                    max: "",
-                },
-                filterTransform: {
-                    transferType: "",
-                    startdate: "",
-                    cityStart: "",
-                    cityEnd: "",
-                    type: ""
-                }
+                filter,
+                filterTransform,
+                showSellAndBuyFilterModel: false,
+                 // 出发
+                startRegionIndex: [0,0],
+                startRegionSecond: 0,
+                // 到达
+                desRegionIndex: [0,0],
+                desRegionSecond: 0,
+                startdateConfig: ""
             }
         },
         mounted() {
@@ -207,6 +249,14 @@
             regionDataComputed() {
                 const secondColumn = this.regionData[1][this.regionSecond]
                 return [this.regionData[0], secondColumn]
+            },
+            desRegionDataComputed() {
+                const secondColumn = this.regionData[1][this.desRegionSecond]
+                return [this.regionData[0], secondColumn]
+            },
+            startRegionDataComputed() {
+                const secondColumn = this.regionData[1][this.startRegionSecond]
+                return [this.regionData[0], secondColumn]
             }
         },
         onReachBottom() {
@@ -219,18 +269,63 @@
                 "queryIndexList",
                 "queryFilters"
             ]),
+            // 筛选 时间
+            startdateChange(e) {
+                this.filterTransform.startdate = e.mp.detail.value
+            },
+            // 筛选 出发 到达城市 切换
+            startRegionChange(e) {
+                const values = e.mp.detail.value
+                this.filterTransform.cityStart = this.regionData[1][values[0]][values[1]]
+            },
+            startRegionColumnChange(e) {
+                if(e.mp.detail.column === 0) {
+                    this.startRegionSecond = e.mp.detail.value
+                    this.startRegionIndex = [e.mp.detail.value, 0]
+                }
+            },
+            desRegionChange(e) {
+                const values = e.mp.detail.value
+                this.filterTransform.cityEnd = this.regionData[1][values[0]][values[1]]
+            },
+            desRegionColumnChange(e) {
+                if(e.mp.detail.column === 0) {
+                    this.desRegionSecond = e.mp.detail.value
+                    this.desRegionIndex = [e.mp.detail.value, 0]
+                }
+            },
             // 筛选切换
             changeFilter(changedItemObj) {
-                return this.filter = Object.assign(this.filter, changedItemObj)
+                if(this.activeTab == this.tabConfig["logistics"]) {
+                    return this.filterTransform = Object.assign(this.filterTransform, changedItemObj)
+                } else {
+                    return this.filter = Object.assign(this.filter, changedItemObj)
+                }
             },
             // 重置筛选
             resetFilter() {
-                for(let key of Object.keys(this.filter)) {
-                    this.filter[key] = ""
+                if(this.activeTab == this.tabConfig["logistics"]) {
+                    for(let key of Object.keys(this.filterTransform)) {
+                        this.filterTransform[key] = ""
+                    }
+                } else {
+                    for(let key of Object.keys(this.filter)) {
+                        this.filter[key] = ""
+                    }
                 }
             },
-            confirmFiterChange() {
-                console.log(this.filter)
+            confirmFilterChange() {
+                this.showSellAndBuyFilterModel = false
+                // 重置列表
+                let _filter = this.activeTab == this.tabConfig["logistics"] ? this.filterTransform : this.filter
+                // 求购时货物状态为 ""
+                if(this.activeTab == this.tabConfig['buy']) {
+                    _filter.stock = ""
+                }
+                this.queryIndexList({
+                    filter: _filter,
+                    listType: this.activeTab
+                })
             },
             hideAuthLayer(layerShowStatus=false) {
                 saveLocationToStorage({city:defaultCity})
@@ -292,9 +387,17 @@
                 })
             },
             changeActiveTab(active) {
+                if(this.activeTab == active) {
+                    return this.showSellAndBuyFilterModel = true
+                }
+                //隐藏筛选框
+                this.showSellAndBuyFilterModel = false
+                this.resetFilter()
                 this.activeTab = active
+                let _filter = this.activeTab == this.tabConfig["logistics"] ? this.filterTransform : this.filter
                 this.queryIndexList({
-                    listType: active
+                    listType: active,
+                    filter: _filter
                 })
             },
             bindRegionChange(e) {
@@ -519,7 +622,8 @@
                                 font-size: 24rpx;
                                 color: #ccc;
                                 border: 1rpx solid #ccc;
-                                padding: 2rpx 10rpx;
+                                padding: 10rpx 16rpx;
+                                box-sizing: border-box;
                                 border-radius: 10rpx;
                                 margin-right: 20rpx;
                                 transition: all ease-in-out .3s;
@@ -534,6 +638,30 @@
                                 vertical-align: middle;
                                 margin: 0 16rpx;
                             }
+                            .height {
+                                height: 50rpx;
+                                line-height: 50rpx;
+                            }
+                            .border {
+                                position: relative;
+                                padding-left: 20rpx;
+                                border: 1rpx solid #dadada;
+                                border-radius: 8rpx;
+                                color:#ccc;
+                                width:37%;
+                                font-size:28rpx;
+                            }
+                            .arrow {
+                                &:after {
+                                    content: "<";
+                                    position: absolute;
+                                    top: 50%;
+                                    right: 20rpx;
+                                    transform: translateY(-50%) rotateZ(-90deg);
+                                    font-size: 26rpx;
+                                    color: #ccc;
+                                }
+                            }
                             input {
                                 display: inline-block;
                                 font-size: 24rpx;
@@ -543,11 +671,9 @@
                                 border: 1rpx solid #ccc;
                                 padding: 2rpx 20rpx;
                                 border-radius: 10rpx;
-                                height: 40rpx;
-                                // min-height: auto!important;
-                                // height: auto!important;
-                                line-height: 40rpx;
-                                // box-sizing: border-box;
+                                height: 38rpx;
+                                margin-bottom: 6rpx;
+                                line-height: 38rpx;
                             }
                         }
                     }

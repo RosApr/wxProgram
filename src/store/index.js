@@ -1,7 +1,12 @@
 import Vue from "vue"
 import Vuex from "vuex"
 import { getIndexList, getDetail, getFilters, getSearchList, getPublishList, deletePublishApi } from "@/utils/api"
-import { INDEX_PAGE_LIST_TYPE, transformTitle } from "@/utils/common"
+import { 
+  INDEX_PAGE_LIST_TYPE,
+  transformTitle,
+  filter,
+  filterTransform
+ } from "@/utils/common"
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -11,7 +16,8 @@ const store = new Vuex.Store({
       page: 1,
       size: 8,
       total: 999999,
-      activeTab: INDEX_PAGE_LIST_TYPE["sell"]
+      activeTab: INDEX_PAGE_LIST_TYPE["sell"],
+      isLoading: false
     },
     detail: {},
     // 我的发布
@@ -21,22 +27,8 @@ const store = new Vuex.Store({
       size: 8,
       total: 999999
     },
-    filter: {
-      category: "",
-      model: "",
-      stock: "",
-      factory: "",
-      price: "",
-      min: "",
-      max: "",
-    },
-    filterTransform: {
-      transferType: "",
-      startdate: "",
-      cityStart: "",
-      cityEnd: "",
-      type: ""
-    },
+    filter,
+    filterTransform,
     filtersConfig: {
       category: [],
       model: [],
@@ -55,6 +47,22 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
+    changeIndexListLoadingStatus(state, { isLoading }) {
+      state.indexConfig.isLoading = isLoading
+    },
+    saveListFilter(state, { listType, filter }) {
+      if(listType == INDEX_PAGE_LIST_TYPE["logistics"]) {
+        state.filterTransform = {
+          ...state.filterTransform,
+          ...filter
+        }
+      } else {
+        state.filter = {
+          ...state.filter,
+          ...filter
+        }
+      }
+    },
     saveSearchData(state, params) {
       if(params["search"]) {
         state.searchConfig = {
@@ -149,17 +157,24 @@ const store = new Vuex.Store({
       data.model = [...[""], ...data.model]
       data.factory = [...[""], ...data.factory]
       data.vehicletype = [...[""], ...data.vehicletype]
+      data.transport = [...[""], ...data.transport]
       commit("saveFilters", data)
     },
-    async queryIndexList({ state, commit }, { listType, region }) {
+    async queryIndexList({ state, commit }, { listType, region, filter }) {
       // 切换tab重置列表请求参数
-      if(state.indexConfig.activeTab != listType) {
+      if(state.indexConfig.activeTab != listType || filter) {
         commit("saveIndexConfig", {
           page: 1,
           size: 8,
           list: [],
           total: 99999999999999,
           activeTab: listType
+        })
+      }
+      if(filter) {
+        commit("saveListFilter", {
+          listType,
+          filter
         })
       }
       if(region) {
@@ -173,10 +188,18 @@ const store = new Vuex.Store({
       }
       // 判断数据是否全部得到
       if(state.indexConfig.list.length < state.indexConfig.total) {
+        let _filter = listType == INDEX_PAGE_LIST_TYPE["logistics"] ? state.filterTransform: state.filter
+        commit("changeIndexListLoadingStatus", {
+          isLoading: true
+        })
         const response = await getIndexList({
           page: state.indexConfig.page,
           size: state.indexConfig.size,
-          listType: listType
+          listType: listType,
+          ..._filter
+        })
+        commit("changeIndexListLoadingStatus", {
+          isLoading: false
         })
         const nextPage = response.data.rows.length === 0 ? state.indexConfig.page : ++state.indexConfig.page
         const list = state.indexConfig.list.concat(response.data.rows)

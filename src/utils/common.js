@@ -45,11 +45,6 @@ const INDEX_PAGE_LIST_TYPE = {
     buy : "buy",
     logistics: "logistics"
 }
-const searchFilterGroup = {
-    [INDEX_PAGE_LIST_TYPE["sell"]]: {
-        
-    }
-}
 const EXEC_REGULAR = {
     phone: /^((1[3-8][0-9])+\d{8})$/,
     code: /^[0-9a-zA-Z]*$/,
@@ -71,6 +66,23 @@ const transformTitle = (title) => {
             break
     }
     return titles
+}
+// 筛选
+const filter = {
+    category: "",
+    model: "",
+    stock: "",
+    factory: "",
+    price: "",
+    min: "",
+    max: "",
+}
+const filterTransform = {
+    transferType: "",
+    startdate: "",
+    cityStart: "",
+    cityEnd: "",
+    type: ""
 }
 const modifyUserProfileSuccessCallback = (data) => {
     setDataToStorageIfIsAvailable(USER_PROFILE, data.data)
@@ -101,5 +113,7 @@ export {
     saveLocationToStorage,
     defaultCity,
     isInStorageAndReturn,
-    setDataToStorageIfIsAvailable
+    setDataToStorageIfIsAvailable,
+    filter,
+    filterTransform
 }
