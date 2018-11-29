@@ -145,8 +145,8 @@ export default {
             price: "",
             phone: "",
             linkman: "",
-            startdate: this.$moment().format("YYYY-MM-DD"),
-            enddate: this.$moment().day(30).format("YYYY-MM-DD"),
+            startdate: this.$moment().format("YYYY.MM.DD"),
+            enddate: this.$moment().day(30).format("YYYY.MM.DD"),
             details: "",
             regionData: regionArray,
             // 产地
@@ -190,8 +190,8 @@ export default {
         this.title = ""
         this.price = ""
         this.linkman = ""
-        this.startdate = this.$moment().format("YYYY-MM-DD")
-        this.enddate = this.$moment().day(30).format("YYYY-MM-DD")
+        this.startdate = this.$moment().format("YYYY.MM.DD")
+        this.enddate = this.$moment().day(30).format("YYYY.MM.DD")
         this.details = ""
         this.phone = ""
         this.stock = ""
@@ -213,8 +213,8 @@ export default {
             this.tipConfig = config
         }
         //配置时间选择插件起始时间
-        this.startdateConfig = this.$moment().format("YYYY-MM-DD")
-        this.enddateConfig = this.$moment().day(30).format("YYYY-MM-DD")
+        this.startdateConfig = this.$moment().format("YYYY.MM.DD")
+        this.enddateConfig = this.$moment().day(30).format("YYYY.MM.DD")
     },
     computed: {
         regionDataComputed() {
@@ -254,12 +254,12 @@ export default {
             this.stock = this.filters['stock'][e.mp.detail.value]
         },
         startdateChange(e) {
-            this.startdate = e.mp.detail.value
+            this.startdate = e.mp.detail.value.split("-").join(".")
             this.enddate = this.startdate
             this.enddateConfig = this.startdate
         },
         enddateChange(e) {
-            this.enddate = e.mp.detail.value
+            this.enddate = e.mp.detail.value.split("-").join(".")
         },
         uploadImg() {
             const that = this
