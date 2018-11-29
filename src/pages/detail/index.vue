@@ -2,7 +2,7 @@
     <div class="detail-container">
         <div class="log-container" v-if="type == typeConfig['logistics']">
             <div class="weui-form-preview__bd">
-                <div class="title">{{detail.title}}</div>
+                <div class="title">{{titleTypeText.titleType}}{{detail.title}}</div>
                 <div class="weui-form-preview__item">
                     <div class="weui-form-preview__value">{{detail.details}}</div>
                 </div>
@@ -20,8 +20,9 @@
                 <div class="price-container weui-form-preview__item">
                     <span class="symbol">¥</span>
                     <span class="price">{{detail.price}}</span>
+                    <span class="tax">({{detail.tax == 1 ? "含税" : "不含税"}})</span>
                 </div>
-                <div class="title">物流基本信息</div>
+                <div class="title">{{titleTypeText.detailType}}</div>
                 <div class="weui-form-preview__item">
                     <div class="weui-form-preview__label">出发城市：</div>
                     <div class="weui-form-preview__value">{{detail.rmation}}</div>
@@ -42,7 +43,7 @@
                     <div class="weui-form-preview__label">车辆信息：</div>
                     <div class="weui-form-preview__value">{{detail.vehicletype}}</div>
                 </div>
-                <div class="weui-form-preview__item">
+                <div class="weui-form-preview__item" v-show="detail.remark">
                     <div class="weui-form-preview__label">备注：</div>
                     <div class="weui-form-preview__value">{{detail.remark}}</div>
                 </div>
@@ -59,7 +60,10 @@
         </div>
         <div class="log-container" v-else>
             <div class="weui-form-preview__bd">
-                <div class="title">{{detail.title}}</div>
+                <div class="title">{{titleTypeText.titleType}}{{detail.title}}</div>
+                <div class="weui-form-preview__item">
+                    <div class="weui-form-preview__value">{{detail.details}}</div>
+                </div>
                 <div class="weui-form-preview__item">
                     <div class="weui-form-preview__label">有效期：</div>
                     <div class="weui-form-preview__value">{{detail.startdate}}-{{detail.enddate}}</div>
@@ -74,8 +78,9 @@
                 <div class="price-container weui-form-preview__item">
                     <span class="symbol">¥</span>
                     <span class="price">{{detail.price}}</span>
+                    <span class="tax">({{detail.tax == 1 ? "含税" : "不含税"}})</span>
                 </div>
-                <div class="title">宝贝基本信息</div>
+                <div class="title">{{titleTypeText.detailType}}</div>
                 <div class="weui-form-preview__item">
                     <div class="weui-form-preview__label">产品分类：</div>
                     <div class="weui-form-preview__value">{{detail.category}}</div>
@@ -96,9 +101,9 @@
                     <div class="weui-form-preview__label">厂家：</div>
                     <div class="weui-form-preview__value">{{detail.factory}}</div>
                 </div>
-                <div class="weui-form-preview__item">
-                    <div class="weui-form-preview__label">详细描述：</div>
-                    <div class="weui-form-preview__value">{{detail.details}}</div>
+                <div class="weui-form-preview__item" v-show="detail.remark">
+                    <div class="weui-form-preview__label">备注：</div>
+                    <div class="weui-form-preview__value">{{detail.remark}}</div>
                 </div>
                 <div class="title">联系信息</div>
                 <div class="weui-form-preview__item">
@@ -152,7 +157,7 @@
                     { name: '信息不真实', value: '信息不真实' }
                 ],
                 showReportModel: false,
-                reportPublish: reportPublish
+                reportPublish
             }
         },
         mounted() {
@@ -172,7 +177,32 @@
         computed: {
             ...mapState([
                 "detail"
-            ])
+            ]),
+            titleTypeText() {
+                let detailType, titleType
+                console.log(this.type)
+                switch(this.type) {
+                    case this.typeConfig["logistics"]:
+                        detailType = "物流基本信息"
+                        titleType = "【物流】"
+                        break
+                    case this.typeConfig["sell"]:
+                        detailType = "宝贝基本信息"
+                        titleType = "【供应】"
+                        break
+                    case this.typeConfig["buy"]:
+                        detailType = "求购基本信息"
+                        titleType = "【求购】"
+                        break
+                    default:
+                        detailType = "基本信息"
+                        titleType = "【求购】"
+                }
+                return {
+                    titleType,
+                    detailType
+                }
+            }
         },
         methods: {
             ...mapActions([

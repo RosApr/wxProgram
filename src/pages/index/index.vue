@@ -148,7 +148,7 @@
                             <div class="price">
                                 <span class="price-symbol">¥</span>
                                 <span class="price-number">{{item.price}}</span>
-                                <span class="price-tip">(含税)</span>
+                                <span class="price-tip">({{item.tax == 1 ? "含税" : "不含税"}})</span>
                             </div>
                         </div>
                     </div>
@@ -173,6 +173,7 @@
                                 <p>
                                     <span class="symbol">¥</span>
                                     <span class="price">{{item.price}}</span>
+                                    <span class="price-tip">({{item.tax == 1 ? "含税" : "不含税"}})</span>
                                 </p>
                             </div>
                         </div>
@@ -816,6 +817,7 @@
                         }
                     }
                     &.logistics {
+                        padding-right: 0!important;
                         margin-bottom: 0;
                         .grid {
                             flex: 1;
@@ -841,7 +843,7 @@
                                 }
                             }
                             &.money {
-                                min-width: 220rpx;
+                                min-width: 300rpx;
                                 flex: 0;
                                 color: #e67a22;
                                 font-size: 58rpx;
@@ -854,11 +856,20 @@
                                     p {
                                         display: inline-block;
                                         flex: 0;
+                                        width:100%;
+                                        overflow-x:hidden;
+                                        white-space:nowrap;
                                     }
+                                }
+                                .price {
+                                    vertical-align: middle;
                                 }
                                 .symbol {
                                     vertical-align: text-top;
                                     font-size: 30rpx;
+                                }
+                                .price-tip {
+                                    font-size: 28rpx;
                                 }
                             }
                         }

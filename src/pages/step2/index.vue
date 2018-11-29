@@ -14,6 +14,14 @@
                 <input class="height border" placeholder="请输入价格" type="text" v-model.lazy="price">
             </div>
         </div>
+        <div class="item">
+            <div class="grid label"><span class="badge">*</span>含税选项：</div>
+            <div class="grid input">
+                <picker mode="selector" @change="taxChange" :value="taxIndex" :range="taxConfig">
+                    <div class="border height arrow">{{tax || "请选择产品分类"}}</div>
+                </picker>
+            </div>
+        </div>
         <div class="item"> 
             <div class="grid label"><span class="badge">*</span>有效期：</div>
             <div class="grid input">
@@ -109,7 +117,7 @@
 </template>
 <script>
 import execTip from "@/components/execTip"
-import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN, EXEC_REGULAR } from "@/utils/common"
+import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN, EXEC_REGULAR, taxConfig, transferCheckedTax } from "@/utils/common"
 import { publishApi, uploadImgUrl } from "@/utils/api"
 import regionArray from "@/utils/region"
 import WXP from 'minapp-api-promise'
@@ -144,6 +152,11 @@ export default {
             // 产地
             regionIndex: [0,0],
             regionSecond: 0,
+
+            taxConfig,    
+            tax: taxConfig[0],
+            taxIndex: 0,
+            transferCheckedTax,
 
             place: "",
             // 货物状态信息
@@ -182,6 +195,7 @@ export default {
         this.details = ""
         this.phone = ""
         this.stock = ""
+        this.tax = this.taxConfig[0]
         this.model = ""
         this.category = ""
         this.factory = ""
@@ -209,6 +223,10 @@ export default {
         }
     },
     methods: {
+        taxChange(e) {
+            this.taxIndex = e.mp.detail.value
+            this.tax = this.taxConfig[e.mp.detail.value]
+        },
         regionChange(e) {
             const values = e.mp.detail.value
             this.place = this.regionData[1][values[0]][values[1]]
@@ -309,6 +327,7 @@ export default {
                     data[key] = this[key]
                 }
                 data["publishType"] = this.publishType
+                data["tax"] = this.transferCheckedTax(this.tax)
                 // publish
                 // make form data
                 data["images"] = res.map(item => {
@@ -451,6 +470,14 @@ export default {
                         .date-picker {
                             flex: 1;
                         }
+                    }
+                }
+                &.radio {
+                    color: #8c8c8c;
+                    font-size: 28rpx;
+                    flex: 1;
+                    ._label.radio {
+                        margin-right: 30rpx;
                     }
                 }
                 &.label {

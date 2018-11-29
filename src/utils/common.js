@@ -97,7 +97,16 @@ const setDataToStorageIfIsAvailable = (key, value) => {
     }
     return false
 }
-
+const taxConfig = [
+    "不含税", "含税"
+]
+const transferCheckedTax = (tax) => {
+    if(Number(tax)) {
+        return taxConfig[tax]
+    } else {
+        return taxConfig.findIndex((value) => tax == value)
+    }
+}
 export {
     setWxNavBarTitle,
     INDEX_PAGE_LIST_TYPE,
@@ -115,5 +124,7 @@ export {
     isInStorageAndReturn,
     setDataToStorageIfIsAvailable,
     filter,
-    filterTransform
+    filterTransform,
+    taxConfig,
+    transferCheckedTax
 }
