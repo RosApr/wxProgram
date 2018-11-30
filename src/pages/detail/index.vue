@@ -3,8 +3,8 @@
         <div class="log-container" v-if="type == typeConfig['logistics']">
             <div class="weui-form-preview__bd">
                 <div class="title">{{titleTypeText.titleType}}{{detail.title}}</div>
-                <div class="weui-form-preview__item">
-                    <div class="weui-form-preview__value">{{detail.details}}</div>
+                <div class="weui-form-preview__item" v-show="detail.remark">
+                    <div class="weui-form-preview__value">{{detail.remark}}</div>
                 </div>
                 <div class="weui-form-preview__item">
                     <div class="weui-form-preview__label">有效期：</div>
@@ -43,9 +43,9 @@
                     <div class="weui-form-preview__label">车辆信息：</div>
                     <div class="weui-form-preview__value">{{detail.vehicletype}}</div>
                 </div>
-                <div class="weui-form-preview__item" v-show="detail.remark">
-                    <div class="weui-form-preview__label">备注：</div>
-                    <div class="weui-form-preview__value">{{detail.remark}}</div>
+                <div class="weui-form-preview__item">
+                    <div class="weui-form-preview__label">详细介绍：</div>
+                    <div class="weui-form-preview__value">{{detail.details}}</div>
                 </div>
                 <div class="title">联系信息</div>
                 <div class="weui-form-preview__item">
@@ -61,8 +61,8 @@
         <div class="log-container" v-else>
             <div class="weui-form-preview__bd">
                 <div class="title">{{titleTypeText.titleType}}{{detail.title}}</div>
-                <div class="weui-form-preview__item">
-                    <div class="weui-form-preview__value">{{detail.details}}</div>
+                <div class="weui-form-preview__item" v-show="detail.remark">
+                    <div class="weui-form-preview__value">{{detail.remark}}</div>
                 </div>
                 <div class="weui-form-preview__item">
                     <div class="weui-form-preview__label">有效期：</div>
@@ -101,9 +101,9 @@
                     <div class="weui-form-preview__label">厂家：</div>
                     <div class="weui-form-preview__value">{{detail.factory}}</div>
                 </div>
-                <div class="weui-form-preview__item" v-show="detail.remark">
-                    <div class="weui-form-preview__label">备注：</div>
-                    <div class="weui-form-preview__value">{{detail.remark}}</div>
+                <div class="weui-form-preview__item">
+                    <div class="weui-form-preview__label">详细介绍：</div>
+                    <div class="weui-form-preview__value">{{detail.details}}</div>
                 </div>
                 <div class="title">联系信息</div>
                 <div class="weui-form-preview__item">
