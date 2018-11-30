@@ -23,6 +23,12 @@
                 <div class="weui-cell__bd">营业执照</div>
                 <div class="weui-cell__ft weui-cell__ft_in-access">{{images}}</div>
             </div>
+            <div class="weui-cell weui-cell_access item" hover-class="weui-cell_active">
+                <div class="weui-cell__bd">审核状态</div>
+                <div class="weui-cell__ft weui-cell__ft_in-access">
+                    <span :class="transformChecked2Text.textClass">{{transformChecked2Text.text}}</span>
+                </div>
+            </div>
         </div>
         <div>{{count}}</div>
     </div>
@@ -32,8 +38,12 @@
         setWxNavBarTitle,
         TOKEN,
         USER_PROFILE,
-        OPEN_ID
+        OPEN_ID,
+        setDataToStorageIfIsAvailable
     } from "@/utils/common"
+    import {
+        getUserProfile
+    } from "@/utils/api"
     import { mapState, mapActions, mapMutations } from "vuex"
     export default {
         data() {
@@ -42,28 +52,48 @@
                 phone: "未设置",
                 password: "修改",
                 realname: "未设置",
-                images: "未设置"
+                images: "未设置",
+                checked: 0
             }
         },
-        onShow() {
+        async onShow() {
             if(!wx.getStorageSync(TOKEN)) {
                 return wx.navigateTo({
                     url: "/pages/login/main"
                 })
             }
-            const userProfile = wx.getStorageSync(USER_PROFILE)
+            const { data: userProfile } = await getUserProfile({})
+            setDataToStorageIfIsAvailable(USER_PROFILE, userProfile)
             if(userProfile) {
                 this.nickname = userProfile.nickname
                 this.phone = userProfile.phone
                 // this.password = "已设置"
                 this.realname = userProfile.realname || "未设置"
                 this.images = userProfile.images != null ? "已设置" : "未设置"
+                this.checked = userProfile.checked
             }
         },
         mounted() {
             setWxNavBarTitle("个人中心")
         },
         computed: {
+            transformChecked2Text(){
+            let text = "", textClass
+                if(this.checked == 1) {
+                    text = "审核通过"
+                    textClass = "checked-success"
+                } else if(this.checked == 2){
+                    text = "审核未通过"
+                    textClass = "checked-fail"
+                } else if(this.checked == 0){
+                    text = "审核中"
+                    textClass = "checked-process"
+                }
+                return {
+                    text,
+                    textClass
+                }
+            }
         },
         methods: {
             navigator(type) {
@@ -95,6 +125,12 @@
     }
 </script>
 <style lang="less" scoped>
+    .checked-success {
+        color: #67c23a;
+    }
+    .checked-fail {
+        color: #f56c6c;
+    }
     .user-container {
         width: 100%;
         height: 100vh;

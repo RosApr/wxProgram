@@ -78,6 +78,9 @@ const reportPublish = (params) => {
 const modifyUserProfile = (params) => {
     return request.post("/user/edit", params)
 }
+const getUserProfile = (params) => {
+    return request.post("/user/profile", params)
+}
 const getUserLoginInfo = (params) => {
     return request.post("/user/wechat", params)
 }
@@ -114,5 +117,7 @@ export {
     // 修改用户信息
     modifyUserProfile,
     // 删除已发布
-    deletePublishApi
+    deletePublishApi,
+    // 获取用户信息
+    getUserProfile
 }
