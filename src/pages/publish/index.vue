@@ -1,15 +1,18 @@
 <template>
   <div class="address">
+    <exec-tip :showTip="showTip" :tip="tip"/>
     <scroll-view :scroll-y="true" class="addcont" style="height: 100%;">
       <!-- <div class="addcont"> -->
       <div v-if="publishConfig.list.length!=0" class="item">
-        <div class="list"
-            @touchstart="startMove"
-            :data-index="index"
-            @touchmove="deleteGoods"
-            @touchend="endMove"
-            v-for="(item, index) in publishConfig.list"
-            :key="index">
+        <div
+          class="list"
+          @touchstart="startMove"
+          :data-index="index"
+          @touchmove="deleteGoods"
+          @touchend="endMove"
+          v-for="(item, index) in publishConfig.list"
+          :key="index"
+        >
           <div class="addresslist" :style="item.textStyle">
             <div>
               <span>{{item.typeFormat}}</span>
@@ -21,61 +24,77 @@
             </div>
             <div @click="showDetail(item.id, item.type)">查看</div>
           </div>
-          <div @click="callDeletePublish(item.id, item.type)" class="delete" :style="item.textStyle1">
-            <div>
-              删除
-            </div>
+          <div
+            :class="[item.checked == 1 ? 'process' : '']"
+            @click="callEditPublish(item.id, item.type, item.checked)"
+            class="edit"
+            :style="item.textStyle1"
+          >
+            <div>编辑</div>
+          </div>
+          <div
+            @click="callDeletePublish(item.id, item.type)"
+            class="delete"
+            :style="item.textStyle1"
+          >
+            <div>删除</div>
           </div>
         </div>
       </div>
       <div class="no-list-tip" v-else>数据加载中...</div>
     </scroll-view>
     <div class="btn-container">
-        <div class="btn" @click="goPublish">发布信息</div>
+      <div class="btn" @click="goPublish">发布信息</div>
     </div>
   </div>
 </template>
 <script>
-import { setWxNavBarTitle, TOKEN, isNoTokenGoAuthPage } from "@/utils/common"
-import { mapActions, mapState } from "vuex"
+import { setWxNavBarTitle, TOKEN, isNoTokenGoAuthPage, INDEX_PAGE_LIST_TYPE } from "@/utils/common";
+import { mapActions, mapState } from "vuex";
+import execTip from "@/components/execTip";
 export default {
   data() {
     return {
-        nowIndex: 0,
-        userInfo: {},
-        imgUrl: "",
-        tranX: 0,
-        tranX1: 0,
-        startX: "",
-        startY: "",
-        moveX: "",
-        moveY: "",
-        moveEndX: "",
-        moveEndY: "",
-        X: 0,
-        Y: "",
-        flag: false
-      }
+      nowIndex: 0,
+      userInfo: {},
+      imgUrl: "",
+      tranX: 0,
+      tranX1: 0,
+      startX: "",
+      startY: "",
+      moveX: "",
+      moveY: "",
+      moveEndX: "",
+      moveEndY: "",
+      X: 0,
+      Y: "",
+      flag: false,
+
+      tip: "",
+      showTip: false,
+      typeConfig: INDEX_PAGE_LIST_TYPE
+    };
   },
   onShow() {
-    if(!wx.getStorageSync(TOKEN)) {
+    if (!wx.getStorageSync(TOKEN)) {
       return wx.navigateTo({
         url: "/pages/login/main"
-      })
+      });
     }
-    this.queryPublishList({refresh: true})
+    this.queryPublishList({ refresh: true });
     // this.queryFilters()
   },
   mounted() {
-    setWxNavBarTitle("发布中心")
+    setWxNavBarTitle("发布中心");
   },
   computed: {
-    ...mapState([
-      "publishConfig"
-    ])
+    ...mapState(["publishConfig"])
   },
   onReachBottom() {
-    this.queryPublishList()
+    this.queryPublishList();
+  },
+  components: {
+    execTip
   },
   methods: {
     ...mapActions([
@@ -85,13 +104,28 @@ export default {
     ]),
     callDeletePublish(id, type) {
       this.deletePublish({
-        id, type
-      })
+        id,
+        type
+      });
+    },
+    callEditPublish(id, type, checked) {
+      checked = 2
+      if (checked == 1) {
+        let text = "审核已通过，不能修改！";
+        this.showTip = true;
+        this.tip = text;
+      } else {
+        let path = type == this.typeConfig["logistics"] ? "step2Log" : "step2"
+        path = `/pages/${path}/main?type=${type}&id=${id}&edit=1`
+        wx.navigateTo({
+          url: path
+        });
+      }
     },
     goPublish() {
-        wx.navigateTo({
-            url: "/pages/step1/main"
-        })
+      wx.navigateTo({
+        url: "/pages/step1/main"
+      });
     },
     initTextStyle() {
       //滑动之前先初始化数据
@@ -110,19 +144,27 @@ export default {
       if (this.X > -50) {
         this.tranX1 = 0;
         this.tranX = 0;
-        this.$store.state.publishConfig.list[index].textStyle = `transform:translateX(${this.tranX}rpx);`;
-        this.$store.state.publishConfig.list[index].textStyle1 = `transform:translateX(${this.tranX1}rpx);`;
+        this.$store.state.publishConfig.list[
+          index
+        ].textStyle = `transform:translateX(${this.tranX}rpx);`;
+        this.$store.state.publishConfig.list[
+          index
+        ].textStyle1 = `transform:translateX(${this.tranX1}rpx);`;
       } else if (this.X <= -50) {
-        this.tranX1 = -150;
-        this.tranX = -150;
-        this.$store.state.publishConfig.list[index].textStyle = `transform:translateX(${this.tranX}rpx);`;
-        this.$store.state.publishConfig.list[index].textStyle1 = `transform:translateX(${this.tranX1}rpx);`;
+        this.tranX1 = -340;
+        this.tranX = -340;
+        this.$store.state.publishConfig.list[
+          index
+        ].textStyle = `transform:translateX(${this.tranX}rpx);`;
+        this.$store.state.publishConfig.list[
+          index
+        ].textStyle1 = `transform:translateX(${this.tranX1}rpx);`;
       }
     },
     showDetail(id, listType) {
       wx.navigateTo({
-          url: `/pages/detail/main?type=${listType}&id=${id}&isOwnPublish=my`
-      })
+        url: `/pages/detail/main?type=${listType}&id=${id}&isOwnPublish=my`
+      });
     },
     deleteGoods(e) {
       //滑动之前先初始化样式数据
@@ -136,7 +178,9 @@ export default {
         this.moveY = e.touches[0].pageY;
         this.X = this.moveX - this.startX;
         this.Y = this.moveX - this.startY;
-        this.$store.state.publishConfig.list[index].textStyle = `transform:translateX(${this.tranX}rpx);`;
+        this.$store.state.publishConfig.list[
+          index
+        ].textStyle = `transform:translateX(${this.tranX}rpx);`;
         if (this.X >= 100) {
           this.X = 0;
         }
@@ -145,7 +189,9 @@ export default {
           this.X = -100;
         }
         this.tranX1 = this.X;
-        this.$store.state.publishConfig.list[index].textStyle1 = `transform:translateX(${this.tranX1}rpx);`;
+        this.$store.state.publishConfig.list[
+          index
+        ].textStyle1 = `transform:translateX(${this.tranX1}rpx);`;
       } else {
         this.moveX = e.touches[0].pageX;
         this.moveY = e.touches[0].pageY;
@@ -153,17 +199,21 @@ export default {
         this.Y = this.moveX - this.startY;
 
         this.tranX = this.X - 100;
-        this.$store.state.publishConfig.list[index].textStyle = `transform:translateX(${this.tranX}rpx);`;
+        this.$store.state.publishConfig.list[
+          index
+        ].textStyle = `transform:translateX(${this.tranX}rpx);`;
 
         if (this.X + -100 > -100) {
           this.flag = false;
         }
         this.tranX1 = -100;
-        this.$store.state.publishConfig.list[index].textStyle1 = `transform:translateX(-100rpx);`;
+        this.$store.state.publishConfig.list[
+          index
+        ].textStyle1 = `transform:translateX(-100rpx);`;
       }
     }
   }
-}
+};
 </script>
 <style lang="less" scoped>
 .address {
@@ -184,12 +234,35 @@ export default {
         &:last-child {
           border: 0;
         }
-        .delete {
+        .edit {
           position: absolute;
           font-size: 28rpx;
           width: 150rpx;
           top: 0;
           right: -190rpx;
+          text-align: center;
+          height: 100%;
+          line-height: 100%;
+          background: #666;
+          color: #fff;
+          transition: all 200ms ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          div {
+            color: #fff;
+          }
+          &.process {
+            color: "65ba4a";
+            background: "#fff";
+          }
+        }
+        .delete {
+          position: absolute;
+          font-size: 28rpx;
+          width: 150rpx;
+          top: 0;
+          right: -340rpx;
           text-align: center;
           height: 100%;
           line-height: 100%;
