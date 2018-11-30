@@ -38,42 +38,51 @@
         methods: {
             async check(type) {
                 this.active = type
-                if(this.active == typeConfig["sell"]) {
+                if(this.active == this.typeConfig["sell"]) {
                     const { data: userProfile } = await getUserProfile({})
                     setDataToStorageIfIsAvailable(USER_PROFILE, userProfile)
-                    userProfile.checked = 2
                     if(userProfile.checked != 1) {
-                        console.log(2)
-                        wx.showModal({
+                        return wx.showModal({
                             title: "提示",
                             content: "您的营业执照还在审核中，无法发布!",
                             success (res) {
                                 if (res.confirm) {
-                                    wx.navigateTo({
-                                        url: `/pages/me/main`
+                                    wx.switchTab({
+                                        url: "/pages/me/main"
                                     })
-                                console.log('用户点击确定')
                                 } else if (res.cancel) {
-                                    wx.navigateTo({
-                                        url: `/pages/me/index`
+                                    wx.switchTab({
+                                        url: "/pages/index/main"
                                     })
-                                console.log('用户点击取消')
                                 }
                             }
                         })
-                    }
-                }
-                setTimeout(() => {
-                    if(type == INDEX_PAGE_LIST_TYPE["logistics"]) {
-                        wx.navigateTo({
-                            url: `/pages/step2Log/main?type=${type}`
-                        })
                     } else {
-                        wx.navigateTo({
-                            url: `/pages/step2/main?type=${type}`
-                        })
+                        setTimeout(() => {
+                            if(type == INDEX_PAGE_LIST_TYPE["logistics"]) {
+                                wx.navigateTo({
+                                    url: `/pages/step2Log/main?type=${type}`
+                                })
+                            } else {
+                                wx.navigateTo({
+                                    url: `/pages/step2/main?type=${type}`
+                                })
+                            }
+                        }, 200)
                     }
-                }, 200)
+                } else {
+                    setTimeout(() => {
+                        if(type == INDEX_PAGE_LIST_TYPE["logistics"]) {
+                            wx.navigateTo({
+                                url: `/pages/step2Log/main?type=${type}`
+                            })
+                        } else {
+                            wx.navigateTo({
+                                url: `/pages/step2/main?type=${type}`
+                            })
+                        }
+                    }, 200)
+                }
             }
         }
     }
