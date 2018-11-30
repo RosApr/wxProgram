@@ -194,6 +194,14 @@ export default {
         this.rmation = ""
         this.tempImgs = []
     },
+    async onShow() {
+        console.log("show")
+        const { query: { type, id, edit }, query } = this.$root.$mp
+        if(type && id && edit) {
+            const detailRes = await getDetail(query)
+            console.log(detailRes)
+        }
+    },
     mounted() {
         this.filters = Object.assign(this.$store.state.filtersInPublish)
         setWxNavBarTitle("发布")

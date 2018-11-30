@@ -118,7 +118,7 @@
 <script>
 import execTip from "@/components/execTip"
 import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN, EXEC_REGULAR, taxConfig, transferCheckedTax } from "@/utils/common"
-import { publishApi, uploadImgUrl } from "@/utils/api"
+import { publishApi, uploadImgUrl, getDetail } from "@/utils/api"
 import regionArray from "@/utils/region"
 import WXP from 'minapp-api-promise'
 import { mapActions, mapState, mapMutations } from "vuex"
@@ -183,6 +183,14 @@ export default {
             uploadUrl: uploadImgUrl,
             token: TOKEN,
             publishType: ""
+        }
+    },
+    async onShow() {
+        console.log("show")
+        const { query: { type, id, edit }, query } = this.$root.$mp
+        if(type && id && edit) {
+            const detailRes = await getDetail(query)
+            console.log(detailRes)
         }
     },
     onUnload() {
