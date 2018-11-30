@@ -140,8 +140,8 @@ export default {
             price: "",
             phone: "",
             linkman: "",
-            startdate: this.$moment().format("YYYY.MM.DD"),
-            enddate: this.$moment().day(30).format("YYYY.MM.DD"),
+            startdate: this.$moment().format("YYYY-MM-DD"),
+            enddate: this.$moment().day(30).format("YYYY-MM-DD"),
             remark: "",
             details: "",
             regionData: regionArray,
@@ -183,8 +183,8 @@ export default {
         this.title = ""
         this.price = ""
         this.linkman = ""
-        this.startdate = this.$moment().format("YYYY.MM.DD")
-        this.enddate = this.$moment().day(30).format("YYYY.MM.DD")
+        this.startdate = this.$moment().format("YYYY-MM-DD")
+        this.enddate = this.$moment().day(30).format("YYYY-MM-DD")
         this.details = ""
         this.phone = ""
         this.type = ""
@@ -200,8 +200,8 @@ export default {
         const { query: { type }} = this.$root.$mp
         this.publishType = type
         //配置时间选择插件起始时间
-        this.startdateConfig = this.$moment().format("YYYY.MM.DD")
-        this.enddateConfig = this.$moment().day(30).format("YYYY.MM.DD")
+        this.startdateConfig = this.$moment().format("YYYY-MM-DD")
+        this.enddateConfig = this.$moment().day(30).format("YYYY-MM-DD")
     },
     computed: {
         regionDataComputed() {
@@ -247,12 +247,12 @@ export default {
             this.vehicletype = this.filters['vehicletype'][e.mp.detail.value]
         },
         startdateChange(e) {
-            this.startdate = e.mp.detail.value.split("-").join(".")
+            this.startdate = e.mp.detail.value
             this.enddate = this.startdate
             this.enddateConfig = this.startdate
         },
         enddateChange(e) {
-            this.enddate = e.mp.detail.value.split("-").join(".")
+            this.enddate = e.mp.detail.value
         },
         uploadImg() {
             const that = this
