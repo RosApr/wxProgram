@@ -15,7 +15,15 @@
     </div>
 </template>
 <script>
-    import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle } from "@/utils/common"
+    import {
+        INDEX_PAGE_LIST_TYPE,
+        setWxNavBarTitle,
+        USER_PROFILE,
+        setDataToStorageIfIsAvailable
+    } from "@/utils/common"
+    import {
+        getUserProfile
+    } from "@/utils/api"
     import { mapActions } from "vuex"
     export default {
         data() {
@@ -28,8 +36,33 @@
             setWxNavBarTitle("第一步")
         },
         methods: {
-            check(type) {
+            async check(type) {
                 this.active = type
+                if(this.active == typeConfig["sell"]) {
+                    const { data: userProfile } = await getUserProfile({})
+                    setDataToStorageIfIsAvailable(USER_PROFILE, userProfile)
+                    userProfile.checked = 2
+                    if(userProfile.checked != 1) {
+                        console.log(2)
+                        wx.showModal({
+                            title: "提示",
+                            content: "您的营业执照还在审核中，无法发布!",
+                            success (res) {
+                                if (res.confirm) {
+                                    wx.navigateTo({
+                                        url: `/pages/me/main`
+                                    })
+                                console.log('用户点击确定')
+                                } else if (res.cancel) {
+                                    wx.navigateTo({
+                                        url: `/pages/me/index`
+                                    })
+                                console.log('用户点击取消')
+                                }
+                            }
+                        })
+                    }
+                }
                 setTimeout(() => {
                     if(type == INDEX_PAGE_LIST_TYPE["logistics"]) {
                         wx.navigateTo({
@@ -40,7 +73,7 @@
                             url: `/pages/step2/main?type=${type}`
                         })
                     }
-                }, 500)
+                }, 200)
             }
         }
     }
