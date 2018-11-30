@@ -182,15 +182,17 @@ export default {
             publishApi: publishApi,
             uploadUrl: uploadImgUrl,
             token: TOKEN,
-            publishType: ""
+            publishType: "",
+            detail: {}
         }
     },
     async onShow() {
         console.log("show")
         const { query: { type, id, edit }, query } = this.$root.$mp
         if(type && id && edit) {
-            const detailRes = await getDetail(query)
+            const { data: detailRes } = await getDetail(query)
             console.log(detailRes)
+            this.detail = detailRes
         }
     },
     onUnload() {
