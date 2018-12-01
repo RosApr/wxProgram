@@ -113,9 +113,9 @@
     </div>
 </template>
 <script>
-import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN, EXEC_REGULAR, taxConfig, transferCheckedTax } from "@/utils/common"
+import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN, EXEC_REGULAR, taxConfig, transferCheckedTax, transformTitle } from "@/utils/common"
 import { publishApi, uploadImgUrl } from "@/utils/api"
-import regionArray from "@/utils/region"
+import { regionArray, getRegionConfig } from "@/utils/region"
 import WXP from 'minapp-api-promise'
 import execTip from "@/components/execTip"
 import { mapActions, mapState, mapMutations } from "vuex"
@@ -135,6 +135,8 @@ const tipConfig = {
 export default {
     data() {
         return {
+            transformTitle,
+            INDEX_PAGE_LIST_TYPE,
             filters: {},
             title: "",
             price: "",
@@ -175,8 +177,8 @@ export default {
             publishApi: publishApi,
             uploadUrl: uploadImgUrl,
             token: TOKEN,
-            publishType: ""
-
+            publishType: "",
+            detail: {}
         }
     },
     onUnload() {
@@ -194,24 +196,75 @@ export default {
         this.rmation = ""
         this.tempImgs = []
     },
-    async onShow() {
-        console.log("show")
+    async mounted() {
+        this.filters = Object.assign(this.$store.state.filtersInPublish)
         const { query: { type, id, edit }, query } = this.$root.$mp
+        this.publishType = type
+        const pageTitle = `${this.transformTitle(this.publishType)}信息发布`
+        setWxNavBarTitle(pageTitle)
+        //配置时间选择插件起始时间
+        this.startdateConfig = this.$moment().format("YYYY-MM-DD")
+        this.enddateConfig = this.$moment().day(30).format("YYYY-MM-DD")
+
+        //edit
         if(type && id && edit) {
             const { data: detailRes } = await getDetail(query)
             console.log(detailRes)
             this.detail = detailRes
+            this.price = this.detail.price
+            this.title = this.detail.title
+            this.linkman = this.detail.linkman
+
+            this.startdate = this.detail.startdate
+            this.startdateConfig = this.$moment(this.detail.startdate).format("YYYY-MM-DD")
+            this.enddate = this.detail.enddate
+            this.enddateConfig = this.$moment(this.detail.enddate).format("YYYY-MM-DD")
+
+            this.details = this.detail.details
+            this.phone = this.detail.phone
+
+            this.vehicletype = this.detail.vehicletype
+            this.vehicletypeIndex = this.filters.vehicletype.findIndex(item => item == this.vehicletype)
+
+            this.type = this.detail.type
+            this.typeIndex = this.filters.type.findIndex(item => item == this.type)
+            
+            this.tax = this.taxConfig[this.detail.tax]
+            this.taxIndex = this.taxConfig.findIndex(item => item == this.tax)
+
+            if(this.detail.images.length > 0) {
+                Promise.all(this.detail.images.map(imgUrl => {
+                    return WXP.getImageInfo({
+                        src: imgUrl
+                    })
+                })).then(async res => {
+                    this.tempImgs = res.map(({ path }) => path)
+                })
+            }
+            let { regionIndex: desRegionIndex, regionSecond: desRegionSecond } = this.getRegionConfig(this.detail.destination)
+            this.desRegionIndex = desRegionIndex
+            this.desRegionSecond = desRegionSecond
+            this.destination = this.detail.destination
+
+            let { regionIndex, regionSecond } = this.getRegionConfig(this.detail.rmation)
+            this.regionIndex = regionIndex
+            this.regionSecond = desReregionSecondgionSecond
+            this.rmation = this.detail.rmation
         }
     },
-    mounted() {
-        this.filters = Object.assign(this.$store.state.filtersInPublish)
-        setWxNavBarTitle("发布")
-        const { query: { type }} = this.$root.$mp
-        this.publishType = type
-        //配置时间选择插件起始时间
-        this.startdateConfig = this.$moment().format("YYYY-MM-DD")
-        this.enddateConfig = this.$moment().day(30).format("YYYY-MM-DD")
-    },
+    // const tipConfig = {
+    //     title: "请输入标题！",
+    //     price: "请输入价格！",
+    //     linkman: "请输入联系人名称！",
+    //     startdate: "请选择开始时间！",
+    //     enddate: "请选择结束时间！",
+    //     details: "请输入详细信息！",
+    //     phone: "请输入联系电话！",
+    //     type: "请选择承载信息！",
+    //     vehicletype: "请选择车辆信息！",
+    //     destination: "请选择到达城市！",
+    //     rmation: "请选择出发城市！"
+    // }
     computed: {
         regionDataComputed() {
             const secondColumn = this.regionData[1][this.regionSecond]
@@ -335,6 +388,9 @@ export default {
                 })
                 data["publishType"] = this.publishType
                 // publish
+                if(this.detail.id) {
+                    data["id"] = this.detail.id
+                }
                 const publishRes = await this.publishApi(data)
                 if(publishRes.code == 1) {
                     wx.switchTab({

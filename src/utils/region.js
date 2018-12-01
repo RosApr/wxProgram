@@ -608,4 +608,34 @@ for (let [key, value] of Object.entries(rawData["86"])) {
   }
 }
 let regionArray = [first, second]
-export default regionArray
+const getRegionConfig = (city) => {
+  let regionIndex = [], regionSecond = 0
+  first.every((item, index) => {
+    // 直辖市
+    if(item == city) {
+      regionIndex = [index, index]
+      regionSecond = index
+      return false
+    } else {
+      second[index].every((secondCity, secondIndex) => {
+        if(secondCity == city) {
+          regionIndex = [index, secondIndex]
+          regionSecond = index
+          return false
+        }
+        return true
+
+      })
+    }
+    return true
+  })
+
+  return {
+    regionIndex,
+    regionSecond
+  }
+}
+export {
+  regionArray,
+  getRegionConfig
+}

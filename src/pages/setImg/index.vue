@@ -39,7 +39,6 @@ export default {
     mounted() {
         setWxNavBarTitle("修改营业执照")
         this.tempImgs = wx.getStorageSync(USER_PROFILE).images || []
-        let cacheFromLocalImgUrlGroup = []
         if(this.tempImgs.length > 0) {
             Promise.all(this.tempImgs.map(imgUrl => {
                 return WXP.getImageInfo({

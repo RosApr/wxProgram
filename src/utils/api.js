@@ -69,8 +69,11 @@ const getPublishList = (params) => {
     return request.get("/user/my", params)
 }
 const publishApi = (params) => {
-    const { publishType, ...formData } = params
-    return request.post(`/${publishType}/publish`, formData)
+    const { publishType, id, ...formData } = params
+    if(id) {
+        formData["id"] = id
+    }
+    return request.post(`/${publishType}/${id ? "edit" : "publish" }`, formData)
 }
 const reportPublish = (params) => {
     return request.post("/report/index", params)

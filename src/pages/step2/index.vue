@@ -18,7 +18,7 @@
             <div class="grid label"><span class="badge">*</span>含税选项：</div>
             <div class="grid input">
                 <picker mode="selector" @change="taxChange" :value="taxIndex" :range="taxConfig">
-                    <div class="border height arrow">{{tax || "请选择产品分类"}}</div>
+                    <div class="border height arrow">{{tax}}</div>
                 </picker>
             </div>
         </div>
@@ -117,9 +117,9 @@
 </template>
 <script>
 import execTip from "@/components/execTip"
-import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN, EXEC_REGULAR, taxConfig, transferCheckedTax } from "@/utils/common"
+import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN, EXEC_REGULAR, taxConfig, transferCheckedTax, transformTitle } from "@/utils/common"
 import { publishApi, uploadImgUrl, getDetail } from "@/utils/api"
-import regionArray from "@/utils/region"
+import { regionArray, getRegionConfig } from "@/utils/region"
 import WXP from 'minapp-api-promise'
 import { mapActions, mapState, mapMutations } from "vuex"
 const tipConfig = {
@@ -139,6 +139,7 @@ const tipConfig = {
 export default {
     data() {
         return {
+            transformTitle,
             INDEX_PAGE_LIST_TYPE,
             filters: {},
             title: "",
@@ -149,6 +150,7 @@ export default {
             enddate: this.$moment().day(30).format("YYYY-MM-DD"),
             details: "",
             regionData: regionArray,
+            getRegionConfig,
             // 产地
             regionIndex: [0,0],
             regionSecond: 0,
@@ -186,15 +188,6 @@ export default {
             detail: {}
         }
     },
-    async onShow() {
-        console.log("show")
-        const { query: { type, id, edit }, query } = this.$root.$mp
-        if(type && id && edit) {
-            const { data: detailRes } = await getDetail(query)
-            console.log(detailRes)
-            this.detail = detailRes
-        }
-    },
     onUnload() {
         this.tipConfig = tipConfig
         this.title = ""
@@ -213,11 +206,12 @@ export default {
         this.place = ""
         this.tempImgs = []
     },
-    mounted() {
+    async mounted() {
         this.filters = Object.assign(this.$store.state.filtersInPublish)
-        setWxNavBarTitle("发布")
-        const { query: { type }} = this.$root.$mp
+        const { query: { type, id, edit }, query } = this.$root.$mp
         this.publishType = type
+        const pageTitle = `${this.transformTitle(this.publishType)}信息发布`
+        setWxNavBarTitle(pageTitle)
         if(this.publishType == this.INDEX_PAGE_LIST_TYPE.buy) {
             let { stock, ...config } = this.tipConfig
             this.tipConfig = config
@@ -225,6 +219,58 @@ export default {
         //配置时间选择插件起始时间
         this.startdateConfig = this.$moment().format("YYYY-MM-DD")
         this.enddateConfig = this.$moment().day(30).format("YYYY-MM-DD")
+        
+        //edit
+        if(type && id && edit) {
+            const { data: detailRes } = await getDetail(query)
+            console.log(detailRes)
+            this.detail = detailRes
+            this.price = this.detail.price
+            this.title = this.detail.title
+            this.linkman = this.detail.linkman
+
+            this.startdate = this.detail.startdate
+            this.startdateConfig = this.$moment(this.detail.startdate).format("YYYY-MM-DD")
+            this.enddate = this.detail.enddate
+            this.enddateConfig = this.$moment(this.detail.enddate).format("YYYY-MM-DD")
+
+            this.details = this.detail.details
+            this.phone = this.detail.phone
+
+            this.model = this.detail.model
+            this.modelIndex = this.filters.model.findIndex(item => item == this.model)
+
+            this.category = this.detail.category
+            this.categoryIndex = this.filters.category.findIndex(item => item == this.category)
+            
+            this.factory = this.detail.factory
+            this.factoryIndex = this.filters.factory.findIndex(item => item == this.factory)
+
+            if(this.detail.stock) {
+                this.stock = this.detail.stock
+                this.factoryIndex = this.filters.stock.findIndex(item => item == this.stock)
+            }
+
+            this.tax = this.taxConfig[this.detail.tax]
+            this.taxIndex = this.taxConfig.findIndex(item => item == this.tax)
+
+            if(this.detail.images.length > 0) {
+                Promise.all(this.detail.images.map(imgUrl => {
+                    return WXP.getImageInfo({
+                        src: imgUrl
+                    })
+                })).then(async res => {
+                    this.tempImgs = res.map(({ path }) => path)
+                })
+            }
+            let { regionIndex, regionSecond } = this.getRegionConfig(this.detail.place)
+            this.regionIndex = regionIndex
+            this.regionSecond = regionSecond
+            this.place = this.detail.place
+        }
+    },
+    async onShow() {
+        console.log("show")
     },
     computed: {
         regionDataComputed() {
@@ -239,6 +285,7 @@ export default {
         },
         regionChange(e) {
             const values = e.mp.detail.value
+            // values 0 省份， values 1 城市
             this.place = this.regionData[1][values[0]][values[1]]
         },
         regionColumnChange(e) {
@@ -344,6 +391,9 @@ export default {
                     return JSON.parse(item["data"])["data"]["url"]
                 })
                 // publish
+                if(this.detail.id) {
+                    data["id"] = this.detail.id
+                }
                 const publishRes = await this.publishApi(data)
                 if(publishRes.code == 1) {
                     wx.switchTab({

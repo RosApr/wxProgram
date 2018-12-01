@@ -201,7 +201,7 @@
 <script>
     import wx from "@/utils/wx"
     import WXP from 'minapp-api-promise'
-    import regionArray from "@/utils/region"
+    import { regionArray, getRegionConfig } from "@/utils/region"
     import { 
         INDEX_PAGE_LIST_TYPE,
         REGION,
