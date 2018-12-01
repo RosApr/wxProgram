@@ -114,7 +114,7 @@
 </template>
 <script>
 import { INDEX_PAGE_LIST_TYPE, setWxNavBarTitle, TOKEN, EXEC_REGULAR, taxConfig, transferCheckedTax, transformTitle } from "@/utils/common"
-import { publishApi, uploadImgUrl } from "@/utils/api"
+import { publishApi, uploadImgUrl, getDetail } from "@/utils/api"
 import { regionArray, getRegionConfig } from "@/utils/region"
 import WXP from 'minapp-api-promise'
 import execTip from "@/components/execTip"
@@ -147,6 +147,7 @@ export default {
             remark: "",
             details: "",
             regionData: regionArray,
+            getRegionConfig,
             // 出发
             regionIndex: [0,0],
             regionSecond: 0,
@@ -222,16 +223,17 @@ export default {
 
             this.details = this.detail.details
             this.phone = this.detail.phone
+            this.remark = this.detail.remark
 
             this.vehicletype = this.detail.vehicletype
             this.vehicletypeIndex = this.filters.vehicletype.findIndex(item => item == this.vehicletype)
 
             this.type = this.detail.type
-            this.typeIndex = this.filters.type.findIndex(item => item == this.type)
-            
-            this.tax = this.taxConfig[this.detail.tax]
-            this.taxIndex = this.taxConfig.findIndex(item => item == this.tax)
-
+            this.typeIndex = this.filters.transport.findIndex(item => item == this.type)
+            if(this.detail.hasOwnProperty("tax")) {
+                this.tax = this.taxConfig[this.detail.tax]
+                this.taxIndex = this.taxConfig.findIndex(item => item == this.tax)
+            }
             if(this.detail.images.length > 0) {
                 Promise.all(this.detail.images.map(imgUrl => {
                     return WXP.getImageInfo({
@@ -241,6 +243,7 @@ export default {
                     this.tempImgs = res.map(({ path }) => path)
                 })
             }
+
             let { regionIndex: desRegionIndex, regionSecond: desRegionSecond } = this.getRegionConfig(this.detail.destination)
             this.desRegionIndex = desRegionIndex
             this.desRegionSecond = desRegionSecond
@@ -248,23 +251,10 @@ export default {
 
             let { regionIndex, regionSecond } = this.getRegionConfig(this.detail.rmation)
             this.regionIndex = regionIndex
-            this.regionSecond = desReregionSecondgionSecond
+            this.regionSecond = regionSecond
             this.rmation = this.detail.rmation
         }
     },
-    // const tipConfig = {
-    //     title: "请输入标题！",
-    //     price: "请输入价格！",
-    //     linkman: "请输入联系人名称！",
-    //     startdate: "请选择开始时间！",
-    //     enddate: "请选择结束时间！",
-    //     details: "请输入详细信息！",
-    //     phone: "请输入联系电话！",
-    //     type: "请选择承载信息！",
-    //     vehicletype: "请选择车辆信息！",
-    //     destination: "请选择到达城市！",
-    //     rmation: "请选择出发城市！"
-    // }
     computed: {
         regionDataComputed() {
             const secondColumn = this.regionData[1][this.regionSecond]
@@ -322,8 +312,20 @@ export default {
                 sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
                 sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
                 success: function (res) {
+                    let _imgArray = []
+                    res.tempFiles.forEach((item, index) => {
+                        if(item.size / 1024 / 1024 < 1) {
+                            _imgArray.push(res.tempFilePaths[index])
+                        } else {
+                            that.showTip = true
+                            that.tip = "图片过大，图片小于1M"
+                            setTimeout(() => {
+                                that.showTip = false
+                            }, 2000)
+                        }
+                    })
+                    that.tempImgs = that.tempImgs.concat(_imgArray)
                     // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-                    that.tempImgs = that.tempImgs.concat(res.tempFilePaths)
                 },
                 fail: function () {
                     // console.log('fail');

@@ -624,12 +624,10 @@ const getRegionConfig = (city) => {
           return false
         }
         return true
-
       })
     }
     return true
   })
-
   return {
     regionIndex,
     regionSecond

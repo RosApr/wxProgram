@@ -23,9 +23,9 @@
                 <div class="weui-cell__bd">营业执照</div>
                 <div class="weui-cell__ft weui-cell__ft_in-access">{{images}}</div>
             </div>
-            <div class="weui-cell weui-cell_access item" hover-class="weui-cell_active">
+            <div class="weui-cell weui-cell_access item">
                 <div class="weui-cell__bd">审核状态</div>
-                <div class="weui-cell__ft weui-cell__ft_in-access">
+                <div class="weui-cell__ft">
                     <span :class="transformChecked2Text.textClass">{{transformChecked2Text.text}}</span>
                 </div>
             </div>

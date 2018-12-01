@@ -42,7 +42,7 @@
                     const { data: userProfile } = await getUserProfile({})
                     setDataToStorageIfIsAvailable(USER_PROFILE, userProfile)
                     if(userProfile.checked != 1) {
-                        return wx.showModal({
+                        wx.showModal({
                             title: "提示",
                             content: "您的营业执照还在审核中，无法发布!",
                             success (res) {

@@ -109,7 +109,6 @@ export default {
       });
     },
     callEditPublish(id, type, checked) {
-      checked = 2
       if (checked == 1) {
         let text = "审核已通过，不能修改！";
         this.showTip = true;
