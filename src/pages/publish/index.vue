@@ -113,6 +113,9 @@ export default {
         let text = "审核已通过，不能修改！";
         this.showTip = true;
         this.tip = text;
+        setTimeout(() => {
+          this.showTip = false
+        }, 2000)
       } else {
         let path = type == this.typeConfig["logistics"] ? "step2Log" : "step2"
         path = `/pages/${path}/main?type=${type}&id=${id}&edit=1`
