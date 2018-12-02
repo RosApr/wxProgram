@@ -148,7 +148,7 @@
                             <div class="price">
                                 <span class="price-symbol">¥</span>
                                 <span class="price-number">{{item.price}}</span>
-                                <span class="price-tip">({{item.tax == 1 ? "含税" : "不含税"}})</span>
+                                <span class="price-tip">{{item.tax == 1 ? "" : "(不含税)"}}</span>
                             </div>
                         </div>
                     </div>
@@ -173,7 +173,7 @@
                                 <p>
                                     <span class="symbol">¥</span>
                                     <span class="price">{{item.price}}</span>
-                                    <span class="price-tip">({{item.tax == 1 ? "含税" : "不含税"}})</span>
+                                    <span class="price-tip">{{item.tax == 1 ? "" : "(不含税)"}}</span>
                                 </p>
                             </div>
                         </div>

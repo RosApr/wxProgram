@@ -20,7 +20,7 @@
                 <div class="price-container weui-form-preview__item">
                     <span class="symbol">¥</span>
                     <span class="price">{{detail.price}}</span>
-                    <span class="tax">({{detail.tax == 1 ? "含税" : "不含税"}})</span>
+                    <span class="tax">{{detail.tax == 1 ? "" : "(不含税)"}}</span>
                 </div>
                 <div class="title">{{titleTypeText.detailType}}</div>
                 <div class="weui-form-preview__item">
@@ -78,7 +78,7 @@
                 <div class="price-container weui-form-preview__item">
                     <span class="symbol">¥</span>
                     <span class="price">{{detail.price}}</span>
-                    <span class="tax">({{detail.tax == 1 ? "含税" : "不含税"}})</span>
+                    <span class="tax">{{detail.tax == 1 ? "" : "(不含税)"}}</span>
                 </div>
                 <div class="title">{{titleTypeText.detailType}}</div>
                 <div class="weui-form-preview__item">

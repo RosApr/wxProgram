@@ -156,8 +156,8 @@ export default {
             desRegionSecond: 0,
 
             taxConfig,
-            tax: taxConfig[0],
-            taxIndex: 0,
+            tax: taxConfig[1],
+            taxIndex: 1,
             transferCheckedTax,
 
             rmation: "",
@@ -191,7 +191,8 @@ export default {
         this.details = ""
         this.phone = ""
         this.type = ""
-        this.tax = this.taxConfig[0]
+        this.tax = this.taxConfig[1]
+        this.taxIndex = 1
         this.vehicletype = ""
         this.destination = ""
         this.rmation = ""
@@ -230,10 +231,13 @@ export default {
 
             this.type = this.detail.type
             this.typeIndex = this.filters.transport.findIndex(item => item == this.type)
-            if(this.detail.hasOwnProperty("tax")) {
-                this.tax = this.taxConfig[this.detail.tax]
-                this.taxIndex = this.taxConfig.findIndex(item => item == this.tax)
-            }
+            // if(this.detail.hasOwnProperty("tax")) {
+            //     this.tax = this.taxConfig[this.detail.tax]
+            //     this.taxIndex = this.taxConfig.findIndex(item => item == this.tax)
+            // }
+            this.tax = this.taxConfig[this.detail["tax"] || 1]
+            this.taxIndex = this.taxConfig.findIndex(item => item == this.tax)
+            
             if(this.detail.images.length > 0) {
                 Promise.all(this.detail.images.map(imgUrl => {
                     return WXP.getImageInfo({

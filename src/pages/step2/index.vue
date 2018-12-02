@@ -156,8 +156,8 @@ export default {
             regionSecond: 0,
 
             taxConfig,    
-            tax: taxConfig[0],
-            taxIndex: 0,
+            tax: taxConfig[1],
+            taxIndex: 1,
             transferCheckedTax,
 
             place: "",
@@ -198,7 +198,8 @@ export default {
         this.details = ""
         this.phone = ""
         this.stock = ""
-        this.tax = this.taxConfig[0]
+        this.tax = this.taxConfig[1]
+        this.taxIndex = 1
         this.model = ""
         this.category = ""
         this.factory = ""
@@ -251,7 +252,7 @@ export default {
                 this.factoryIndex = this.filters.stock.findIndex(item => item == this.stock)
             }
 
-            this.tax = this.taxConfig[this.detail["tax"] || 0]
+            this.tax = this.taxConfig[this.detail["tax"] || 1]
             this.taxIndex = this.taxConfig.findIndex(item => item == this.tax)
 
             if(this.detail.images.length > 0) {

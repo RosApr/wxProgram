@@ -35,6 +35,9 @@
         mounted() {
             setWxNavBarTitle("第一步")
         },
+        onShow() {
+            this.active = ""
+        },
         methods: {
             async check(type) {
                 this.active = type
