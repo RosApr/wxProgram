@@ -41,7 +41,7 @@
           </div>
         </div>
       </div>
-      <div class="no-list-tip" v-else>数据加载中...</div>
+      <div class="no-list-tip" v-else>{{ publishConfig.isLoading ? "数据加载中..." : "没有发布过信息!" }} </div>
     </scroll-view>
     <div class="btn-container">
       <div class="btn" @click="goPublish">发布信息</div>

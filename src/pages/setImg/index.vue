@@ -52,6 +52,14 @@ export default {
     methods: {
         uploadImg() {
             const that = this
+            if(this.tempImgs.length >= 1) {
+                this.showTip = true
+                this.tip = "只能上传一张图片"
+                setTimeout(() => {
+                    this.showTip = false
+                }, 2000)
+                return true
+            }
             wx.chooseImage({
                 sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
                 sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有

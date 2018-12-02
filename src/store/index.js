@@ -25,7 +25,8 @@ const store = new Vuex.Store({
       list: [],
       page: 1,
       size: 8,
-      total: 999999
+      total: 999999,
+      isLoading: false
     },
     filter,
     filterTransform,
@@ -127,6 +128,9 @@ const store = new Vuex.Store({
       }
       const { publishConfig: {page, size, total} } = state
       if(state.publishConfig.list.length < total) {
+        commit("savePublishData", {
+          isLoading: true
+        })
         const response = await getPublishList({
           page,
           size
@@ -141,7 +145,8 @@ const store = new Vuex.Store({
         commit("savePublishData", {
           list: list,
           total: response.data.total,
-          page: nextPage
+          page: nextPage,
+          isLoading: false
         })
       }
     },
