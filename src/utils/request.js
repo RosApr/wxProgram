@@ -1,7 +1,7 @@
 import wx from './wx'
 import Fly from 'flyio'
 import WXP from 'minapp-api-promise'
-const baseUrl = "https://m.91lzht.com/ids/public/index.php/api/"
+const baseUrl = "https://m.91lzht.com/index.php/"
 import { TOKEN, OPEN_ID, REGION, isInStorageAndReturn } from "@/utils/common"
 const request = new Fly()
 request.config.baseURL = baseUrl
