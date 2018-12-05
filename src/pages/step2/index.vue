@@ -74,7 +74,7 @@
             <div class="grid label"><span class="badge">*</span>产地：</div>
             <div class="grid input">
                 <picker mode="multiSelector" @change="regionChange" @columnchange="regionColumnChange" :value="regionIndex" :range="regionDataComputed">
-                    <div class="border height arrow">{{place || "请选择出发城市"}}</div>
+                    <div class="border height arrow">{{place || "请选择产地"}}</div>
                 </picker>
             </div>
         </div>
