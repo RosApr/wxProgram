@@ -12,7 +12,7 @@
                     <img :src="item" alt="">
                     <div class="del" @click="delImg">X</div>
                 </div>
-                <div class="upload-img-btn" :class="[tempImgs.length === 0 ? 'hide' : '']" @click="uploadImg">+</div>
+                <div class="upload-img-btn" :class="[tempImgs.length === 0? '' : 'hidden']" @click="uploadImg">+</div>
             </div>
         </div>
         <button class="weui-btn" @click="modify" type="primary">确认</button>
@@ -37,7 +37,6 @@ export default {
         }
     },
     mounted() {
-        console.log(1)
         setWxNavBarTitle("修改营业执照")
         this.tempImgs = wx.getStorageSync(USER_PROFILE).images || []
         if(this.tempImgs.length > 0) {
@@ -121,6 +120,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .hidden {
+        display: none!important;
+    }
     .container {
         position: relative;
         .tip {
